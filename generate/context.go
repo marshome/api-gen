@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"errors"
 
 	"github.com/marshome/apis/spec"
 )
@@ -22,9 +23,8 @@ var (
 	ApisURL = flag.String("discoveryurl", googleDiscoveryURL, "URL to root discovery document")
 
 	ContextHTTPPkg = flag.String("ctxhttp_pkg", "golang.org/x/net/context/ctxhttp", "Go package path of the 'ctxhttp' package.")
-	ContextPkg     = flag.String("context_pkg", "golang.org/x/net/context", "Go package path of the 'context' package.")
-	GensupportPkg  = flag.String("gensupport_pkg", "airble.com/pkg/gensupport", "Go package path of the 'api/gensupport' support package.")
-	GoogleapiPkg   = flag.String("googleapi_pkg", "google.golang.org/api/googleapi", "Go package path of the 'api/googleapi' support package.")
+	GensupportPkg  = flag.String("gensupport_pkg", "github.com/marshome/apis/generate", "Go package path of the 'api/gensupport' support package.")
+	GoogleapiPkg   = flag.String("googleapi_pkg", "github.com/marshome/apis/googleapi", "Go package path of the 'api/googleapi' support package.")
 )
 
 var canonicalDocsURL = map[string]string{}
@@ -512,8 +512,8 @@ func GenerateClient(doc_json string, params *ClientGenerateParams) (code string,
 		{"net/url", ""},
 		{"strconv", ""},
 		{"strings", ""},
+		{"context",""},
 		{*ContextHTTPPkg, "ctxhttp"},
-		{*ContextPkg, "context"},
 		{*GensupportPkg, "gensupport"},
 		{*GoogleapiPkg, "googleapi"},
 	} {
@@ -595,8 +595,9 @@ func GenerateClient(doc_json string, params *ClientGenerateParams) (code string,
 }
 
 func (c *Context) GenerateServerService(r *Resource, methods []*Method) {
-	path_params_buffer := &bytes.Buffer{}
-	regist_service_buffer := &bytes.Buffer{}
+	if (len(methods)) == 0 {
+		return
+	}
 
 	if r == nil {
 		c.Pn("type Service interface{")
@@ -604,8 +605,9 @@ func (c *Context) GenerateServerService(r *Resource, methods []*Method) {
 		c.Pn("type " + r.GoType() + " interface{")
 	}
 
+	path_params_buffer := &bytes.Buffer{}
 	for _, meth := range methods {
-		meth.GenerateServerCode(path_params_buffer, regist_service_buffer)
+		meth.GenerateServerCode(path_params_buffer)
 	}
 	c.Pn("}")
 	c.P("\n")
@@ -613,27 +615,34 @@ func (c *Context) GenerateServerService(r *Resource, methods []*Method) {
 	c.Pn(path_params_buffer.String())
 	c.P("\n")
 
-	if len(methods) > 0 {
-		if r == nil {
-			c.Pn("func RegistServiceService(service Service)(err error){")
-		} else {
-			c.Pn("func Regist" + r.GoType() + "(service " + r.GoType() + ")(err error){")
-		}
-		if r == nil {
-			c.Pn("s,err:=endpoints.RegisterService(service,\"\",\"\",\"" + c.Doc.Version + "\",\"" + c.Doc.Title + "\",true)")
-		} else {
-			c.Pn("s,err:=endpoints.RegisterService(service,\"" + r.parent + "\",\"" + r.name + "\",\"" + c.Doc.Version + "\",\"" + c.Doc.Title + "\",true)")
-		}
-		c.Pn("if err!=nil{")
-		c.Pn("return err")
-		c.Pn("}")
-		c.P("\n")
-		c.P("var m *endpoints.ServiceMethod")
-		c.P("\n")
-		c.P(regist_service_buffer.String())
-		c.P("return nil")
-		c.Pn("}")
+	if r == nil {
+		c.Pn("func RegistServiceService(router restful.Router,service Service)(err error){")
+	} else {
+		c.Pn("func Regist" + r.GoType() + "(router restful.Router, service " + r.GoType() + ")(err error){")
 	}
+
+	for _, m := range methods {
+		c.Pn("    router.Handle(\"%s\",\"%s\", func(ctx *restful.Context) {", m.doc.HttpMethod, m.doc.Path)
+		c.Pn("        req:=&%s{}", strings.TrimLeft(m.GetRequestType(), "*"))
+		for _, param := range m.NewArguments().l {
+			if param.location == "path" {
+				c.Pn("        req.%s = ctx.PathParamMap[\"%s\"]", c.InitialCap(param.goname), param.apiname)
+			} else if param.location == "query" {
+				c.Pn("    req.%s = ctx.HttpRequest.URL.Query().Get(%s)", c.InitialCap(param.goname), param.apiname)
+			} else if param.location == "body" {
+
+			} else {
+				panic(errors.New("unkown location"))
+			}
+		}
+
+		c.Pn("        service.%s(ctx, req)", m.GoName())
+		c.Pn("    })")
+		c.Pn("")
+	}
+
+	c.P("return nil")
+	c.Pn("}")
 }
 
 func GenerateServer(doc_json string, params *ServerGenerateParams) (code string, err error) {
@@ -650,26 +659,16 @@ func GenerateServer(doc_json string, params *ServerGenerateParams) (code string,
 
 	c.Parse()
 
-	c.Pn("// Package %s provides access to the %s.", c.Package(), c.Doc.Title)
-	if c.Doc.DocumentationLink != "" {
-		c.Pn("//")
-		c.Pn("// See %s", c.Doc.DocumentationLink)
-	}
-	c.Pn("//\n// Usage example:")
-	c.Pn("//")
-	c.Pn("//   import %q", c.Target())
-	c.Pn("//   ...")
-	c.Pn("//   %sService, err := %s.New(oauthHttpClient)", c.Package(), c.Package())
-
 	c.Pn("package api")
 	c.P("\n")
 
-	c.Pn("import \"airble.com/services/apis/endpoints\"")
-	c.Pn("import \"airble.com/pkg/gensupport\"")
 	c.Pn("import \"errors\"")
-	c.Pn("import \"golang.org/x/net/context\"")
-	c.Pn("import googleapi \"google.golang.org/api/googleapi\"")
+	c.Pn("import \"net/http\"")
+	c.Pn("import \"github.com/marshome/apis/restful\"")
 	c.P("\n")
+
+	c.Pn("var _=errors.New(\"\")")
+	c.Pn("var _=http.DefaultClient")
 
 	for _, name := range c.SortedSchemaNames() {
 		c.Schemas[name].WriteSchemaCode()

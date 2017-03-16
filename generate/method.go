@@ -26,6 +26,10 @@ func (m *Method) Id() string {
 	return m.doc.Id
 }
 
+func (m *Method)GoName()string{
+	return m.c.InitialCap(m.name)
+}
+
 func (m *Method) supportsMediaUpload() bool {
 	return m.doc.MediaUpload != nil
 }
@@ -139,11 +143,11 @@ func (meth *Method) GetResponseType() (typ string) {
 	}
 }
 
-func (meth *Method) GenerateServerCode(path_params_buffer *bytes.Buffer, regist_service_buffer *bytes.Buffer) {
+func (meth *Method) GenerateServerCode(path_params_buffer *bytes.Buffer) {
 	a := meth.c
 	p, _ := a.P, a.Pn
 
-	p("    " + meth.c.InitialCap(meth.name) + "(c context.Context")
+	p("    " + meth.GoName() + "(ctx *restful.Context")
 
 	reqType := meth.GetRequestType()
 
@@ -188,23 +192,6 @@ func (meth *Method) GenerateServerCode(path_params_buffer *bytes.Buffer, regist_
 	}
 
 	p("\n")
-
-	//service method registry
-	regist_service_buffer.WriteString("m=s.MethodByName(\"" + meth.c.InitialCap(meth.name) + "\")\n")
-	regist_service_buffer.WriteString("if m==nil{\n")
-	if meth.r == nil {
-		regist_service_buffer.WriteString("return errors.New(\"method not found Service." + meth.c.InitialCap(meth.name) + "\")\n")
-	} else {
-		regist_service_buffer.WriteString("return errors.New(\"method not found " + meth.r.GoType() + "." + meth.c.InitialCap(meth.name) + "\")\n")
-	}
-	regist_service_buffer.WriteString("}\n")
-	regist_service_buffer.WriteString("m.Info().HTTPMethod=\"" + meth.doc.HttpMethod + "\"\n")
-	regist_service_buffer.WriteString("m.Info().Path=\"" + meth.doc.Path + "\"\n")
-	regist_service_buffer.WriteString("m.Info().Name=\"" + meth.name + "\"\n")
-	desc := strings.Replace(meth.doc.Description, "\n", "/n", -1)
-	desc = strings.Replace(desc, "\"", "\\\"", -1)
-	regist_service_buffer.WriteString("m.Info().Desc=\"" + desc + "\"\n")
-	regist_service_buffer.WriteString("\n")
 }
 
 func (meth *Method) GenerateClientCode() {
@@ -235,7 +222,7 @@ func (meth *Method) GenerateClientCode() {
 			pn(" %s %s", arg.goname, arg.gotype)
 		}
 	}
-	pn(" urlParams_ gensupport.URLParams")
+	pn(" urlParams_ generate.URLParams")
 	httpMethod := meth.doc.HttpMethod
 	if httpMethod == "GET" {
 		pn(" ifNoneMatch_ string")
@@ -266,7 +253,7 @@ func (meth *Method) GenerateClientCode() {
 		servicePtr = "r.s"
 	}
 
-	pn(" c := &%s{s: %s, urlParams_: make(gensupport.URLParams)}", callName, servicePtr)
+	pn(" c := &%s{s: %s, urlParams_: make(generate.URLParams)}", callName, servicePtr)
 	for _, arg := range args.l {
 		// TODO(gmlewis): clean up and consolidate this section.
 		// See: https://code-review.googlesource.com/#/c/3520/18/google-api-go-generator/gen.go

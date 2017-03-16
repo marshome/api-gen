@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 
 	"github.com/marshome/apis/generate"
+	"path/filepath"
+	"os"
 )
 
 var (
@@ -40,7 +42,17 @@ func main() {
 			return
 		}
 
-		err = ioutil.WriteFile(*clientFile, []byte(code), 0)
+		dir:=filepath.Dir(*clientFile)
+		dirInfo,err:=os.Stat(dir)
+		if dirInfo==nil||os.IsNotExist(err) {
+			err = os.MkdirAll(dir, os.ModePerm)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+		}
+
+		err = ioutil.WriteFile(*clientFile, []byte(code), os.ModePerm)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -58,7 +70,17 @@ func main() {
 			return
 		}
 
-		err = ioutil.WriteFile(*serverFile, []byte(code), 0)
+		dir:=filepath.Dir(*serverFile)
+		dirInfo,err:=os.Stat(dir)
+		if dirInfo==nil||os.IsNotExist(err) {
+			err = os.MkdirAll(dir, os.ModePerm)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+		}
+
+		err = ioutil.WriteFile(*serverFile, []byte(code), os.ModePerm|os.ModeExclusive)
 		if err != nil {
 			fmt.Println(err)
 			return

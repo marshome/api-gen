@@ -261,7 +261,6 @@ func (s *Schema) writeSchemaStruct() {
 	s.c.Pn("type %s struct {", s.GoName())
 
 	np := new(namePool)
-	forceSendName := np.Get("ForceSendFields")
 	if s.isResponseType() {
 		np.Get("ServerResponse") // reserve the name
 	}
@@ -328,7 +327,7 @@ func (s *Schema) writeSchemaStruct() {
 			s.c.P("\n")
 		}
 		s.c.P("%s", s.c.AsComment("\t", "ServerResponse contains the HTTP response code and headers from the server."))
-		s.c.P(" googleapi.ServerResponse `json:\"-\"`")
+		s.c.P(" restful.ServerResponse `json:\"-\"`")
 	}
 
 	if firstFieldName == "" {
@@ -338,21 +337,8 @@ func (s *Schema) writeSchemaStruct() {
 		return
 	}
 
-	commentFmtStr := "%s is a list of field names (e.g. %q) to " +
-		"unconditionally include in API requests. By default, fields " +
-		"with empty values are omitted from API requests. However, " +
-		"any non-pointer, non-interface field appearing in %s will " +
-		"be sent to the server regardless of whether the field is " +
-		"empty or not. This may be used to include empty fields in " +
-		"Patch requests."
-	comment := fmt.Sprintf(commentFmtStr, forceSendName, firstFieldName, forceSendName)
-	s.c.P("\n")
-	s.c.P("%s", s.c.AsComment("\t", comment))
-
-	s.c.Pn("\t%s []string `json:\"-\"`", forceSendName)
 	s.c.Pn("}")
-	s.writeSchemaMarshal(forceSendName)
-	s.writeSchemaUnmarshal(forceSendName)
+	s.c.Pn("")
 
 	return
 }
@@ -365,7 +351,7 @@ func (s *Schema) writeSchemaMarshal(forceSendFieldName string) {
 	s.c.Pn("\ttype noMethod %s", s.GoName())
 	// pass schema as methodless type to prevent subsequent calls to MarshalJSON from recursing indefinitely.
 	s.c.Pn("\traw := noMethod(*s)")
-	s.c.Pn("\treturn gensupport.MarshalJSON(raw, s.%s)", forceSendFieldName)
+	s.c.Pn("\treturn generate.MarshalJSON(raw, s.%s)", forceSendFieldName)
 	s.c.Pn("}")
 }
 
@@ -374,7 +360,7 @@ func (s *Schema) writeSchemaUnmarshal(forceSendFieldName string) {
 	s.c.Pn("\ttype noMethod %s", s.GoName())
 	// pass schema as methodless type to prevent subsequent calls to MarshalJSON from recursing indefinitely.
 	s.c.Pn("\traw := noMethod(*s)")
-	s.c.Pn("\treturn gensupport.UnmarshalJSON(data,raw, s.%s)", forceSendFieldName)
+	s.c.Pn("\treturn generate.UnmarshalJSON(data,raw, s.%s)", forceSendFieldName)
 	s.c.Pn("}")
 }
 
