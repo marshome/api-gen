@@ -22,13 +22,13 @@ func main() {
 
 	if *specFile == "" {
 		fmt.Println("need flag spec")
-		return
+		os.Exit(1)
 	}
 
 	docData, err := ioutil.ReadFile(*specFile)
 	if err != nil {
 		fmt.Println(err)
-		return
+		os.Exit(1)
 	}
 
 	//client code
@@ -39,7 +39,7 @@ func main() {
 		code, err := generate.GenerateClient(string(docData), &params)
 		if err != nil {
 			fmt.Println(err)
-			return
+			os.Exit(1)
 		}
 
 		dir:=filepath.Dir(*clientFile)
@@ -48,26 +48,26 @@ func main() {
 			err = os.MkdirAll(dir, os.ModePerm)
 			if err != nil {
 				fmt.Println(err)
-				return
+				os.Exit(1)
 			}
 		}
 
 		err = ioutil.WriteFile(*clientFile, []byte(code), os.ModePerm)
 		if err != nil {
 			fmt.Println(err)
-			return
+			os.Exit(1)
 		}
 	}
 
 	//server code
 	if *serverFile != "" {
 		params := generate.ServerGenerateParams{}
-		params.ApiPackageBase = *apiPackageBase
+		params.Namespace="api"
 
 		code, err := generate.GenerateServer(string(docData), &params)
 		if err != nil {
 			fmt.Println(err)
-			return
+			os.Exit(1)
 		}
 
 		dir:=filepath.Dir(*serverFile)
@@ -76,14 +76,14 @@ func main() {
 			err = os.MkdirAll(dir, os.ModePerm)
 			if err != nil {
 				fmt.Println(err)
-				return
+				os.Exit(1)
 			}
 		}
 
 		err = ioutil.WriteFile(*serverFile, []byte(code), os.ModePerm|os.ModeExclusive)
 		if err != nil {
 			fmt.Println(err)
-			return
+			os.Exit(1)
 		}
 	}
 }

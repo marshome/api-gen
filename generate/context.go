@@ -16,15 +16,8 @@ import (
 	"github.com/marshome/apis/spec"
 )
 
-const googleDiscoveryURL = "https://www.googleapis.com/discovery/v1/apis"
-
 var (
 	BaseURL = flag.String("base_url", "", "(optional) Override the default service API URL. If empty, the service's root URL will be used.")
-	ApisURL = flag.String("discoveryurl", googleDiscoveryURL, "URL to root discovery document")
-
-	ContextHTTPPkg = flag.String("ctxhttp_pkg", "golang.org/x/net/context/ctxhttp", "Go package path of the 'ctxhttp' package.")
-	GensupportPkg  = flag.String("gensupport_pkg", "github.com/marshome/apis/generate", "Go package path of the 'api/gensupport' support package.")
-	GoogleapiPkg   = flag.String("googleapi_pkg", "github.com/marshome/apis/googleapi", "Go package path of the 'api/googleapi' support package.")
 )
 
 var canonicalDocsURL = map[string]string{}
@@ -34,11 +27,13 @@ type ClientGenerateParams struct {
 }
 
 type ServerGenerateParams struct {
-	ApiPackageBase string
+	Namespace string
 }
 
 type Context struct {
 	ApiPackageBase string
+	Namespace string
+
 	Doc            *spec.APIDocument
 	Code           *bytes.Buffer
 
@@ -350,7 +345,6 @@ func (c *Context) PrettyJSON(m interface{}) string {
 	return string(bs)
 }
 
-// emptyPattern reports whether a pattern matches the empty string.
 func (c *Context) EmptyPattern(pattern string) bool {
 	if re, err := regexp.Compile(pattern); err == nil {
 		return re.MatchString("")
@@ -359,7 +353,6 @@ func (c *Context) EmptyPattern(pattern string) bool {
 	return false
 }
 
-// emptyEnum reports whether a property enum list contains the empty string.
 func (c *Context) EmptyEnum(enum []string) bool {
 	for _, val := range enum {
 		if val == "" {
@@ -369,32 +362,13 @@ func (c *Context) EmptyEnum(enum []string) bool {
 	return false
 }
 
-// PopulateSchemas reads all the API types ("schemas") from the JSON file
-// and converts them to *Schema instances, returning an identically
-// keyed map, additionally containing subresources.  For instance,
-//
-// A resource "Foo" of type "object" with a property "bar", also of type
-// "object" (an anonymous sub-resource), will get a synthetic API name
-// of "Foo.bar".
-//
-// A resource "Foo" of type "array" with an "items" of type "object"
-// will get a synthetic API name of "Foo.Item".
 func (c *Context) ParseSchemas() {
 	if c.Schemas != nil {
 		panic("")
 	}
 	c.Schemas = make(map[string]*Schema)
 	for name, mi := range c.Doc.Schemas {
-		s := &Schema{
-			c:       c,
-			apiName: name,
-			m:       mi,
-		}
-
-		// And a little gross hack, so a map alone is good
-		// enough to get its apiName:
-		s._apiName = name
-
+		s := NewSchema(c, mi, name, nil)
 		c.Schemas[name] = s
 		err := s.populateSubSchemas()
 		if err != nil {
@@ -421,7 +395,6 @@ func (c *Context) ParseResources(rm map[string]*spec.APIResource, p string) []*R
 	return res
 }
 
-// APIMethods returns top-level ("API-level") methods. They don't have an associated resource.
 func (c *Context) ParseAPIMethods() []*Method {
 	meths := []*Method{}
 	methMap := make(map[string]interface{})
@@ -513,9 +486,6 @@ func GenerateClient(doc_json string, params *ClientGenerateParams) (code string,
 		{"strconv", ""},
 		{"strings", ""},
 		{"context",""},
-		{*ContextHTTPPkg, "ctxhttp"},
-		{*GensupportPkg, "gensupport"},
-		{*GoogleapiPkg, "googleapi"},
 	} {
 		if imp.lname == "" {
 			c.Pn("  %q", imp.pkg)
@@ -594,7 +564,25 @@ func GenerateClient(doc_json string, params *ClientGenerateParams) (code string,
 	return string(clean), nil
 }
 
-func (c *Context) GenerateServerService(r *Resource, methods []*Method) {
+func (c *Context)GenerateDefaultService(r *Resource, methods []*Method) {
+	serviceName:="Service"
+	if r!=nil{
+		serviceName=r.GoType()
+	}
+
+	c.Pn("type Default%s struct{",serviceName)
+	c.Pn("}")
+	c.Pn("")
+
+	for _, m := range methods {
+		c.Pn("func (s *Default%s) %s{",serviceName,m.Signature())
+		c.Pn("    return nil,nil")
+		c.Pn("}")
+		c.Pn("")
+	}
+}
+
+func (c *Context) GenerateService(r *Resource, methods []*Method) {
 	if (len(methods)) == 0 {
 		return
 	}
@@ -605,32 +593,44 @@ func (c *Context) GenerateServerService(r *Resource, methods []*Method) {
 		c.Pn("type " + r.GoType() + " interface{")
 	}
 
-	path_params_buffer := &bytes.Buffer{}
 	for _, meth := range methods {
-		meth.GenerateServerCode(path_params_buffer)
+		c.Pn(meth.Signature())
 	}
 	c.Pn("}")
 	c.P("\n")
 
-	c.Pn(path_params_buffer.String())
+	for _, meth := range methods {
+		c.Pn("type " + meth.GetRequestTypeReal() + " struct{")
+		path_args := meth.PathParams()
+		if len(path_args) > 0 {
+			for _, v := range path_args {
+				c.Pn("    " + meth.c.InitialCap(v.goname) + " " + v.gotype + " `json:\"" + v.apiname + "\"`")
+			}
+
+		}
+		c.Pn("}")
+	}
 	c.P("\n")
 
+	c.GenerateDefaultService(r, methods)
+
 	if r == nil {
-		c.Pn("func RegistServiceService(router restful.Router,service Service)(err error){")
+		c.Pn("func RouteServiceService(router restful.Router,service Service)(err error){")
 	} else {
-		c.Pn("func Regist" + r.GoType() + "(router restful.Router, service " + r.GoType() + ")(err error){")
+		c.Pn("func Route" + r.GoType() + "(router restful.Router, service " + r.GoType() + ")(err error){")
 	}
 
 	for _, m := range methods {
 		c.Pn("    router.Handle(\"%s\",\"%s\", func(ctx *restful.Context) {", m.doc.HttpMethod, m.doc.Path)
-		c.Pn("        req:=&%s{}", strings.TrimLeft(m.GetRequestType(), "*"))
+		c.Pn("        req:=&%s{}", m.GetRequestTypeReal())
 		for _, param := range m.NewArguments().l {
 			if param.location == "path" {
 				c.Pn("        req.%s = ctx.PathParamMap[\"%s\"]", c.InitialCap(param.goname), param.apiname)
 			} else if param.location == "query" {
 				c.Pn("    req.%s = ctx.HttpRequest.URL.Query().Get(%s)", c.InitialCap(param.goname), param.apiname)
-			} else if param.location == "body" {
+				fmt.Println("query",param.required, param)
 
+			} else if param.location == "body" {
 			} else {
 				panic(errors.New("unkown location"))
 			}
@@ -641,7 +641,7 @@ func (c *Context) GenerateServerService(r *Resource, methods []*Method) {
 		c.Pn("")
 	}
 
-	c.P("return nil")
+	c.Pn("    return nil")
 	c.Pn("}")
 }
 
@@ -653,13 +653,14 @@ func GenerateServer(doc_json string, params *ServerGenerateParams) (code string,
 	}
 
 	c := Context{}
+	c.Namespace=params.Namespace
+
 	c.Code = &bytes.Buffer{}
 	c.Doc = doc
-	c.ApiPackageBase = params.ApiPackageBase
 
 	c.Parse()
 
-	c.Pn("package api")
+	c.Pn("package %s",c.Namespace)
 	c.P("\n")
 
 	c.Pn("import \"errors\"")
@@ -674,7 +675,7 @@ func GenerateServer(doc_json string, params *ServerGenerateParams) (code string,
 		c.Schemas[name].WriteSchemaCode()
 	}
 
-	c.GenerateServerService(nil, c.APIMethods)
+	c.GenerateService(nil, c.APIMethods)
 
 	for _, res := range c.Resources {
 		res.GenerateServerMethods()

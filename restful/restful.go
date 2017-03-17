@@ -3,6 +3,7 @@ package restful
 import (
 	"net/http"
 	"github.com/gorilla/mux"
+	"net/url"
 )
 
 type ServerResponse struct {
@@ -49,9 +50,11 @@ func (r *muxRouter)Handle(method string, path string,handlerFunc func(ctx *Conte
 		if r.postProcessor != nil {
 			r.postProcessor(ctx)
 		}
+
+		ctx.HttpRequest.URL.Query().Encode()
 	})
 }
 
-func NewRouter(preprocessor func(ctx *Context),postProcessor func(ctx*Context)) Router {
+func NewRouter() Router {
 	return &muxRouter{}
 }

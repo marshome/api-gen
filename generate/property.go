@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/marshome/apis/spec"
+	"fmt"
 )
 
 type Property struct {
@@ -17,7 +18,7 @@ type Property struct {
 
 func (p *Property) Type() *Type {
 	if p.typ == nil {
-		p.typ = &Type{c: p.s.c, m: p.m}
+		p.typ = &Type{c: p.s.c, m: p.m, _apiName:fmt.Sprintf("%s.%s", p.s.apiName, p.apiName)}
 	}
 	return p.typ
 }
@@ -106,19 +107,4 @@ func (p *Property) UnfortunateDefault() bool {
 		// The default value has an unexpected form.  Whatever it is, it's non-zero.
 		return true
 	}
-}
-
-// forcePointerType reports whether p should be represented as a pointer type in its parent schema struct.
-func (p *Property) ForcePointerType() bool {
-	if p.UnfortunateDefault() {
-		return true
-	}
-
-	name := fieldName{api: p.s.c.Doc.Id, schema: p.s.GoName(), field: p.GoName()}
-	for _, pf := range pointerFields {
-		if pf == name {
-			return true
-		}
-	}
-	return false
 }

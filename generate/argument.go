@@ -12,6 +12,8 @@ type Argument struct {
 	goname, gotype   string
 	location         string // "path", "query", "body"
 	desc             string
+
+	required         bool
 }
 
 func (a *Argument) String() string {

@@ -85,6 +85,7 @@ func (t *Type) AsGo() string {
 			//}
 			return "*" + s.GoName()
 		}
+		fmt.Println("Type.AsGo",t)
 		panic("in Type.AsGo, no _apiName found for struct type " + t.c.PrettyJSON(t.m))
 	}
 	panic("unhandled Type.AsGo for " + t.c.PrettyJSON(t.m))
@@ -190,5 +191,6 @@ func (t *Type) ArrayType() (elementType *Type, ok bool) {
 	if items == nil {
 		t.c.Panicf("can't handle array type missing its 'items' key. map is %#v", t.m)
 	}
-	return &Type{c: t.c, m: items}, true
+
+	return &Type{c: t.c, m: items, _apiName:t._apiName}, true
 }

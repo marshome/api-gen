@@ -1,7 +1,6 @@
 package generate
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -131,6 +130,21 @@ func (meth *Method) GetRequestType() (typ string) {
 	}
 }
 
+func (meth *Method)GetRequestTypeReal()(typ string) {
+	reqType := meth.GetRequestType()
+	if reqType != "" {
+		return strings.TrimLeft(reqType, "*")
+	}
+
+	if meth.r == nil {
+		return "Service_" + meth.c.InitialCap(meth.name)+"Request"
+	} else {
+		return "" + meth.c.InitialCap(meth.r.parent + meth.r.name) + "Service_" + meth.c.InitialCap(meth.name)+"Request"
+	}
+
+	return ""
+}
+
 func (meth *Method) GetResponseType() (typ string) {
 	if meth.doc.Response == nil {
 		return ""
@@ -143,55 +157,24 @@ func (meth *Method) GetResponseType() (typ string) {
 	}
 }
 
-func (meth *Method) GenerateServerCode(path_params_buffer *bytes.Buffer) {
-	a := meth.c
-	p, _ := a.P, a.Pn
+func (meth *Method) Signature()(signature string) {
+	signature+="    " + meth.GoName() + "(ctx *restful.Context"
 
-	p("    " + meth.GoName() + "(ctx *restful.Context")
-
-	reqType := meth.GetRequestType()
-
-	//path params
-	if reqType == "" {
-		var all_args = make(map[string]*Argument)
-		args := meth.NewArguments()
-		for _, arg := range args.m {
-			if arg.location == "path" {
-				all_args[arg.apiname] = arg
-			}
-		}
-
-		if len(all_args) > 0 {
-			if meth.r == nil {
-				reqType = "Service_" + meth.c.InitialCap(meth.name)
-			} else {
-				reqType = meth.c.InitialCap(meth.r.parent+meth.r.name) + "Service_" + meth.c.InitialCap(meth.name)
-			}
-
-			path_params_buffer.WriteString("type " + reqType + " struct{\n")
-			for _, v := range all_args {
-				path_params_buffer.WriteString("    " + meth.c.InitialCap(v.goname) + " " + v.gotype + " `json:\"" + v.apiname + "\"`\n")
-			}
-			path_params_buffer.WriteString("}\n")
-
-			reqType = "*" + reqType
-		}
-	}
-
+	reqType := meth.GetRequestTypeReal()
 	if reqType != "" {
-		p(", req " + reqType)
+		signature+=", req *" + reqType
 	}
 
-	p(")")
+	signature+=")"
 
 	resType := meth.GetResponseType()
 	if resType == "" {
-		p("(err error)")
+		signature+="(err error)"
 	} else {
-		p("(resp " + resType + ", err error)")
+		signature+="(resp " + resType + ", err error)"
 	}
 
-	p("\n")
+	return signature
 }
 
 func (meth *Method) GenerateClientCode() {
@@ -609,6 +592,7 @@ func (meth *Method) NewArg(apiname string, p *Param) *Argument {
 		gotype:   gotype,
 		location: m.Location,
 		desc:     des,
+		required:p.IsRequired(),
 	}
 }
 
@@ -619,4 +603,17 @@ func (meth *Method) ResponseTypeLiteral() string {
 		return v[1:]
 	}
 	return v
+}
+
+func (meth *Method)PathParams()(paramList []*Argument) {
+	paramList = make([]*Argument, 0)
+
+	args := meth.NewArguments()
+	for _, arg := range args.m {
+		if arg.location == "path" {
+			paramList = append(paramList, arg)
+		}
+	}
+
+	return paramList
 }

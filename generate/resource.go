@@ -104,7 +104,7 @@ func (r *Resource) ParseMethods() {
 }
 
 func (r *Resource) GenerateServerMethods() {
-	r.c.GenerateServerService(r, r.Methods)
+	r.c.GenerateService(r, r.Methods)
 
 	for _, res := range r.resources {
 		res.GenerateServerMethods()

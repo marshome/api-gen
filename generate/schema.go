@@ -8,38 +8,9 @@ import (
 	"github.com/marshome/apis/spec"
 )
 
-// A FieldName uniquely identifies a field within a Schema struct for an API.
-type fieldName struct {
-	api    string // The ID of an API.
-	schema string // The Go name of a Schema struct.
-	field  string // The Go name of a field.
-}
-
-// pointerFields is a list of fields that should use a pointer type.
-// This makes it possible to distinguish between a field being unset vs having
-// an empty value.
-var pointerFields = []fieldName{
-	{api: "cloudmonitoring:v2beta2", schema: "Point", field: "BoolValue"},
-	{api: "cloudmonitoring:v2beta2", schema: "Point", field: "DoubleValue"},
-	{api: "cloudmonitoring:v2beta2", schema: "Point", field: "Int64Value"},
-	{api: "cloudmonitoring:v2beta2", schema: "Point", field: "StringValue"},
-	{api: "compute:v1", schema: "MetadataItems", field: "Value"},
-	{api: "content:v2", schema: "AccountUser", field: "Admin"},
-	{api: "datastore:v1beta2", schema: "Property", field: "BlobKeyValue"},
-	{api: "datastore:v1beta2", schema: "Property", field: "BlobValue"},
-	{api: "datastore:v1beta2", schema: "Property", field: "BooleanValue"},
-	{api: "datastore:v1beta2", schema: "Property", field: "DateTimeValue"},
-	{api: "datastore:v1beta2", schema: "Property", field: "DoubleValue"},
-	{api: "datastore:v1beta2", schema: "Property", field: "Indexed"},
-	{api: "datastore:v1beta2", schema: "Property", field: "IntegerValue"},
-	{api: "datastore:v1beta2", schema: "Property", field: "StringValue"},
-	{api: "genomics:v1beta2", schema: "Dataset", field: "IsPublic"},
-	{api: "tasks:v1", schema: "Task", field: "Completed"},
-	{api: "youtube:v3", schema: "ChannelSectionSnippet", field: "Position"},
-}
-
 type Schema struct {
 	c *Context
+
 	m *spec.APIObject
 
 	typ *Type // lazily populated by Type
@@ -48,23 +19,34 @@ type Schema struct {
 	goName       string // lazily populated by GoName
 	goReturnType string // lazily populated by GoReturnType
 
-	_apiName string
-
 	properties []*Property
 }
 
-func (s *Schema) Type() *Type {
-	if s.typ == nil {
-		s.typ = &Type{c: s.c, m: s.m, _apiName: s._apiName}
+func NewSchema(ctx *Context,spec *spec.APIObject,apiName string, typ  *Type) (s*Schema) {
+	s = &Schema{
+		c:ctx,
+		m:spec,
+		apiName:apiName,
+		typ:typ,
 	}
-	return s.typ
-}
 
-func (s *Schema) GetProperties() []*Property {
-	if s.properties == nil {
-		if !s.Type().IsStruct() {
-			panic("called properties on non-object schema")
-		}
+	if s.typ == nil {
+		s.typ = &Type{c: s.c, m: s.m, _apiName: s.apiName}
+	}
+
+	if name, ok := s.Type().MapType(); ok {
+		s.goName = name
+	} else {
+		s.goName = s.c.GetName(s.c.InitialCap(s.apiName))
+	}
+
+	if s.Type().IsMap() {
+		s.goReturnType = s.GoName()
+	} else {
+		s.goReturnType = "*" + s.GoName()
+	}
+
+	if s.Type().IsStruct() {
 		pl := []*Property{}
 		propMap := make(map[string]interface{})
 		for k, v := range s.m.Properties {
@@ -82,6 +64,22 @@ func (s *Schema) GetProperties() []*Property {
 		s.properties = pl
 	}
 
+	return s
+}
+
+func (s *Schema) Type() *Type {
+	return s.typ
+}
+
+func (s *Schema) GoName() string {
+	return s.goName
+}
+
+func (s *Schema) GoReturnType() string {
+	return s.goReturnType
+}
+
+func (s *Schema) GetProperties() []*Property {
 	return s.properties
 }
 
@@ -99,13 +97,7 @@ func (s *Schema) populateSubSchemas() (outerr error) {
 			panic("dup schema apiName: " + subApiName)
 		}
 		subm := t.m
-		subs := &Schema{
-			c:        s.c,
-			m:        subm,
-			typ:      t,
-			apiName:  subApiName,
-			_apiName: subApiName,
-		}
+		subs:=NewSchema(s.c,subm,subApiName,t)
 		s.c.Schemas[subApiName] = subs
 		err := subs.populateSubSchemas()
 		if err != nil {
@@ -175,35 +167,6 @@ func (s *Schema) populateSubSchemas() (outerr error) {
 	fmt.Fprintf(os.Stderr, "in populateSubSchemas, schema is: %s", s.c.PrettyJSON(s.m))
 	s.c.Panicf("populateSubSchemas: unsupported type for schema %q", s.apiName)
 	panic("unreachable")
-}
-
-// GoName returns (or creates and returns) the bare Go name
-// of the apiName, making sure that it's a proper Go identifier
-// and doesn't conflict with an existing name.
-func (s *Schema) GoName() string {
-	if s.goName == "" {
-		if name, ok := s.Type().MapType(); ok {
-			s.goName = name
-		} else {
-			s.goName = s.c.GetName(s.c.InitialCap(s.apiName))
-		}
-	}
-	return s.goName
-}
-
-// GoReturnType returns the Go type to use as the return type.
-// If a type is a struct, it will return *StructType,
-// for a map it will return map[string]ValueType,
-// for (not yet supported) slices it will return []ValueType.
-func (s *Schema) GoReturnType() string {
-	if s.goReturnType == "" {
-		if s.Type().IsMap() {
-			s.goReturnType = s.GoName()
-		} else {
-			s.goReturnType = "*" + s.GoName()
-		}
-	}
-	return s.goReturnType
 }
 
 func (s *Schema) WriteSchemaCode() {
@@ -299,7 +262,12 @@ func (s *Schema) writeSchemaStruct() {
 		if i > 0 {
 			s.c.P("\n")
 		}
+
 		pname := np.Get(p.GoName())
+		if pname[0] == '@' {
+			continue
+		}
+
 		des := p.Description()
 		if des != "" {
 			s.c.P("%s", s.c.AsComment("\t", fmt.Sprintf("%s: %s", pname, des)))
@@ -312,9 +280,6 @@ func (s *Schema) writeSchemaStruct() {
 		}
 
 		typ := p.Type().AsGo()
-		if p.ForcePointerType() {
-			typ = "*" + typ
-		}
 
 		s.c.Pn(" %s %s `json:\"%s,omitempty%s\"`", pname, typ, p.APIName(), extraOpt)
 		if firstFieldName == "" {
