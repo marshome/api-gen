@@ -1,4 +1,4 @@
-package restful
+package marsapi
 
 import (
 	"net/http"

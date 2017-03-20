@@ -43,15 +43,15 @@ func (t *Type) AsGo() string {
 		if at.ApiType() == "string" {
 			switch at.ApiTypeFormat() {
 			case "int64":
-				return "googleapi.Int64s"
+				return "marsapi.Int64s"
 			case "uint64":
-				return "googleapi.Uint64s"
+				return "marsapi.Uint64s"
 			case "int32":
-				return "googleapi.Int32s"
+				return "marsapi.Int32s"
 			case "uint32":
-				return "googleapi.Uint32s"
+				return "marsapi.Uint32s"
 			case "float64":
-				return "googleapi.Float64s"
+				return "marsapi.Float64s"
 			default:
 				return "[]" + at.AsGo()
 			}

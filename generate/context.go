@@ -20,12 +20,6 @@ var (
 	BaseURL = flag.String("base_url", "", "(optional) Override the default service API URL. If empty, the service's root URL will be used.")
 )
 
-var canonicalDocsURL = map[string]string{}
-
-type ClientGenerateParams struct {
-	ApiPackageBase string
-}
-
 type ServerGenerateParams struct {
 	Namespace string
 }
@@ -444,191 +438,51 @@ func (c *Context) Parse() {
 	}
 }
 
-func GenerateClient(doc_json string, params *ClientGenerateParams) (code string, err error) {
-	doc := &spec.APIDocument{}
-	err = json.Unmarshal([]byte(doc_json), doc)
-	if err != nil {
-		return "", err
-	}
-
-	c := Context{}
-	c.Code = &bytes.Buffer{}
-	c.Doc = doc
-	c.ApiPackageBase = params.ApiPackageBase
-
-	c.Parse()
-
-	c.Pn("// Package %s provides access to the %s.", c.Package(), c.Doc.Title)
-	if c.Doc.DocumentationLink != "" {
-		c.Pn("//")
-		c.Pn("// See %s", c.Doc.DocumentationLink)
-	}
-	c.Pn("//\n// Usage example:")
-	c.Pn("//")
-	c.Pn("//   import %q", c.Target())
-	c.Pn("//   ...")
-	c.Pn("//   %sService, err := %s.New(oauthHttpClient)", c.Package(), c.Package())
-
-	c.Pn("package %s //// import %q", c.Package(), c.Target())
-	c.P("\n")
-	c.Pn("import (")
-	for _, imp := range []struct {
-		pkg   string
-		lname string
-	}{
-		{"bytes", ""},
-		{"encoding/json", ""},
-		{"errors", ""},
-		{"fmt", ""},
-		{"io", ""},
-		{"net/http", ""},
-		{"net/url", ""},
-		{"strconv", ""},
-		{"strings", ""},
-		{"context",""},
-	} {
-		if imp.lname == "" {
-			c.Pn("  %q", imp.pkg)
-		} else {
-			c.Pn("  %s %q", imp.lname, imp.pkg)
-		}
-	}
-	c.Pn(")")
-	c.Pn("\n// Always reference these packages, just in case the auto-generated code")
-	c.Pn("// below doesn't.")
-	c.Pn("var _ = bytes.NewBuffer")
-	c.Pn("var _ = strconv.Itoa")
-	c.Pn("var _ = fmt.Sprintf")
-	c.Pn("var _ = json.NewDecoder")
-	c.Pn("var _ = io.Copy")
-	c.Pn("var _ = url.Parse")
-	c.Pn("var _ = gensupport.MarshalJSON")
-	c.Pn("var _ = googleapi.Version")
-	c.Pn("var _ = errors.New")
-	c.Pn("var _ = strings.Replace")
-	c.Pn("var _ = context.Canceled")
-	c.Pn("var _ = ctxhttp.Do")
-	c.Pn("")
-	c.Pn("const apiId = %q", c.Doc.Id)
-	c.Pn("const apiName = %q", c.Doc.Name)
-	c.Pn("const apiVersion = %q", c.Doc.Version)
-	c.Pn("const basePath = %q", c.ApiBaseURL())
-
-	c.GenerateScopeConstants()
-
-	c.GetName("New") // ignore return value; we're the first caller
-	c.Pn("func New(client *http.Client) (*Service, error) {")
-	c.Pn("if client == nil { return nil, errors.New(\"client is nil\") }")
-	c.Pn("s := &Service{client: client, BasePath: basePath}")
-	for _, res := range c.Resources { // add top level resources.
-		c.Pn("s.%s = New%s(s)", res.GoField(), res.GoType())
-	}
-	c.Pn("return s, nil")
-	c.Pn("}")
-
-	c.GetName("Service") // ignore return value; no user-defined names yet
-	c.Pn("\ntype Service struct {")
-	c.Pn(" client *http.Client")
-	c.Pn(" BasePath string // API endpoint base URL")
-	c.Pn(" UserAgent string // optional additional User-Agent fragment")
-
-	for _, res := range c.Resources {
-		c.Pn("\n\t%s\t*%s", res.GoField(), res.GoType())
-	}
-	c.Pn("}")
-	c.Pn("\nfunc (s *Service) userAgent() string {")
-	c.Pn(` if s.UserAgent == "" { return googleapi.UserAgent }`)
-	c.Pn(` return googleapi.UserAgent + " " + s.UserAgent`)
-	c.Pn("}\n")
-
-	for _, res := range c.Resources {
-		res.GenerateType()
-	}
-
-	for _, name := range c.SortedSchemaNames() {
-		c.Schemas[name].WriteSchemaCode()
-	}
-
-	for _, meth := range c.APIMethods {
-		meth.GenerateClientCode()
-	}
-
-	for _, res := range c.Resources {
-		res.GenerateClientMethods()
-	}
-
-	clean, err := format.Source(c.Code.Bytes())
-	if err != nil {
-		return c.Code.String(), err
-	}
-	return string(clean), nil
-}
-
-func (c *Context)GenerateDefaultService(r *Resource, methods []*Method) {
-	serviceName:="Service"
-	if r!=nil{
-		serviceName=r.GoType()
-	}
-
-	c.Pn("type Default%s struct{",serviceName)
-	c.Pn("}")
-	c.Pn("")
-
-	for _, m := range methods {
-		c.Pn("func (s *Default%s) %s{",serviceName,m.Signature())
-		c.Pn("    return nil,nil")
-		c.Pn("}")
-		c.Pn("")
-	}
-}
-
 func (c *Context) GenerateService(r *Resource, methods []*Method) {
 	if (len(methods)) == 0 {
 		return
 	}
 
-	if r == nil {
-		c.Pn("type Service interface{")
-	} else {
-		c.Pn("type " + r.GoType() + " interface{")
+	serviceName := "Service"
+	if r != nil {
+		serviceName = r.GoType()
 	}
 
+	//options
+	for _, meth := range methods {
+		if len(meth.OptParams()) > 0 {
+			c.Pn("type %s struct{", meth.OptionsType())
+			c.Pn("}")
+			c.Pn("")
+		}
+	}
+
+	//def
+	c.Pn("type %s interface{", serviceName)
 	for _, meth := range methods {
 		c.Pn(meth.Signature())
 	}
 	c.Pn("}")
 	c.P("\n")
 
-	for _, meth := range methods {
-		c.Pn("type " + meth.GetRequestTypeReal() + " struct{")
-		path_args := meth.PathParams()
-		if len(path_args) > 0 {
-			for _, v := range path_args {
-				c.Pn("    " + meth.c.InitialCap(v.goname) + " " + v.gotype + " `json:\"" + v.apiname + "\"`")
-			}
+	//default impl
+	//c.Pn("type Default%s struct{", serviceName)
+	//c.Pn("}")
+	//c.Pn("")
+	//for _, m := range methods {
+	//	c.Pn("func (s *Default%s) %s{", serviceName, m.Signature())
+	//	c.Pn("    return nil,nil")
+	//	c.Pn("}")
+	//	c.Pn("")
+	//}
 
-		}
-		c.Pn("}")
-	}
-	c.P("\n")
-
-	c.GenerateDefaultService(r, methods)
-
-	if r == nil {
-		c.Pn("func RouteServiceService(router restful.Router,service Service)(err error){")
-	} else {
-		c.Pn("func Route" + r.GoType() + "(router restful.Router, service " + r.GoType() + ")(err error){")
-	}
-
+	//handle
+	c.Pn("func Handle%s(r marsapi.Router,s %s)(err error){", serviceName, serviceName)
 	for _, m := range methods {
-		c.Pn("    router.Handle(\"%s\",\"%s\", func(ctx *restful.Context) {", m.doc.HttpMethod, m.doc.Path)
-		c.Pn("        req:=&%s{}", m.GetRequestTypeReal())
+		c.Pn("    r.Handle(\"%s\",\"%s\", func(ctx *marsapi.Context) {", m.doc.HttpMethod, m.doc.Path)
 		for _, param := range m.NewArguments().l {
 			if param.location == "path" {
-				c.Pn("        req.%s = ctx.PathParamMap[\"%s\"]", c.InitialCap(param.goname), param.apiname)
 			} else if param.location == "query" {
-				c.Pn("    req.%s = ctx.HttpRequest.URL.Query().Get(%s)", c.InitialCap(param.goname), param.apiname)
-				fmt.Println("query",param.required, param)
 
 			} else if param.location == "body" {
 			} else {
@@ -636,13 +490,18 @@ func (c *Context) GenerateService(r *Resource, methods []*Method) {
 			}
 		}
 
-		c.Pn("        service.%s(ctx, req)", m.GoName())
+		//c.Pn("        s.%s(ctx)", m.GoName())
 		c.Pn("    })")
 		c.Pn("")
 	}
-
 	c.Pn("    return nil")
 	c.Pn("}")
+
+	if r != nil {
+		for _, subResource := range r.resources {
+			c.GenerateService(subResource, methods)
+		}
+	}
 }
 
 func GenerateServer(doc_json string, params *ServerGenerateParams) (code string, err error) {
@@ -653,19 +512,19 @@ func GenerateServer(doc_json string, params *ServerGenerateParams) (code string,
 	}
 
 	c := Context{}
-	c.Namespace=params.Namespace
+	c.Namespace = params.Namespace
 
 	c.Code = &bytes.Buffer{}
 	c.Doc = doc
 
 	c.Parse()
 
-	c.Pn("package %s",c.Namespace)
+	c.Pn("package %s", c.Namespace)
 	c.P("\n")
 
 	c.Pn("import \"errors\"")
 	c.Pn("import \"net/http\"")
-	c.Pn("import \"github.com/marshome/apis/restful\"")
+	c.Pn("import \"github.com/marshome/apis/marsapi\"")
 	c.P("\n")
 
 	c.Pn("var _=errors.New(\"\")")
@@ -677,8 +536,8 @@ func GenerateServer(doc_json string, params *ServerGenerateParams) (code string,
 
 	c.GenerateService(nil, c.APIMethods)
 
-	for _, res := range c.Resources {
-		res.GenerateServerMethods()
+	for _, r := range c.Resources {
+		c.GenerateService(r, r.Methods)
 	}
 
 	clean, err := format.Source(c.Code.Bytes())

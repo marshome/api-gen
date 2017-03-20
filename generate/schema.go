@@ -212,10 +212,6 @@ func (s *Schema) Description() string {
 }
 
 func (s *Schema) writeSchemaStruct() {
-	//if v := jobj(s.m, "variant"); v != nil {//todo
-	//	s.writeVariant(api, v)
-	//	return
-	//}
 	s.c.P("\n")
 	des := s.Description()
 	if des != "" {
@@ -226,35 +222,6 @@ func (s *Schema) writeSchemaStruct() {
 	np := new(namePool)
 	if s.isResponseType() {
 		np.Get("ServerResponse") // reserve the name
-	}
-
-	if s.isRequestType() {
-		all_args := make(map[string]*Argument)
-		for _, meth := range s.c.APIMethods {
-			args := meth.NewArguments()
-			for _, arg := range args.m {
-				if arg.location == "path" && meth.GetRequestType() == ("*"+s.GoName()) {
-					all_args[arg.apiname] = arg
-				}
-			}
-		}
-
-		for _, res := range s.c.Resources {
-			get_resource_methods_request_args(res, s.GoName(), all_args)
-		}
-
-		for _, arg := range all_args {
-			exsit := false
-			for _, p := range s.GetProperties() {
-				pname := p.GoName()
-				if pname == s.c.InitialCap(arg.goname) {
-					exsit = true
-				}
-			}
-			if !exsit {
-				s.c.Pn(s.c.InitialCap(arg.goname) + " " + arg.gotype + " `json:\"" + arg.apiname + "\"`")
-			}
-		}
 	}
 
 	firstFieldName := "" // used to store a struct field name for use in documentation.
@@ -292,14 +259,7 @@ func (s *Schema) writeSchemaStruct() {
 			s.c.P("\n")
 		}
 		s.c.P("%s", s.c.AsComment("\t", "ServerResponse contains the HTTP response code and headers from the server."))
-		s.c.P(" restful.ServerResponse `json:\"-\"`")
-	}
-
-	if firstFieldName == "" {
-		// There were no fields in the struct, so there is no point
-		// adding any custom JSON marshaling code.
-		s.c.Pn("}")
-		return
+		s.c.P(" marsapi.ServerResponse `json:\"-\"`")
 	}
 
 	s.c.Pn("}")
@@ -308,49 +268,6 @@ func (s *Schema) writeSchemaStruct() {
 	return
 }
 
-// writeSchemaMarshal writes a custom MarshalJSON function for s, which allows
-// fields to be explicitly transmitted by listing them in the field identified
-// by forceSendFieldName.
-func (s *Schema) writeSchemaMarshal(forceSendFieldName string) {
-	s.c.Pn("func (s *%s) MarshalJSON() ([]byte, error) {", s.GoName())
-	s.c.Pn("\ttype noMethod %s", s.GoName())
-	// pass schema as methodless type to prevent subsequent calls to MarshalJSON from recursing indefinitely.
-	s.c.Pn("\traw := noMethod(*s)")
-	s.c.Pn("\treturn generate.MarshalJSON(raw, s.%s)", forceSendFieldName)
-	s.c.Pn("}")
-}
-
-func (s *Schema) writeSchemaUnmarshal(forceSendFieldName string) {
-	s.c.Pn("func (s *%s) UnmarshalJSON(data []byte) error {", s.GoName())
-	s.c.Pn("\ttype noMethod %s", s.GoName())
-	// pass schema as methodless type to prevent subsequent calls to MarshalJSON from recursing indefinitely.
-	s.c.Pn("\traw := noMethod(*s)")
-	s.c.Pn("\treturn generate.UnmarshalJSON(data,raw, s.%s)", forceSendFieldName)
-	s.c.Pn("}")
-}
-
-// isResponseType returns true for all types that are used as a response.
 func (s *Schema) isResponseType() bool {
 	return s.c.ResponseTypes["*"+s.goName]
-}
-
-func (s *Schema) isRequestType() bool {
-	return s.c.RequestTypes["*"+s.goName]
-}
-
-func get_resource_methods_request_args(r *Resource, schemaName string, all_args map[string]*Argument) {
-	for _, meth := range r.Methods {
-		args := meth.NewArguments()
-		for _, arg := range args.m {
-			if arg.location == "path" && meth.GetRequestType() == ("*"+schemaName) {
-				all_args[arg.apiname] = arg
-			}
-		}
-	}
-
-	for _, subResource := range r.resources {
-		get_resource_methods_request_args(subResource, schemaName, all_args)
-	}
-
-	return
 }
