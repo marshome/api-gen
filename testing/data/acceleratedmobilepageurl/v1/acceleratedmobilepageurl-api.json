@@ -17,7 +17,7 @@
   },
   "documentationLink": "",
   "protocol": "rest",
-  "rootUrl": "https://www.marsapi.com/",
+  "rootUrl": "https://www.marsapi.com",
   "parameters": {
     "alt": {
       "type": "string",
@@ -85,7 +85,7 @@
       "methods": {
         "get": {
           "id": "captcha.get",
-          "path": "captcha/get",
+          "path": "/captcha/v1.0/captcha/get",
           "httpMethod": "GET",
           "description": "Get new captcha",
           "parameters": {
@@ -122,7 +122,7 @@
         },
         "verify": {
           "id": "captcha.verify",
-          "path": "captcha/verify",
+          "path": "/captcha/v1.0/captcha/verify",
           "httpMethod": "GET",
           "description": "Verify captcha",
           "parameters": {

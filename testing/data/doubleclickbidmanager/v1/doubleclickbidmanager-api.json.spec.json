@@ -61,180 +61,324 @@
     ],
     "schemas": [
         {
-            "name": "Parameters",
-            "desc": "Parameters of a query or report.",
+            "name": "QueryMetadata",
+            "desc": "Query metadata.",
             "type": "object",
             "fields": [
                 {
-                    "name": "type",
-                    "desc": "Report type.",
+                    "name": "sendNotification",
+                    "desc": "Whether to send an email notification when a report is ready. Default to false.",
+                    "type": "bool"
+                },
+                {
+                    "name": "shareEmailAddress",
+                    "desc": "List of email addresses which are sent email notifications when the report is finished. Separate from sendNotification.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "dataRange",
+                    "desc": "Range of report data.",
                     "type": "string",
                     "enum": [
                         {
-                            "name": "TYPE_ACTIVE_GRP"
+                            "name": "ALL_TIME"
                         },
                         {
-                            "name": "TYPE_AUDIENCE_COMPOSITION"
+                            "name": "CURRENT_DAY"
                         },
                         {
-                            "name": "TYPE_AUDIENCE_PERFORMANCE"
+                            "name": "CUSTOM_DATES"
                         },
                         {
-                            "name": "TYPE_CLIENT_SAFE"
+                            "name": "LAST_14_DAYS"
                         },
                         {
-                            "name": "TYPE_COMSCORE_VCE"
+                            "name": "LAST_30_DAYS"
                         },
                         {
-                            "name": "TYPE_CROSS_FEE"
+                            "name": "LAST_365_DAYS"
                         },
                         {
-                            "name": "TYPE_CROSS_PARTNER"
+                            "name": "LAST_7_DAYS"
                         },
                         {
-                            "name": "TYPE_CROSS_PARTNER_THIRD_PARTY_DATA_PROVIDER"
+                            "name": "LAST_90_DAYS"
                         },
                         {
-                            "name": "TYPE_ESTIMATED_CONVERSION"
+                            "name": "MONTH_TO_DATE"
                         },
                         {
-                            "name": "TYPE_FEE"
+                            "name": "PREVIOUS_DAY"
                         },
                         {
-                            "name": "TYPE_GENERAL"
+                            "name": "PREVIOUS_HALF_MONTH"
                         },
                         {
-                            "name": "TYPE_INVENTORY_AVAILABILITY"
+                            "name": "PREVIOUS_MONTH"
                         },
                         {
-                            "name": "TYPE_KEYWORD"
+                            "name": "PREVIOUS_QUARTER"
                         },
                         {
-                            "name": "TYPE_NIELSEN_AUDIENCE_PROFILE"
+                            "name": "PREVIOUS_WEEK"
                         },
                         {
-                            "name": "TYPE_NIELSEN_DAILY_REACH_BUILD"
+                            "name": "PREVIOUS_YEAR"
                         },
                         {
-                            "name": "TYPE_NIELSEN_ONLINE_GLOBAL_MARKET"
-                        },
-                        {
-                            "name": "TYPE_NIELSEN_SITE"
+                            "name": "QUARTER_TO_DATE"
                         },
                         {
                             "name": "TYPE_NOT_SUPPORTED"
                         },
                         {
-                            "name": "TYPE_ORDER_ID"
+                            "name": "WEEK_TO_DATE"
                         },
                         {
-                            "name": "TYPE_PAGE_CATEGORY"
-                        },
-                        {
-                            "name": "TYPE_PETRA_NIELSEN_AUDIENCE_PROFILE"
-                        },
-                        {
-                            "name": "TYPE_PETRA_NIELSEN_DAILY_REACH_BUILD"
-                        },
-                        {
-                            "name": "TYPE_PETRA_NIELSEN_ONLINE_GLOBAL_MARKET"
-                        },
-                        {
-                            "name": "TYPE_PIXEL_LOAD"
-                        },
-                        {
-                            "name": "TYPE_REACH_AND_FREQUENCY"
-                        },
-                        {
-                            "name": "TYPE_REACH_AUDIENCE"
-                        },
-                        {
-                            "name": "TYPE_THIRD_PARTY_DATA_PROVIDER"
-                        },
-                        {
-                            "name": "TYPE_TRUEVIEW"
-                        },
-                        {
-                            "name": "TYPE_TRUEVIEW_IAR"
-                        },
-                        {
-                            "name": "TYPE_VERIFICATION"
-                        },
-                        {
-                            "name": "TYPE_YOUTUBE_VERTICAL"
+                            "name": "YEAR_TO_DATE"
                         }
                     ]
                 },
                 {
-                    "name": "filters",
-                    "desc": "Filters used to match traffic data in your report.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "FilterPair"
+                    "name": "format",
+                    "desc": "Format of the generated report.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "CSV"
+                        },
+                        {
+                            "name": "EXCEL_CSV"
+                        },
+                        {
+                            "name": "XLSX"
+                        }
+                    ]
                 },
                 {
-                    "name": "groupBys",
-                    "desc": "Data is grouped by the filters listed in this field.",
-                    "collection": "array",
+                    "name": "latestReportRunTimeMs",
+                    "desc": "The time when the latest report started to run.",
+                    "type": "int64"
+                },
+                {
+                    "name": "locale",
+                    "desc": "Locale of the generated reports. Valid values are cs CZECH de GERMAN en ENGLISH es SPANISH fr FRENCH it ITALIAN ja JAPANESE ko KOREAN pl POLISH pt-BR BRAZILIAN_PORTUGUESE ru RUSSIAN tr TURKISH uk UKRAINIAN zh-CN CHINA_CHINESE zh-TW TAIWAN_CHINESE\n\nAn locale string not in the list above will generate reports in English.",
                     "type": "string"
                 },
                 {
-                    "name": "includeInviteData",
-                    "desc": "Whether to include data from Invite Media.",
+                    "name": "reportCount",
+                    "desc": "Number of reports that have been generated for the query.",
+                    "type": "int32"
+                },
+                {
+                    "name": "googleCloudStoragePathForLatestReport",
+                    "desc": "The path to the location in Google Cloud Storage where the latest report is stored.",
+                    "type": "string"
+                },
+                {
+                    "name": "googleDrivePathForLatestReport",
+                    "desc": "The path in Google Drive for the latest report.",
+                    "type": "string"
+                },
+                {
+                    "name": "running",
+                    "desc": "Whether the latest report is currently running.",
                     "type": "bool"
                 },
                 {
-                    "name": "metrics",
-                    "desc": "Metrics to include as columns in your report.",
-                    "collection": "array",
+                    "name": "title",
+                    "desc": "Query title. It is used to name the reports generated from this query.",
                     "type": "string"
                 }
             ]
         },
         {
-            "name": "QuerySchedule",
-            "desc": "Information on how frequently and when to run a query.",
+            "name": "ReportMetadata",
+            "desc": "Report metadata.",
             "type": "object",
             "fields": [
                 {
-                    "name": "endTimeMs",
-                    "desc": "Datetime to periodically run the query until.",
+                    "name": "reportDataEndTimeMs",
+                    "desc": "The ending time for the data that is shown in the report.",
                     "type": "int64"
                 },
                 {
-                    "name": "frequency",
-                    "desc": "How often the query is run.",
+                    "name": "reportDataStartTimeMs",
+                    "desc": "The starting time for the data that is shown in the report.",
+                    "type": "int64"
+                },
+                {
+                    "name": "status",
+                    "desc": "Report status.",
+                    "type": "ref",
+                    "refType": "ReportStatus"
+                },
+                {
+                    "name": "googleCloudStoragePath",
+                    "desc": "The path to the location in Google Cloud Storage where the report is stored.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "ReportStatus",
+            "desc": "Report status.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "format",
+                    "desc": "The file type of the report.",
                     "type": "string",
                     "enum": [
                         {
-                            "name": "DAILY"
+                            "name": "CSV"
                         },
                         {
-                            "name": "MONTHLY"
+                            "name": "EXCEL_CSV"
                         },
                         {
-                            "name": "ONE_TIME"
-                        },
-                        {
-                            "name": "QUARTERLY"
-                        },
-                        {
-                            "name": "SEMI_MONTHLY"
-                        },
-                        {
-                            "name": "WEEKLY"
+                            "name": "XLSX"
                         }
                     ]
                 },
                 {
-                    "name": "nextRunMinuteOfDay",
-                    "desc": "Time of day at which a new report will be generated, represented as minutes past midnight. Range is 0 to 1439. Only applies to scheduled reports.",
-                    "type": "int32"
+                    "name": "state",
+                    "desc": "The state of the report.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "DONE"
+                        },
+                        {
+                            "name": "FAILED"
+                        },
+                        {
+                            "name": "RUNNING"
+                        }
+                    ]
                 },
                 {
-                    "name": "nextRunTimezoneCode",
-                    "desc": "Canonical timezone code for report generation time. Defaults to America/New_York.",
+                    "name": "failure",
+                    "desc": "If the report failed, this records the cause.",
+                    "type": "ref",
+                    "refType": "ReportFailure"
+                },
+                {
+                    "name": "finishTimeMs",
+                    "desc": "The time when this report either completed successfully or failed.",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "DownloadRequest",
+            "desc": "Request to fetch stored insertion orders, line items, TrueView ad groups and ads.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "version",
+                    "desc": "SDF Version (column names, types, order) in which the entities will be returned. Default to 3.",
                     "type": "string"
+                },
+                {
+                    "name": "fileTypes",
+                    "desc": "File types that will be returned.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "filterIds",
+                    "desc": "The IDs of the specified filter type. This is used to filter entities to fetch. At least one ID must be specified. Only one ID is allowed for the ADVERTISER_ID filter type. For INSERTION_ORDER_ID or LINE_ITEM_ID filter types, all IDs must be from the same Advertiser.",
+                    "collection": "array",
+                    "type": "int64"
+                },
+                {
+                    "name": "filterType",
+                    "desc": "Filter type used to filter line items to fetch.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "ADVERTISER_ID"
+                        },
+                        {
+                            "name": "INSERTION_ORDER_ID"
+                        },
+                        {
+                            "name": "LINE_ITEM_ID"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ListQueriesResponse",
+            "desc": "List queries response.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"doubleclickbidmanager#listQueriesResponse\".",
+                    "type": "string",
+                    "default": "doubleclickbidmanager#listQueriesResponse"
+                },
+                {
+                    "name": "queries",
+                    "desc": "Retrieved queries.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Query"
+                }
+            ]
+        },
+        {
+            "name": "Query",
+            "desc": "Represents a query.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "reportDataEndTimeMs",
+                    "desc": "The ending time for the data that is shown in the report. Note, reportDataEndTimeMs is required if metadata.dataRange is CUSTOM_DATES and ignored otherwise.",
+                    "type": "int64"
+                },
+                {
+                    "name": "reportDataStartTimeMs",
+                    "desc": "The starting time for the data that is shown in the report. Note, reportDataStartTimeMs is required if metadata.dataRange is CUSTOM_DATES and ignored otherwise.",
+                    "type": "int64"
+                },
+                {
+                    "name": "schedule",
+                    "desc": "Information on how often and when to run a query.",
+                    "type": "ref",
+                    "refType": "QuerySchedule"
+                },
+                {
+                    "name": "timezoneCode",
+                    "desc": "Canonical timezone code for report data time. Defaults to America/New_York.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"doubleclickbidmanager#query\".",
+                    "type": "string",
+                    "default": "doubleclickbidmanager#query"
+                },
+                {
+                    "name": "metadata",
+                    "desc": "Query metadata.",
+                    "type": "ref",
+                    "refType": "QueryMetadata"
+                },
+                {
+                    "name": "params",
+                    "desc": "Query parameters.",
+                    "type": "ref",
+                    "refType": "Parameters"
+                },
+                {
+                    "name": "queryId",
+                    "desc": "Query ID.",
+                    "type": "int64"
                 }
             ]
         },
@@ -307,57 +451,22 @@
             ]
         },
         {
-            "name": "ReportKey",
-            "desc": "Key used to identify a report.",
+            "name": "UploadStatus",
+            "desc": "Represents the status of upload.",
             "type": "object",
             "fields": [
-                {
-                    "name": "queryId",
-                    "desc": "Query ID.",
-                    "type": "int64"
-                },
-                {
-                    "name": "reportId",
-                    "desc": "Report ID.",
-                    "type": "int64"
-                }
-            ]
-        },
-        {
-            "name": "RowStatus",
-            "desc": "Represents the upload status of a row in the request.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "entityName",
-                    "desc": "Entity name.",
-                    "type": "string"
-                },
                 {
                     "name": "errors",
-                    "desc": "Reasons why the entity can't be uploaded.",
+                    "desc": "Reasons why upload can't be completed.",
                     "collection": "array",
                     "type": "string"
                 },
                 {
-                    "name": "persisted",
-                    "desc": "Whether the entity is persisted.",
-                    "type": "bool"
-                },
-                {
-                    "name": "rowNumber",
-                    "desc": "Row number.",
-                    "type": "int32"
-                },
-                {
-                    "name": "changed",
-                    "desc": "Whether the stored entity is changed as a result of upload.",
-                    "type": "bool"
-                },
-                {
-                    "name": "entityId",
-                    "desc": "Entity Id.",
-                    "type": "int64"
+                    "name": "rowStatus",
+                    "desc": "Per-row upload status.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "RowStatus"
                 }
             ]
         },
@@ -366,6 +475,28 @@
             "desc": "Request to fetch stored line items.",
             "type": "object",
             "fields": [
+                {
+                    "name": "filterIds",
+                    "desc": "Ids of the specified filter type used to filter line items to fetch. If omitted, all the line items will be returned.",
+                    "collection": "array",
+                    "type": "int64"
+                },
+                {
+                    "name": "filterType",
+                    "desc": "Filter type used to filter line items to fetch.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "ADVERTISER_ID"
+                        },
+                        {
+                            "name": "INSERTION_ORDER_ID"
+                        },
+                        {
+                            "name": "LINE_ITEM_ID"
+                        }
+                    ]
+                },
                 {
                     "name": "format",
                     "desc": "Format in which the line items will be returned. Default to CSV.",
@@ -386,28 +517,6 @@
                         },
                         {
                             "name": "SDF"
-                        }
-                    ]
-                },
-                {
-                    "name": "filterIds",
-                    "desc": "Ids of the specified filter type used to filter line items to fetch. If omitted, all the line items will be returned.",
-                    "collection": "array",
-                    "type": "int64"
-                },
-                {
-                    "name": "filterType",
-                    "desc": "Filter type used to filter line items to fetch.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "ADVERTISER_ID"
-                        },
-                        {
-                            "name": "INSERTION_ORDER_ID"
-                        },
-                        {
-                            "name": "LINE_ITEM_ID"
                         }
                     ]
                 }
@@ -811,22 +920,170 @@
             ]
         },
         {
-            "name": "ListQueriesResponse",
-            "desc": "List queries response.",
+            "name": "ListReportsResponse",
+            "desc": "List reports response.",
             "type": "object",
             "fields": [
                 {
-                    "name": "queries",
-                    "desc": "Retrieved queries.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Query"
+                    "name": "kind",
+                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"doubleclickbidmanager#listReportsResponse\".",
+                    "type": "string",
+                    "default": "doubleclickbidmanager#listReportsResponse"
                 },
                 {
-                    "name": "kind",
-                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"doubleclickbidmanager#listQueriesResponse\".",
+                    "name": "reports",
+                    "desc": "Retrieved reports.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Report"
+                }
+            ]
+        },
+        {
+            "name": "Parameters",
+            "desc": "Parameters of a query or report.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "metrics",
+                    "desc": "Metrics to include as columns in your report.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "type",
+                    "desc": "Report type.",
                     "type": "string",
-                    "default": "doubleclickbidmanager#listQueriesResponse"
+                    "enum": [
+                        {
+                            "name": "TYPE_ACTIVE_GRP"
+                        },
+                        {
+                            "name": "TYPE_AUDIENCE_COMPOSITION"
+                        },
+                        {
+                            "name": "TYPE_AUDIENCE_PERFORMANCE"
+                        },
+                        {
+                            "name": "TYPE_CLIENT_SAFE"
+                        },
+                        {
+                            "name": "TYPE_COMSCORE_VCE"
+                        },
+                        {
+                            "name": "TYPE_CROSS_FEE"
+                        },
+                        {
+                            "name": "TYPE_CROSS_PARTNER"
+                        },
+                        {
+                            "name": "TYPE_CROSS_PARTNER_THIRD_PARTY_DATA_PROVIDER"
+                        },
+                        {
+                            "name": "TYPE_ESTIMATED_CONVERSION"
+                        },
+                        {
+                            "name": "TYPE_FEE"
+                        },
+                        {
+                            "name": "TYPE_GENERAL"
+                        },
+                        {
+                            "name": "TYPE_INVENTORY_AVAILABILITY"
+                        },
+                        {
+                            "name": "TYPE_KEYWORD"
+                        },
+                        {
+                            "name": "TYPE_NIELSEN_AUDIENCE_PROFILE"
+                        },
+                        {
+                            "name": "TYPE_NIELSEN_DAILY_REACH_BUILD"
+                        },
+                        {
+                            "name": "TYPE_NIELSEN_ONLINE_GLOBAL_MARKET"
+                        },
+                        {
+                            "name": "TYPE_NIELSEN_SITE"
+                        },
+                        {
+                            "name": "TYPE_NOT_SUPPORTED"
+                        },
+                        {
+                            "name": "TYPE_ORDER_ID"
+                        },
+                        {
+                            "name": "TYPE_PAGE_CATEGORY"
+                        },
+                        {
+                            "name": "TYPE_PETRA_NIELSEN_AUDIENCE_PROFILE"
+                        },
+                        {
+                            "name": "TYPE_PETRA_NIELSEN_DAILY_REACH_BUILD"
+                        },
+                        {
+                            "name": "TYPE_PETRA_NIELSEN_ONLINE_GLOBAL_MARKET"
+                        },
+                        {
+                            "name": "TYPE_PIXEL_LOAD"
+                        },
+                        {
+                            "name": "TYPE_REACH_AND_FREQUENCY"
+                        },
+                        {
+                            "name": "TYPE_REACH_AUDIENCE"
+                        },
+                        {
+                            "name": "TYPE_THIRD_PARTY_DATA_PROVIDER"
+                        },
+                        {
+                            "name": "TYPE_TRUEVIEW"
+                        },
+                        {
+                            "name": "TYPE_TRUEVIEW_IAR"
+                        },
+                        {
+                            "name": "TYPE_VERIFICATION"
+                        },
+                        {
+                            "name": "TYPE_YOUTUBE_VERTICAL"
+                        }
+                    ]
+                },
+                {
+                    "name": "filters",
+                    "desc": "Filters used to match traffic data in your report.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "FilterPair"
+                },
+                {
+                    "name": "groupBys",
+                    "desc": "Data is grouped by the filters listed in this field.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "includeInviteData",
+                    "desc": "Whether to include data from Invite Media.",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "ReportKey",
+            "desc": "Key used to identify a report.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "reportId",
+                    "desc": "Report ID.",
+                    "type": "int64"
+                },
+                {
+                    "name": "queryId",
+                    "desc": "Query ID.",
+                    "type": "int64"
                 }
             ]
         },
@@ -835,16 +1092,6 @@
             "desc": "Request to run a stored query to generate a report.",
             "type": "object",
             "fields": [
-                {
-                    "name": "reportDataStartTimeMs",
-                    "desc": "The starting time for the data that is shown in the report. Note, reportDataStartTimeMs is required if dataRange is CUSTOM_DATES and ignored otherwise.",
-                    "type": "int64"
-                },
-                {
-                    "name": "timezoneCode",
-                    "desc": "Canonical timezone code for report data time. Defaults to America/New_York.",
-                    "type": "string"
-                },
                 {
                     "name": "dataRange",
                     "desc": "Report data range used to generate the report.",
@@ -913,6 +1160,16 @@
                     "name": "reportDataEndTimeMs",
                     "desc": "The ending time for the data that is shown in the report. Note, reportDataEndTimeMs is required if dataRange is CUSTOM_DATES and ignored otherwise.",
                     "type": "int64"
+                },
+                {
+                    "name": "reportDataStartTimeMs",
+                    "desc": "The starting time for the data that is shown in the report. Note, reportDataStartTimeMs is required if dataRange is CUSTOM_DATES and ignored otherwise.",
+                    "type": "int64"
+                },
+                {
+                    "name": "timezoneCode",
+                    "desc": "Canonical timezone code for report data time. Defaults to America/New_York.",
+                    "type": "string"
                 }
             ]
         },
@@ -921,6 +1178,11 @@
             "desc": "Request to upload line items.",
             "type": "object",
             "fields": [
+                {
+                    "name": "lineItems",
+                    "desc": "Line items in CSV to upload. Refer to  Entity Write File Format for more information on file format.",
+                    "type": "string"
+                },
                 {
                     "name": "dryRun",
                     "desc": "Set to true to get upload status without actually persisting the line items.",
@@ -935,156 +1197,64 @@
                             "name": "CSV"
                         }
                     ]
-                },
+                }
+            ]
+        },
+        {
+            "name": "DownloadLineItemsResponse",
+            "desc": "Download line items response.",
+            "type": "object",
+            "fields": [
                 {
                     "name": "lineItems",
-                    "desc": "Line items in CSV to upload. Refer to  Entity Write File Format for more information on file format.",
+                    "desc": "Retrieved line items in CSV format. Refer to  Entity Write File Format or  Structured Data File Format for more information on file formats.",
                     "type": "string"
                 }
             ]
         },
         {
-            "name": "UploadLineItemsResponse",
-            "desc": "Upload line items response.",
+            "name": "QuerySchedule",
+            "desc": "Information on how frequently and when to run a query.",
             "type": "object",
             "fields": [
                 {
-                    "name": "uploadStatus",
-                    "desc": "Status of upload.",
-                    "type": "ref",
-                    "refType": "UploadStatus"
-                }
-            ]
-        },
-        {
-            "name": "QueryMetadata",
-            "desc": "Query metadata.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "reportCount",
-                    "desc": "Number of reports that have been generated for the query.",
-                    "type": "int32"
-                },
-                {
-                    "name": "sendNotification",
-                    "desc": "Whether to send an email notification when a report is ready. Default to false.",
-                    "type": "bool"
-                },
-                {
-                    "name": "shareEmailAddress",
-                    "desc": "List of email addresses which are sent email notifications when the report is finished. Separate from sendNotification.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "dataRange",
-                    "desc": "Range of report data.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "ALL_TIME"
-                        },
-                        {
-                            "name": "CURRENT_DAY"
-                        },
-                        {
-                            "name": "CUSTOM_DATES"
-                        },
-                        {
-                            "name": "LAST_14_DAYS"
-                        },
-                        {
-                            "name": "LAST_30_DAYS"
-                        },
-                        {
-                            "name": "LAST_365_DAYS"
-                        },
-                        {
-                            "name": "LAST_7_DAYS"
-                        },
-                        {
-                            "name": "LAST_90_DAYS"
-                        },
-                        {
-                            "name": "MONTH_TO_DATE"
-                        },
-                        {
-                            "name": "PREVIOUS_DAY"
-                        },
-                        {
-                            "name": "PREVIOUS_HALF_MONTH"
-                        },
-                        {
-                            "name": "PREVIOUS_MONTH"
-                        },
-                        {
-                            "name": "PREVIOUS_QUARTER"
-                        },
-                        {
-                            "name": "PREVIOUS_WEEK"
-                        },
-                        {
-                            "name": "PREVIOUS_YEAR"
-                        },
-                        {
-                            "name": "QUARTER_TO_DATE"
-                        },
-                        {
-                            "name": "TYPE_NOT_SUPPORTED"
-                        },
-                        {
-                            "name": "WEEK_TO_DATE"
-                        },
-                        {
-                            "name": "YEAR_TO_DATE"
-                        }
-                    ]
-                },
-                {
-                    "name": "format",
-                    "desc": "Format of the generated report.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "CSV"
-                        },
-                        {
-                            "name": "EXCEL_CSV"
-                        },
-                        {
-                            "name": "XLSX"
-                        }
-                    ]
-                },
-                {
-                    "name": "googleCloudStoragePathForLatestReport",
-                    "desc": "The path to the location in Google Cloud Storage where the latest report is stored.",
-                    "type": "string"
-                },
-                {
-                    "name": "googleDrivePathForLatestReport",
-                    "desc": "The path in Google Drive for the latest report.",
-                    "type": "string"
-                },
-                {
-                    "name": "latestReportRunTimeMs",
-                    "desc": "The time when the latest report started to run.",
+                    "name": "endTimeMs",
+                    "desc": "Datetime to periodically run the query until.",
                     "type": "int64"
                 },
                 {
-                    "name": "locale",
-                    "desc": "Locale of the generated reports. Valid values are cs CZECH de GERMAN en ENGLISH es SPANISH fr FRENCH it ITALIAN ja JAPANESE ko KOREAN pl POLISH pt-BR BRAZILIAN_PORTUGUESE ru RUSSIAN tr TURKISH uk UKRAINIAN zh-CN CHINA_CHINESE zh-TW TAIWAN_CHINESE\n\nAn locale string not in the list above will generate reports in English.",
-                    "type": "string"
+                    "name": "frequency",
+                    "desc": "How often the query is run.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "DAILY"
+                        },
+                        {
+                            "name": "MONTHLY"
+                        },
+                        {
+                            "name": "ONE_TIME"
+                        },
+                        {
+                            "name": "QUARTERLY"
+                        },
+                        {
+                            "name": "SEMI_MONTHLY"
+                        },
+                        {
+                            "name": "WEEKLY"
+                        }
+                    ]
                 },
                 {
-                    "name": "running",
-                    "desc": "Whether the latest report is currently running.",
-                    "type": "bool"
+                    "name": "nextRunMinuteOfDay",
+                    "desc": "Time of day at which a new report will be generated, represented as minutes past midnight. Range is 0 to 1439. Only applies to scheduled reports.",
+                    "type": "int32"
                 },
                 {
-                    "name": "title",
-                    "desc": "Query title. It is used to name the reports generated from this query.",
+                    "name": "nextRunTimezoneCode",
+                    "desc": "Canonical timezone code for report generation time. Defaults to America/New_York.",
                     "type": "string"
                 }
             ]
@@ -1115,228 +1285,71 @@
             ]
         },
         {
-            "name": "UploadStatus",
-            "desc": "Represents the status of upload.",
+            "name": "RowStatus",
+            "desc": "Represents the upload status of a row in the request.",
             "type": "object",
             "fields": [
+                {
+                    "name": "entityId",
+                    "desc": "Entity Id.",
+                    "type": "int64"
+                },
+                {
+                    "name": "entityName",
+                    "desc": "Entity name.",
+                    "type": "string"
+                },
                 {
                     "name": "errors",
-                    "desc": "Reasons why upload can't be completed.",
+                    "desc": "Reasons why the entity can't be uploaded.",
                     "collection": "array",
                     "type": "string"
                 },
                 {
-                    "name": "rowStatus",
-                    "desc": "Per-row upload status.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "RowStatus"
+                    "name": "persisted",
+                    "desc": "Whether the entity is persisted.",
+                    "type": "bool"
+                },
+                {
+                    "name": "rowNumber",
+                    "desc": "Row number.",
+                    "type": "int32"
+                },
+                {
+                    "name": "changed",
+                    "desc": "Whether the stored entity is changed as a result of upload.",
+                    "type": "bool"
                 }
             ]
         },
         {
-            "name": "DownloadLineItemsResponse",
-            "desc": "Download line items response.",
+            "name": "UploadLineItemsResponse",
+            "desc": "Upload line items response.",
             "type": "object",
             "fields": [
                 {
-                    "name": "lineItems",
-                    "desc": "Retrieved line items in CSV format. Refer to  Entity Write File Format or  Structured Data File Format for more information on file formats.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "DownloadRequest",
-            "desc": "Request to fetch stored insertion orders, line items, TrueView ad groups and ads.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "fileTypes",
-                    "desc": "File types that will be returned.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "filterIds",
-                    "desc": "The IDs of the specified filter type. This is used to filter entities to fetch. At least one ID must be specified. Only one ID is allowed for the ADVERTISER_ID filter type. For INSERTION_ORDER_ID or LINE_ITEM_ID filter types, all IDs must be from the same Advertiser.",
-                    "collection": "array",
-                    "type": "int64"
-                },
-                {
-                    "name": "filterType",
-                    "desc": "Filter type used to filter line items to fetch.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "ADVERTISER_ID"
-                        },
-                        {
-                            "name": "INSERTION_ORDER_ID"
-                        },
-                        {
-                            "name": "LINE_ITEM_ID"
-                        }
-                    ]
-                },
-                {
-                    "name": "version",
-                    "desc": "SDF Version (column names, types, order) in which the entities will be returned. Default to 3.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "ListReportsResponse",
-            "desc": "List reports response.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "kind",
-                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"doubleclickbidmanager#listReportsResponse\".",
-                    "type": "string",
-                    "default": "doubleclickbidmanager#listReportsResponse"
-                },
-                {
-                    "name": "reports",
-                    "desc": "Retrieved reports.",
-                    "collection": "array",
+                    "name": "uploadStatus",
+                    "desc": "Status of upload.",
                     "type": "ref",
-                    "refType": "Report"
-                }
-            ]
-        },
-        {
-            "name": "Query",
-            "desc": "Represents a query.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "kind",
-                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"doubleclickbidmanager#query\".",
-                    "type": "string",
-                    "default": "doubleclickbidmanager#query"
-                },
-                {
-                    "name": "metadata",
-                    "desc": "Query metadata.",
-                    "type": "ref",
-                    "refType": "QueryMetadata"
-                },
-                {
-                    "name": "params",
-                    "desc": "Query parameters.",
-                    "type": "ref",
-                    "refType": "Parameters"
-                },
-                {
-                    "name": "queryId",
-                    "desc": "Query ID.",
-                    "type": "int64"
-                },
-                {
-                    "name": "reportDataEndTimeMs",
-                    "desc": "The ending time for the data that is shown in the report. Note, reportDataEndTimeMs is required if metadata.dataRange is CUSTOM_DATES and ignored otherwise.",
-                    "type": "int64"
-                },
-                {
-                    "name": "reportDataStartTimeMs",
-                    "desc": "The starting time for the data that is shown in the report. Note, reportDataStartTimeMs is required if metadata.dataRange is CUSTOM_DATES and ignored otherwise.",
-                    "type": "int64"
-                },
-                {
-                    "name": "schedule",
-                    "desc": "Information on how often and when to run a query.",
-                    "type": "ref",
-                    "refType": "QuerySchedule"
-                },
-                {
-                    "name": "timezoneCode",
-                    "desc": "Canonical timezone code for report data time. Defaults to America/New_York.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "ReportMetadata",
-            "desc": "Report metadata.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "googleCloudStoragePath",
-                    "desc": "The path to the location in Google Cloud Storage where the report is stored.",
-                    "type": "string"
-                },
-                {
-                    "name": "reportDataEndTimeMs",
-                    "desc": "The ending time for the data that is shown in the report.",
-                    "type": "int64"
-                },
-                {
-                    "name": "reportDataStartTimeMs",
-                    "desc": "The starting time for the data that is shown in the report.",
-                    "type": "int64"
-                },
-                {
-                    "name": "status",
-                    "desc": "Report status.",
-                    "type": "ref",
-                    "refType": "ReportStatus"
-                }
-            ]
-        },
-        {
-            "name": "ReportStatus",
-            "desc": "Report status.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "failure",
-                    "desc": "If the report failed, this records the cause.",
-                    "type": "ref",
-                    "refType": "ReportFailure"
-                },
-                {
-                    "name": "finishTimeMs",
-                    "desc": "The time when this report either completed successfully or failed.",
-                    "type": "int64"
-                },
-                {
-                    "name": "format",
-                    "desc": "The file type of the report.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "CSV"
-                        },
-                        {
-                            "name": "EXCEL_CSV"
-                        },
-                        {
-                            "name": "XLSX"
-                        }
-                    ]
-                },
-                {
-                    "name": "state",
-                    "desc": "The state of the report.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "DONE"
-                        },
-                        {
-                            "name": "FAILED"
-                        },
-                        {
-                            "name": "RUNNING"
-                        }
-                    ]
+                    "refType": "UploadStatus"
                 }
             ]
         }
     ],
     "resources": [
+        {
+            "name": "sdf",
+            "methods": [
+                {
+                    "name": "download",
+                    "desc": "Retrieves entities in SDF format.",
+                    "path": "sdf/download",
+                    "httpMethod": "POST",
+                    "request": "DownloadRequest",
+                    "response": "DownloadResponse"
+                }
+            ]
+        },
         {
             "name": "lineitems",
             "methods": [
@@ -1361,6 +1374,14 @@
         {
             "name": "queries",
             "methods": [
+                {
+                    "name": "createquery",
+                    "desc": "Creates a query.",
+                    "path": "query",
+                    "httpMethod": "POST",
+                    "request": "Query",
+                    "response": "Query"
+                },
                 {
                     "name": "deletequery",
                     "desc": "Deletes a stored query as well as the associated stored reports.",
@@ -1411,14 +1432,6 @@
                         }
                     ],
                     "request": "RunQueryRequest"
-                },
-                {
-                    "name": "createquery",
-                    "desc": "Creates a query.",
-                    "path": "query",
-                    "httpMethod": "POST",
-                    "request": "Query",
-                    "response": "Query"
                 }
             ]
         },
@@ -1439,19 +1452,6 @@
                         }
                     ],
                     "response": "ListReportsResponse"
-                }
-            ]
-        },
-        {
-            "name": "sdf",
-            "methods": [
-                {
-                    "name": "download",
-                    "desc": "Retrieves entities in SDF format.",
-                    "path": "sdf/download",
-                    "httpMethod": "POST",
-                    "request": "DownloadRequest",
-                    "response": "DownloadResponse"
                 }
             ]
         }

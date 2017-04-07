@@ -15,15 +15,20 @@
     "rootUrl": "https://www.googleapis.com/",
     "auth": {
         "oauth2": [
-            "https://www.googleapis.com/auth/cloud-platform.read-only",
-            "https://www.googleapis.com/auth/compute",
             "https://www.googleapis.com/auth/compute.readonly",
             "https://www.googleapis.com/auth/ndev.cloudman",
             "https://www.googleapis.com/auth/ndev.cloudman.readonly",
-            "https://www.googleapis.com/auth/cloud-platform"
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/compute"
         ]
     },
     "parameters": [
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
         {
             "name": "key",
             "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
@@ -61,14 +66,22 @@
                     "desc": "Responses with Content-Type of application/json"
                 }
             ]
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
         }
     ],
     "schemas": [
+        {
+            "name": "ZoneViewsInsertResponse",
+            "desc": "The response to an insert request.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "resource",
+                    "desc": "The resource view object that has been inserted.",
+                    "type": "ref",
+                    "refType": "ResourceView"
+                }
+            ]
+        },
         {
             "name": "ZoneViewsListResponse",
             "desc": "The response to a list request.",
@@ -85,23 +98,6 @@
                     "collection": "array",
                     "type": "ref",
                     "refType": "ResourceView"
-                }
-            ]
-        },
-        {
-            "name": "Label",
-            "desc": "The Label to be applied to the resource views.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "key",
-                    "desc": "Key of the label.",
-                    "type": "string"
-                },
-                {
-                    "name": "value",
-                    "desc": "Value of the label.",
-                    "type": "string"
                 }
             ]
         },
@@ -132,6 +128,24 @@
             ]
         },
         {
+            "name": "RegionViewsListResourcesResponse",
+            "desc": "The response to the list resource request.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "members",
+                    "desc": "The resources in the view.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "A token used for pagination.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
             "name": "RegionViewsRemoveResourcesRequest",
             "desc": "The request to remove resources from the resource view.",
             "type": "object",
@@ -155,25 +169,20 @@
                     "type": "string"
                 },
                 {
+                    "name": "description",
+                    "desc": "The detailed description of the resource view.",
+                    "type": "string"
+                },
+                {
                     "name": "id",
                     "desc": "[Output Only] The ID of the resource view.",
                     "type": "string"
                 },
                 {
-                    "name": "members",
-                    "desc": "A list of all resources in the resource view.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "lastModified",
-                    "desc": "The last modified time of the view. Not supported yet.",
-                    "type": "string"
-                },
-                {
-                    "name": "name",
-                    "desc": "The name of the resource view.",
-                    "type": "string"
+                    "name": "kind",
+                    "desc": "Type of the resource.",
+                    "type": "string",
+                    "default": "resourceviews#resourceView"
                 },
                 {
                     "name": "numMembers",
@@ -186,52 +195,56 @@
                     "type": "string"
                 },
                 {
-                    "name": "description",
-                    "desc": "The detailed description of the resource view.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Type of the resource.",
-                    "type": "string",
-                    "default": "resourceviews#resourceView"
-                },
-                {
                     "name": "labels",
                     "desc": "The labels for events.",
                     "collection": "array",
                     "type": "ref",
                     "refType": "Label"
-                }
-            ]
-        },
-        {
-            "name": "ZoneViewsRemoveResourcesRequest",
-            "desc": "The request to remove resources from the resource view.",
-            "type": "object",
-            "fields": [
+                },
                 {
-                    "name": "resources",
-                    "desc": "The list of resources to be removed.",
-                    "collection": "array",
+                    "name": "lastModified",
+                    "desc": "The last modified time of the view. Not supported yet.",
                     "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "RegionViewsListResourcesResponse",
-            "desc": "The response to the list resource request.",
-            "type": "object",
-            "fields": [
+                },
                 {
                     "name": "members",
-                    "desc": "The resources in the view.",
+                    "desc": "A list of all resources in the resource view.",
                     "collection": "array",
                     "type": "string"
                 },
                 {
-                    "name": "nextPageToken",
-                    "desc": "A token used for pagination.",
+                    "name": "name",
+                    "desc": "The name of the resource view.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "ZoneViewsAddResourcesRequest",
+            "desc": "The request to add resources to the resource view.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "resources",
+                    "desc": "The list of resources to be added.",
+                    "collection": "array",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Label",
+            "desc": "The Label to be applied to the resource views.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "key",
+                    "desc": "Key of the label.",
+                    "type": "string"
+                },
+                {
+                    "name": "value",
+                    "desc": "Value of the label.",
                     "type": "string"
                 }
             ]
@@ -256,32 +269,6 @@
             ]
         },
         {
-            "name": "ZoneViewsAddResourcesRequest",
-            "desc": "The request to add resources to the resource view.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "resources",
-                    "desc": "The list of resources to be added.",
-                    "collection": "array",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "ZoneViewsInsertResponse",
-            "desc": "The response to an insert request.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "resource",
-                    "desc": "The resource view object that has been inserted.",
-                    "type": "ref",
-                    "refType": "ResourceView"
-                }
-            ]
-        },
-        {
             "name": "ZoneViewsListResourcesResponse",
             "desc": "The response to a list resource request.",
             "type": "object",
@@ -298,75 +285,25 @@
                     "type": "string"
                 }
             ]
+        },
+        {
+            "name": "ZoneViewsRemoveResourcesRequest",
+            "desc": "The request to remove resources from the resource view.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "resources",
+                    "desc": "The list of resources to be removed.",
+                    "collection": "array",
+                    "type": "string"
+                }
+            ]
         }
     ],
     "resources": [
         {
             "name": "regionViews",
             "methods": [
-                {
-                    "name": "addresources",
-                    "desc": "Add resources to the view.",
-                    "path": "{projectName}/regions/{region}/resourceViews/{resourceViewName}/addResources",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform",
-                        "https://www.googleapis.com/auth/compute",
-                        "https://www.googleapis.com/auth/ndev.cloudman"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "projectName",
-                            "desc": "The project name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "region",
-                            "desc": "The region name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "resourceViewName",
-                            "desc": "The name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "request": "RegionViewsAddResourcesRequest"
-                },
-                {
-                    "name": "delete",
-                    "desc": "Delete a resource view.",
-                    "path": "{projectName}/regions/{region}/resourceViews/{resourceViewName}",
-                    "httpMethod": "DELETE",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform",
-                        "https://www.googleapis.com/auth/compute",
-                        "https://www.googleapis.com/auth/ndev.cloudman"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "projectName",
-                            "desc": "The project name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "region",
-                            "desc": "The region name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "resourceViewName",
-                            "desc": "The name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ]
-                },
                 {
                     "name": "get",
                     "desc": "Get the information of a resource view.",
@@ -554,12 +491,189 @@
                         }
                     ],
                     "request": "RegionViewsRemoveResourcesRequest"
+                },
+                {
+                    "name": "addresources",
+                    "desc": "Add resources to the view.",
+                    "path": "{projectName}/regions/{region}/resourceViews/{resourceViewName}/addResources",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/compute",
+                        "https://www.googleapis.com/auth/ndev.cloudman"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "projectName",
+                            "desc": "The project name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "region",
+                            "desc": "The region name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "resourceViewName",
+                            "desc": "The name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "RegionViewsAddResourcesRequest"
+                },
+                {
+                    "name": "delete",
+                    "desc": "Delete a resource view.",
+                    "path": "{projectName}/regions/{region}/resourceViews/{resourceViewName}",
+                    "httpMethod": "DELETE",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/compute",
+                        "https://www.googleapis.com/auth/ndev.cloudman"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "projectName",
+                            "desc": "The project name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "region",
+                            "desc": "The region name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "resourceViewName",
+                            "desc": "The name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ]
                 }
             ]
         },
         {
             "name": "zoneViews",
             "methods": [
+                {
+                    "name": "listresources",
+                    "desc": "List the resources of the resource view.",
+                    "path": "{projectName}/zones/{zone}/resourceViews/{resourceViewName}/resources",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/cloud-platform.read-only",
+                        "https://www.googleapis.com/auth/compute",
+                        "https://www.googleapis.com/auth/compute.readonly",
+                        "https://www.googleapis.com/auth/ndev.cloudman",
+                        "https://www.googleapis.com/auth/ndev.cloudman.readonly"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "projectName",
+                            "desc": "The project name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "zone",
+                            "desc": "The zone name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "resourceViewName",
+                            "desc": "The name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "maxResults",
+                            "desc": "Maximum count of results to be returned. Acceptable values are 0 to 5000, inclusive. (Default: 5000)",
+                            "type": "int32",
+                            "default": "5000",
+                            "min": "0",
+                            "max": "5000"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "Specifies a nextPageToken returned by a previous list request. This token can be used to request the next page of results from a previous list request.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "ZoneViewsListResourcesResponse"
+                },
+                {
+                    "name": "removeresources",
+                    "desc": "Remove resources from the view.",
+                    "path": "{projectName}/zones/{zone}/resourceViews/{resourceViewName}/removeResources",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/compute",
+                        "https://www.googleapis.com/auth/ndev.cloudman"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "projectName",
+                            "desc": "The project name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "zone",
+                            "desc": "The zone name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "resourceViewName",
+                            "desc": "The name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "ZoneViewsRemoveResourcesRequest"
+                },
+                {
+                    "name": "addresources",
+                    "desc": "Add resources to the view.",
+                    "path": "{projectName}/zones/{zone}/resourceViews/{resourceViewName}/addResources",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/compute",
+                        "https://www.googleapis.com/auth/ndev.cloudman"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "projectName",
+                            "desc": "The project name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "zone",
+                            "desc": "The zone name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "resourceViewName",
+                            "desc": "The name of the resource view.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "ZoneViewsAddResourcesRequest"
+                },
                 {
                     "name": "delete",
                     "desc": "Delete a resource view.",
@@ -696,120 +810,6 @@
                         }
                     ],
                     "response": "ZoneViewsListResponse"
-                },
-                {
-                    "name": "listresources",
-                    "desc": "List the resources of the resource view.",
-                    "path": "{projectName}/zones/{zone}/resourceViews/{resourceViewName}/resources",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform",
-                        "https://www.googleapis.com/auth/cloud-platform.read-only",
-                        "https://www.googleapis.com/auth/compute",
-                        "https://www.googleapis.com/auth/compute.readonly",
-                        "https://www.googleapis.com/auth/ndev.cloudman",
-                        "https://www.googleapis.com/auth/ndev.cloudman.readonly"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "projectName",
-                            "desc": "The project name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "zone",
-                            "desc": "The zone name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "resourceViewName",
-                            "desc": "The name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "maxResults",
-                            "desc": "Maximum count of results to be returned. Acceptable values are 0 to 5000, inclusive. (Default: 5000)",
-                            "type": "int32",
-                            "default": "5000",
-                            "min": "0",
-                            "max": "5000"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "Specifies a nextPageToken returned by a previous list request. This token can be used to request the next page of results from a previous list request.",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "ZoneViewsListResourcesResponse"
-                },
-                {
-                    "name": "removeresources",
-                    "desc": "Remove resources from the view.",
-                    "path": "{projectName}/zones/{zone}/resourceViews/{resourceViewName}/removeResources",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform",
-                        "https://www.googleapis.com/auth/compute",
-                        "https://www.googleapis.com/auth/ndev.cloudman"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "projectName",
-                            "desc": "The project name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "zone",
-                            "desc": "The zone name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "resourceViewName",
-                            "desc": "The name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "request": "ZoneViewsRemoveResourcesRequest"
-                },
-                {
-                    "name": "addresources",
-                    "desc": "Add resources to the view.",
-                    "path": "{projectName}/zones/{zone}/resourceViews/{resourceViewName}/addResources",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform",
-                        "https://www.googleapis.com/auth/compute",
-                        "https://www.googleapis.com/auth/ndev.cloudman"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "projectName",
-                            "desc": "The project name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "zone",
-                            "desc": "The zone name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "resourceViewName",
-                            "desc": "The name of the resource view.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "request": "ZoneViewsAddResourcesRequest"
                 }
             ]
         }

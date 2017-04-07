@@ -17,22 +17,6 @@
     },
     "parameters": [
         {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
-            "type": "string"
-        },
-        {
-            "name": "userIp",
-            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
-            "type": "string"
-        },
-        {
             "name": "alt",
             "desc": "Data format for the response.",
             "type": "string",
@@ -58,6 +42,22 @@
             "name": "oauth_token",
             "desc": "OAuth 2.0 token for the current user.",
             "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
         }
     ],
     "schemas": [
@@ -65,6 +65,18 @@
             "name": "AnalyticsSnapshot",
             "type": "object",
             "fields": [
+                {
+                    "name": "referrers",
+                    "desc": "Top referring hosts, e.g. \"www.google.com\"; sorted by (descending) click counts. Only present if this data is available.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "StringCount"
+                },
+                {
+                    "name": "shortUrlClicks",
+                    "desc": "Number of clicks on this short URL.",
+                    "type": "int64"
+                },
                 {
                     "name": "browsers",
                     "desc": "Top browsers, e.g. \"Chrome\"; sorted by (descending) click counts. Only present if this data is available.",
@@ -90,18 +102,6 @@
                     "collection": "array",
                     "type": "ref",
                     "refType": "StringCount"
-                },
-                {
-                    "name": "referrers",
-                    "desc": "Top referring hosts, e.g. \"www.google.com\"; sorted by (descending) click counts. Only present if this data is available.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "StringCount"
-                },
-                {
-                    "name": "shortUrlClicks",
-                    "desc": "Number of clicks on this short URL.",
-                    "type": "int64"
                 }
             ]
         },
@@ -109,18 +109,6 @@
             "name": "AnalyticsSummary",
             "type": "object",
             "fields": [
-                {
-                    "name": "twoHours",
-                    "desc": "Click analytics over the last two hours.",
-                    "type": "ref",
-                    "refType": "AnalyticsSnapshot"
-                },
-                {
-                    "name": "week",
-                    "desc": "Click analytics over the last week.",
-                    "type": "ref",
-                    "refType": "AnalyticsSnapshot"
-                },
                 {
                     "name": "allTime",
                     "desc": "Click analytics over all time.",
@@ -138,6 +126,18 @@
                     "desc": "Click analytics over the last month.",
                     "type": "ref",
                     "refType": "AnalyticsSnapshot"
+                },
+                {
+                    "name": "twoHours",
+                    "desc": "Click analytics over the last two hours.",
+                    "type": "ref",
+                    "refType": "AnalyticsSnapshot"
+                },
+                {
+                    "name": "week",
+                    "desc": "Click analytics over the last week.",
+                    "type": "ref",
+                    "refType": "AnalyticsSnapshot"
                 }
             ]
         },
@@ -146,14 +146,14 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "id",
-                    "desc": "Label assigned to this top entry, e.g. \"US\" or \"Chrome\".",
-                    "type": "string"
-                },
-                {
                     "name": "count",
                     "desc": "Number of clicks for this top entry, e.g. for this particular country or browser.",
                     "type": "int64"
+                },
+                {
+                    "name": "id",
+                    "desc": "Label assigned to this top entry, e.g. \"US\" or \"Chrome\".",
+                    "type": "string"
                 }
             ]
         },
@@ -161,11 +161,6 @@
             "name": "Url",
             "type": "object",
             "fields": [
-                {
-                    "name": "status",
-                    "desc": "Status of the target URL. Possible values: \"OK\", \"MALWARE\", \"PHISHING\", or \"REMOVED\". A URL might be marked \"REMOVED\" if it was flagged as spam, for example.",
-                    "type": "string"
-                },
                 {
                     "name": "analytics",
                     "desc": "A summary of the click analytics for the short and long URL. Might not be present if not requested or currently unavailable.",
@@ -192,6 +187,11 @@
                     "name": "longUrl",
                     "desc": "Long URL, e.g. \"http://www.google.com/\". Might not be present if the status is \"REMOVED\".",
                     "type": "string"
+                },
+                {
+                    "name": "status",
+                    "desc": "Status of the target URL. Possible values: \"OK\", \"MALWARE\", \"PHISHING\", or \"REMOVED\". A URL might be marked \"REMOVED\" if it was flagged as spam, for example.",
+                    "type": "string"
                 }
             ]
         },
@@ -199,6 +199,18 @@
             "name": "UrlHistory",
             "type": "object",
             "fields": [
+                {
+                    "name": "items",
+                    "desc": "A list of URL resources.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Url"
+                },
+                {
+                    "name": "itemsPerPage",
+                    "desc": "Number of items returned with each full \"page\" of results. Note that the last page could have fewer items than the \"itemsPerPage\" value.",
+                    "type": "int32"
+                },
                 {
                     "name": "kind",
                     "desc": "The fixed string \"urlshortener#urlHistory\".",
@@ -213,18 +225,6 @@
                 {
                     "name": "totalItems",
                     "desc": "Total number of short URLs associated with this user (may be approximate).",
-                    "type": "int32"
-                },
-                {
-                    "name": "items",
-                    "desc": "A list of URL resources.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Url"
-                },
-                {
-                    "name": "itemsPerPage",
-                    "desc": "Number of items returned with each full \"page\" of results. Note that the last page could have fewer items than the \"itemsPerPage\" value.",
                     "type": "int32"
                 }
             ]

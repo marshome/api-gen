@@ -12,13 +12,23 @@
     "rootUrl": "https://www.googleapis.com/",
     "auth": {
         "oauth2": [
-            "https://www.googleapis.com/auth/devstorage.read_write",
-            "https://www.googleapis.com/auth/prediction",
             "https://www.googleapis.com/auth/devstorage.full_control",
-            "https://www.googleapis.com/auth/devstorage.read_only"
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/devstorage.read_write",
+            "https://www.googleapis.com/auth/prediction"
         ]
     },
     "parameters": [
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
         {
             "name": "oauth_token",
             "desc": "OAuth 2.0 token for the current user.",
@@ -51,111 +61,18 @@
                     "desc": "Responses with Content-Type of application/json"
                 }
             ]
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
-        },
-        {
-            "name": "key",
-            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
-            "type": "string"
         }
     ],
     "schemas": [
-        {
-            "name": "Output",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "selfLink",
-                    "desc": "A URL to re-request this resource.",
-                    "type": "string"
-                },
-                {
-                    "name": "id",
-                    "desc": "The unique name for the predictive model.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "What kind of resource this is.",
-                    "type": "string",
-                    "default": "prediction#output"
-                },
-                {
-                    "name": "outputLabel",
-                    "desc": "The most likely class label [Categorical models only].",
-                    "type": "string"
-                },
-                {
-                    "name": "outputMulti",
-                    "desc": "A list of class labels with their estimated probabilities [Categorical models only].",
-                    "collection": "array",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "label",
-                            "desc": "The class label.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "score",
-                            "desc": "The probability of the class label.",
-                            "type": "float64"
-                        }
-                    ]
-                },
-                {
-                    "name": "outputValue",
-                    "desc": "The estimated regression value [Regression models only].",
-                    "type": "float64"
-                }
-            ]
-        },
         {
             "name": "Training",
             "type": "object",
             "fields": [
                 {
-                    "name": "dataAnalysis",
-                    "desc": "Data Analysis.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "warnings",
-                            "collection": "array",
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "storageDataLocation",
-                    "desc": "Google storage location of the training data file.",
-                    "type": "string"
-                },
-                {
                     "name": "modelInfo",
                     "desc": "Model metadata.",
                     "type": "object",
                     "fields": [
-                        {
-                            "name": "confusionMatrixRowTotals",
-                            "desc": "A list of the confusion matrix row totals",
-                            "collection": "map",
-                            "type": "float64"
-                        },
-                        {
-                            "name": "meanSquaredError",
-                            "desc": "An estimated mean squared error. The can be used to measure the quality of the predicted model [Regression models only].",
-                            "type": "float64"
-                        },
-                        {
-                            "name": "modelType",
-                            "desc": "Type of predictive model (CLASSIFICATION or REGRESSION)",
-                            "type": "string"
-                        },
                         {
                             "name": "numberInstances",
                             "desc": "Number of valid data instances used in the trained model.",
@@ -184,13 +101,34 @@
                                 "collection": "map",
                                 "type": "float64"
                             }
+                        },
+                        {
+                            "name": "confusionMatrixRowTotals",
+                            "desc": "A list of the confusion matrix row totals",
+                            "collection": "map",
+                            "type": "float64"
+                        },
+                        {
+                            "name": "meanSquaredError",
+                            "desc": "An estimated mean squared error. The can be used to measure the quality of the predicted model [Regression models only].",
+                            "type": "float64"
+                        },
+                        {
+                            "name": "modelType",
+                            "desc": "Type of predictive model (CLASSIFICATION or REGRESSION)",
+                            "type": "string"
                         }
                     ]
                 },
                 {
-                    "name": "selfLink",
-                    "desc": "A URL to re-request this resource.",
-                    "type": "string"
+                    "name": "utility",
+                    "desc": "A class weighting function, which allows the importance weights for class labels to be specified [Categorical models only].",
+                    "collection": "array",
+                    "collectionItem": {
+                        "desc": "Class label (string).",
+                        "collection": "map",
+                        "type": "float64"
+                    }
                 },
                 {
                     "name": "storagePMMLLocation",
@@ -208,14 +146,16 @@
                     "type": "string"
                 },
                 {
-                    "name": "utility",
-                    "desc": "A class weighting function, which allows the importance weights for class labels to be specified [Categorical models only].",
-                    "collection": "array",
-                    "collectionItem": {
-                        "desc": "Class label (string).",
-                        "collection": "map",
-                        "type": "float64"
-                    }
+                    "name": "dataAnalysis",
+                    "desc": "Data Analysis.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "warnings",
+                            "collection": "array",
+                            "type": "string"
+                        }
+                    ]
                 },
                 {
                     "name": "id",
@@ -227,6 +167,16 @@
                     "desc": "What kind of resource this is.",
                     "type": "string",
                     "default": "prediction#training"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "A URL to re-request this resource.",
+                    "type": "string"
+                },
+                {
+                    "name": "storageDataLocation",
+                    "desc": "Google storage location of the training data file.",
+                    "type": "string"
                 }
             ]
         },
@@ -270,6 +220,56 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "Output",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "The unique name for the predictive model.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "What kind of resource this is.",
+                    "type": "string",
+                    "default": "prediction#output"
+                },
+                {
+                    "name": "outputLabel",
+                    "desc": "The most likely class label [Categorical models only].",
+                    "type": "string"
+                },
+                {
+                    "name": "outputMulti",
+                    "desc": "A list of class labels with their estimated probabilities [Categorical models only].",
+                    "collection": "array",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "label",
+                            "desc": "The class label.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "score",
+                            "desc": "The probability of the class label.",
+                            "type": "float64"
+                        }
+                    ]
+                },
+                {
+                    "name": "outputValue",
+                    "desc": "The estimated regression value [Regression models only].",
+                    "type": "float64"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "A URL to re-request this resource.",
+                    "type": "string"
+                }
+            ]
         }
     ],
     "resources": [
@@ -300,39 +300,6 @@
         {
             "name": "trainedmodels",
             "methods": [
-                {
-                    "name": "insert",
-                    "desc": "Begin training your model.",
-                    "path": "trainedmodels",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/devstorage.full_control",
-                        "https://www.googleapis.com/auth/devstorage.read_only",
-                        "https://www.googleapis.com/auth/devstorage.read_write",
-                        "https://www.googleapis.com/auth/prediction"
-                    ],
-                    "request": "Training",
-                    "response": "Training"
-                },
-                {
-                    "name": "predict",
-                    "desc": "Submit model id and request a prediction",
-                    "path": "trainedmodels/{id}/predict",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/prediction"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "id",
-                            "desc": "The unique name for the predictive model.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "request": "Input",
-                    "response": "Output"
-                },
                 {
                     "name": "update",
                     "desc": "Add new data to a trained model.",
@@ -386,6 +353,39 @@
                         }
                     ],
                     "response": "Training"
+                },
+                {
+                    "name": "insert",
+                    "desc": "Begin training your model.",
+                    "path": "trainedmodels",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_only",
+                        "https://www.googleapis.com/auth/devstorage.read_write",
+                        "https://www.googleapis.com/auth/prediction"
+                    ],
+                    "request": "Training",
+                    "response": "Training"
+                },
+                {
+                    "name": "predict",
+                    "desc": "Submit model id and request a prediction",
+                    "path": "trainedmodels/{id}/predict",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/prediction"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "id",
+                            "desc": "The unique name for the predictive model.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "Input",
+                    "response": "Output"
                 }
             ]
         }

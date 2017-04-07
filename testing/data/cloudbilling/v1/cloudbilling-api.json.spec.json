@@ -17,6 +17,58 @@
     },
     "parameters": [
         {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        },
+        {
+            "name": "uploadType",
+            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
             "name": "alt",
             "desc": "Data format for response.",
             "type": "string",
@@ -37,26 +89,6 @@
             ]
         },
         {
-            "name": "callback",
-            "desc": "JSONP",
-            "type": "string"
-        },
-        {
-            "name": "uploadType",
-            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
-            "type": "string"
-        },
-        {
-            "name": "upload_protocol",
-            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
-            "type": "string"
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
-        },
-        {
             "name": "$.xgafv",
             "desc": "V1 error format.",
             "type": "string",
@@ -72,40 +104,8 @@
             ]
         },
         {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
-        {
-            "name": "access_token",
-            "desc": "OAuth access token.",
-            "type": "string"
-        },
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "key",
-            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
-            "type": "string"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
-            "type": "string"
-        },
-        {
-            "name": "pp",
-            "desc": "Pretty-print response.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "bearer_token",
-            "desc": "OAuth bearer token.",
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
             "type": "string"
         }
     ],
@@ -115,6 +115,11 @@
             "desc": "Encapsulation of billing information for a Cloud Console project. A project\nhas at most one associated billing account at a time (but a billing account\ncan be assigned to multiple projects).",
             "type": "object",
             "fields": [
+                {
+                    "name": "projectId",
+                    "desc": "The ID of the project that this `ProjectBillingInfo` represents, such as\n`tokyo-rain-123`. This is a convenience field so that you don't need to\nparse the `name` field to obtain a project ID. This field is read-only.",
+                    "type": "string"
+                },
                 {
                     "name": "billingAccountName",
                     "desc": "The resource name of the billing account associated with the project, if\nany. For example, `billingAccounts/012345-567890-ABCDEF`.",
@@ -129,11 +134,6 @@
                     "name": "name",
                     "desc": "The resource name for the `ProjectBillingInfo`; has the form\n`projects/{project_id}/billingInfo`. For example, the resource name for the\nbilling information for project `tokyo-rain-123` would be\n`projects/tokyo-rain-123/billingInfo`. This field is read-only.",
                     "type": "string"
-                },
-                {
-                    "name": "projectId",
-                    "desc": "The ID of the project that this `ProjectBillingInfo` represents, such as\n`tokyo-rain-123`. This is a convenience field so that you don't need to\nparse the `name` field to obtain a project ID. This field is read-only.",
-                    "type": "string"
                 }
             ]
         },
@@ -143,16 +143,16 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "nextPageToken",
+                    "desc": "A token to retrieve the next page of results. To retrieve the next page,\ncall `ListProjectBillingInfo` again with the `page_token` field set to this\nvalue. This field is empty if there are no more results to retrieve.",
+                    "type": "string"
+                },
+                {
                     "name": "projectBillingInfo",
                     "desc": "A list of `ProjectBillingInfo` resources representing the projects\nassociated with the billing account.",
                     "collection": "array",
                     "type": "ref",
                     "refType": "ProjectBillingInfo"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "A token to retrieve the next page of results. To retrieve the next page,\ncall `ListProjectBillingInfo` again with the `page_token` field set to this\nvalue. This field is empty if there are no more results to retrieve.",
-                    "type": "string"
                 }
             ]
         },
@@ -181,6 +181,11 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "open",
+                    "desc": "True if the billing account is open, and will therefore be charged for any\nusage on associated projects. False if the billing account is closed, and\ntherefore projects associated with it will be unable to use paid services.",
+                    "type": "bool"
+                },
+                {
                     "name": "name",
                     "desc": "The resource name of the billing account. The resource name has the form\n`billingAccounts/{billing_account_id}`. For example,\n`billingAccounts/012345-567890-ABCDEF` would be the resource name for\nbilling account `012345-567890-ABCDEF`.",
                     "type": "string"
@@ -189,11 +194,6 @@
                     "name": "displayName",
                     "desc": "The display name given to the billing account, such as `My Billing\nAccount`. This name is displayed in the Google Cloud Console.",
                     "type": "string"
-                },
-                {
-                    "name": "open",
-                    "desc": "True if the billing account is open, and will therefore be charged for any\nusage on associated projects. False if the billing account is closed, and\ntherefore projects associated with it will be unable to use paid services.",
-                    "type": "bool"
                 }
             ]
         }

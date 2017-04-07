@@ -20,17 +20,6 @@
     },
     "parameters": [
         {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
-            "type": "string"
-        },
-        {
             "name": "userIp",
             "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
             "type": "string"
@@ -60,6 +49,17 @@
         {
             "name": "oauth_token",
             "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
             "type": "string"
         }
     ],
@@ -128,6 +128,10 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "trainingStatus",
+                    "type": "string"
+                },
+                {
                     "name": "id",
                     "type": "string"
                 },
@@ -141,25 +145,21 @@
                     "type": "object",
                     "fields": [
                         {
-                            "name": "modelType",
-                            "type": "string"
-                        },
-                        {
                             "name": "classificationAccuracy",
                             "type": "float64"
                         },
                         {
                             "name": "meanSquaredError",
                             "type": "float64"
+                        },
+                        {
+                            "name": "modelType",
+                            "type": "string"
                         }
                     ]
                 },
                 {
                     "name": "selfLink",
-                    "type": "string"
-                },
-                {
-                    "name": "trainingStatus",
                     "type": "string"
                 }
             ]
@@ -169,23 +169,82 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "classLabel",
-                    "desc": "The true class label of this instance",
-                    "type": "string"
-                },
-                {
                     "name": "csvInstance",
                     "desc": "The input features for this instance",
                     "collection": "array",
                     "type": "any"
+                },
+                {
+                    "name": "classLabel",
+                    "desc": "The true class label of this instance",
+                    "type": "string"
                 }
             ]
         }
     ],
     "resources": [
         {
+            "name": "hostedmodels",
+            "methods": [
+                {
+                    "name": "predict",
+                    "desc": "Submit input and request an output against a hosted model",
+                    "path": "hostedmodels/{hostedModelName}/predict",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/prediction"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "hostedModelName",
+                            "desc": "The name of a hosted model",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "Input",
+                    "response": "Output"
+                }
+            ]
+        },
+        {
             "name": "training",
             "methods": [
+                {
+                    "name": "delete",
+                    "desc": "Delete a trained model",
+                    "path": "training/{data}",
+                    "httpMethod": "DELETE",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/prediction"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "data",
+                            "desc": "mybucket/mydata resource in Google Storage",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "get",
+                    "desc": "Check training status of your model",
+                    "path": "training/{data}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/prediction"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "data",
+                            "desc": "mybucket/mydata resource in Google Storage",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "Training"
+                },
                 {
                     "name": "insert",
                     "desc": "Begin training your model",
@@ -225,65 +284,6 @@
                     ],
                     "request": "Update",
                     "response": "Training"
-                },
-                {
-                    "name": "delete",
-                    "desc": "Delete a trained model",
-                    "path": "training/{data}",
-                    "httpMethod": "DELETE",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/prediction"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "data",
-                            "desc": "mybucket/mydata resource in Google Storage",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "get",
-                    "desc": "Check training status of your model",
-                    "path": "training/{data}",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/prediction"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "data",
-                            "desc": "mybucket/mydata resource in Google Storage",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "response": "Training"
-                }
-            ]
-        },
-        {
-            "name": "hostedmodels",
-            "methods": [
-                {
-                    "name": "predict",
-                    "desc": "Submit input and request an output against a hosted model",
-                    "path": "hostedmodels/{hostedModelName}/predict",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/prediction"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "hostedModelName",
-                            "desc": "The name of a hosted model",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "request": "Input",
-                    "response": "Output"
                 }
             ]
         }

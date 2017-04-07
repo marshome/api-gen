@@ -20,6 +20,11 @@
     },
     "parameters": [
         {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        },
+        {
             "name": "alt",
             "desc": "Data format for the response.",
             "type": "string",
@@ -56,11 +61,6 @@
             "name": "quotaUser",
             "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
             "type": "string"
-        },
-        {
-            "name": "userIp",
-            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
-            "type": "string"
         }
     ],
     "schemas": [
@@ -68,6 +68,31 @@
             "name": "Blog",
             "type": "object",
             "fields": [
+                {
+                    "name": "url",
+                    "desc": "The URL where this blog is published.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "The identifier for this resource.",
+                    "type": "int64"
+                },
+                {
+                    "name": "name",
+                    "desc": "The name of this blog. This is displayed as the title.",
+                    "type": "string"
+                },
+                {
+                    "name": "published",
+                    "desc": "RFC 3339 date-time when this blog was published.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "The API REST URL to fetch this resource from.",
+                    "type": "string"
+                },
                 {
                     "name": "posts",
                     "desc": "The container of posts in this blog.",
@@ -86,19 +111,14 @@
                     ]
                 },
                 {
-                    "name": "published",
-                    "desc": "RFC 3339 date-time when this blog was published.",
+                    "name": "updated",
+                    "desc": "RFC 3339 date-time when this blog was last updated.",
                     "type": "datetime"
                 },
                 {
                     "name": "description",
                     "desc": "The description of this blog. This is displayed underneath the title.",
                     "type": "string"
-                },
-                {
-                    "name": "id",
-                    "desc": "The identifier for this resource.",
-                    "type": "int64"
                 },
                 {
                     "name": "kind",
@@ -129,11 +149,6 @@
                     ]
                 },
                 {
-                    "name": "name",
-                    "desc": "The name of this blog. This is displayed as the title.",
-                    "type": "string"
-                },
-                {
                     "name": "pages",
                     "desc": "The container of pages in this blog.",
                     "type": "object",
@@ -149,40 +164,6 @@
                             "type": "int32"
                         }
                     ]
-                },
-                {
-                    "name": "selfLink",
-                    "desc": "The API REST URL to fetch this resource from.",
-                    "type": "string"
-                },
-                {
-                    "name": "updated",
-                    "desc": "RFC 3339 date-time when this blog was last updated.",
-                    "type": "datetime"
-                },
-                {
-                    "name": "url",
-                    "desc": "The URL where this blog is published.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "BlogList",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "items",
-                    "desc": "The list of Blogs this user has Authorship or Admin rights over.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Blog"
-                },
-                {
-                    "name": "kind",
-                    "desc": "The kind of this entity. Always blogger#blogList",
-                    "type": "string",
-                    "default": "blogger#blogList"
                 }
             ]
         },
@@ -191,9 +172,44 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "blog",
+                    "desc": "Data about the blog containing this comment.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "desc": "The identifier of the blog containing this comment.",
+                            "type": "int64"
+                        }
+                    ]
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of this entry. Always blogger#comment",
+                    "type": "string",
+                    "default": "blogger#comment"
+                },
+                {
+                    "name": "post",
+                    "desc": "Data about the post containing this comment.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "desc": "The identifier of the post containing this comment.",
+                            "type": "int64"
+                        }
+                    ]
+                },
+                {
                     "name": "selfLink",
                     "desc": "The API REST URL to fetch this resource from.",
                     "type": "string"
+                },
+                {
+                    "name": "updated",
+                    "desc": "RFC 3339 date-time when this comment was last updated.",
+                    "type": "datetime"
                 },
                 {
                     "name": "author",
@@ -240,35 +256,6 @@
                     "type": "int64"
                 },
                 {
-                    "name": "post",
-                    "desc": "Data about the post containing this comment.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "id",
-                            "desc": "The identifier of the post containing this comment.",
-                            "type": "int64"
-                        }
-                    ]
-                },
-                {
-                    "name": "published",
-                    "desc": "RFC 3339 date-time when this comment was published.",
-                    "type": "datetime"
-                },
-                {
-                    "name": "blog",
-                    "desc": "Data about the blog containing this comment.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "id",
-                            "desc": "The identifier of the blog containing this comment.",
-                            "type": "int64"
-                        }
-                    ]
-                },
-                {
                     "name": "inReplyTo",
                     "desc": "Data about the comment this is in reply to.",
                     "type": "object",
@@ -281,253 +268,9 @@
                     ]
                 },
                 {
-                    "name": "kind",
-                    "desc": "The kind of this entry. Always blogger#comment",
-                    "type": "string",
-                    "default": "blogger#comment"
-                },
-                {
-                    "name": "updated",
-                    "desc": "RFC 3339 date-time when this comment was last updated.",
-                    "type": "datetime"
-                }
-            ]
-        },
-        {
-            "name": "Page",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "author",
-                    "desc": "The author of this Page.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "displayName",
-                            "desc": "The display name.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "id",
-                            "desc": "The identifier of the Page creator.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "image",
-                            "desc": "The page author's avatar.",
-                            "type": "object",
-                            "fields": [
-                                {
-                                    "name": "url",
-                                    "desc": "The page author's avatar URL.",
-                                    "type": "string"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "url",
-                            "desc": "The URL of the Page creator's Profile page.",
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "blog",
-                    "desc": "Data about the blog containing this Page.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "id",
-                            "desc": "The identifier of the blog containing this page.",
-                            "type": "int64"
-                        }
-                    ]
-                },
-                {
-                    "name": "title",
-                    "desc": "The title of this entity. This is the name displayed in the Admin user interface.",
-                    "type": "string"
-                },
-                {
-                    "name": "url",
-                    "desc": "The URL that this Page is displayed at.",
-                    "type": "string"
-                },
-                {
-                    "name": "content",
-                    "desc": "The body content of this Page, in HTML.",
-                    "type": "string"
-                },
-                {
-                    "name": "id",
-                    "desc": "The identifier for this resource.",
-                    "type": "int64"
-                },
-                {
-                    "name": "kind",
-                    "desc": "The kind of this entity. Always blogger#page",
-                    "type": "string",
-                    "default": "blogger#page"
-                },
-                {
                     "name": "published",
-                    "desc": "RFC 3339 date-time when this Page was published.",
+                    "desc": "RFC 3339 date-time when this comment was published.",
                     "type": "datetime"
-                },
-                {
-                    "name": "selfLink",
-                    "desc": "The API REST URL to fetch this resource from.",
-                    "type": "string"
-                },
-                {
-                    "name": "updated",
-                    "desc": "RFC 3339 date-time when this Page was last updated.",
-                    "type": "datetime"
-                }
-            ]
-        },
-        {
-            "name": "Post",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "selfLink",
-                    "desc": "The API REST URL to fetch this resource from.",
-                    "type": "string"
-                },
-                {
-                    "name": "title",
-                    "desc": "The title of the Post.",
-                    "type": "string"
-                },
-                {
-                    "name": "author",
-                    "desc": "The author of this Post.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "displayName",
-                            "desc": "The display name.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "id",
-                            "desc": "The identifier of the Post creator.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "image",
-                            "desc": "The Post author's avatar.",
-                            "type": "object",
-                            "fields": [
-                                {
-                                    "name": "url",
-                                    "desc": "The Post author's avatar URL.",
-                                    "type": "string"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "url",
-                            "desc": "The URL of the Post creator's Profile page.",
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "blog",
-                    "desc": "Data about the blog containing this Post.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "id",
-                            "desc": "The identifier of the Blog that contains this Post.",
-                            "type": "int64"
-                        }
-                    ]
-                },
-                {
-                    "name": "id",
-                    "desc": "The identifier of this Post.",
-                    "type": "int64"
-                },
-                {
-                    "name": "kind",
-                    "desc": "The kind of this entity. Always blogger#post",
-                    "type": "string",
-                    "default": "blogger#post"
-                },
-                {
-                    "name": "published",
-                    "desc": "RFC 3339 date-time when this Post was published.",
-                    "type": "datetime"
-                },
-                {
-                    "name": "content",
-                    "desc": "The content of the Post. May contain HTML markup.",
-                    "type": "string"
-                },
-                {
-                    "name": "labels",
-                    "desc": "The list of labels this Post was tagged with.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "replies",
-                    "desc": "The container of comments on this Post.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "totalItems",
-                            "desc": "The count of comments on this post.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "selfLink",
-                            "desc": "The URL of the comments on this post.",
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "updated",
-                    "desc": "RFC 3339 date-time when this Post was last updated.",
-                    "type": "datetime"
-                },
-                {
-                    "name": "url",
-                    "desc": "The URL where this Post is displayed.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "PostList",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "nextPageToken",
-                    "desc": "Pagination token to fetch the next page, if one exists.",
-                    "type": "string"
-                },
-                {
-                    "name": "prevPageToken",
-                    "desc": "Pagination token to fetch the previous page, if one exists.",
-                    "type": "string"
-                },
-                {
-                    "name": "items",
-                    "desc": "The list of Posts for this Blog.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Post"
-                },
-                {
-                    "name": "kind",
-                    "desc": "The kind of this entity. Always blogger#postList",
-                    "type": "string",
-                    "default": "blogger#postList"
                 }
             ]
         },
@@ -561,6 +304,99 @@
             ]
         },
         {
+            "name": "Page",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "published",
+                    "desc": "RFC 3339 date-time when this Page was published.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "content",
+                    "desc": "The body content of this Page, in HTML.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "The identifier for this resource.",
+                    "type": "int64"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of this entity. Always blogger#page",
+                    "type": "string",
+                    "default": "blogger#page"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "The API REST URL to fetch this resource from.",
+                    "type": "string"
+                },
+                {
+                    "name": "title",
+                    "desc": "The title of this entity. This is the name displayed in the Admin user interface.",
+                    "type": "string"
+                },
+                {
+                    "name": "updated",
+                    "desc": "RFC 3339 date-time when this Page was last updated.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "author",
+                    "desc": "The author of this Page.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "image",
+                            "desc": "The page author's avatar.",
+                            "type": "object",
+                            "fields": [
+                                {
+                                    "name": "url",
+                                    "desc": "The page author's avatar URL.",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "url",
+                            "desc": "The URL of the Page creator's Profile page.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "displayName",
+                            "desc": "The display name.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "id",
+                            "desc": "The identifier of the Page creator.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "blog",
+                    "desc": "Data about the blog containing this Page.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "desc": "The identifier of the blog containing this page.",
+                            "type": "int64"
+                        }
+                    ]
+                },
+                {
+                    "name": "url",
+                    "desc": "The URL that this Page is displayed at.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
             "name": "PageList",
             "type": "object",
             "fields": [
@@ -580,25 +416,173 @@
             ]
         },
         {
-            "name": "User",
+            "name": "Post",
             "type": "object",
             "fields": [
                 {
-                    "name": "displayName",
-                    "desc": "The display name.",
+                    "name": "id",
+                    "desc": "The identifier of this Post.",
+                    "type": "int64"
+                },
+                {
+                    "name": "published",
+                    "desc": "RFC 3339 date-time when this Post was published.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "title",
+                    "desc": "The title of the Post.",
                     "type": "string"
                 },
                 {
-                    "name": "id",
-                    "desc": "The identifier for this User.",
+                    "name": "updated",
+                    "desc": "RFC 3339 date-time when this Post was last updated.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "blog",
+                    "desc": "Data about the blog containing this Post.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "desc": "The identifier of the Blog that contains this Post.",
+                            "type": "int64"
+                        }
+                    ]
+                },
+                {
+                    "name": "content",
+                    "desc": "The content of the Post. May contain HTML markup.",
                     "type": "string"
+                },
+                {
+                    "name": "labels",
+                    "desc": "The list of labels this Post was tagged with.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "replies",
+                    "desc": "The container of comments on this Post.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "totalItems",
+                            "desc": "The count of comments on this post.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "selfLink",
+                            "desc": "The URL of the comments on this post.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "The API REST URL to fetch this resource from.",
+                    "type": "string"
+                },
+                {
+                    "name": "url",
+                    "desc": "The URL where this Post is displayed.",
+                    "type": "string"
+                },
+                {
+                    "name": "author",
+                    "desc": "The author of this Post.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "image",
+                            "desc": "The Post author's avatar.",
+                            "type": "object",
+                            "fields": [
+                                {
+                                    "name": "url",
+                                    "desc": "The Post author's avatar URL.",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "url",
+                            "desc": "The URL of the Post creator's Profile page.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "displayName",
+                            "desc": "The display name.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "id",
+                            "desc": "The identifier of the Post creator.",
+                            "type": "string"
+                        }
+                    ]
                 },
                 {
                     "name": "kind",
-                    "desc": "The kind of this entity. Always blogger#user",
+                    "desc": "The kind of this entity. Always blogger#post",
                     "type": "string",
-                    "default": "blogger#user"
+                    "default": "blogger#post"
+                }
+            ]
+        },
+        {
+            "name": "BlogList",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "items",
+                    "desc": "The list of Blogs this user has Authorship or Admin rights over.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Blog"
                 },
+                {
+                    "name": "kind",
+                    "desc": "The kind of this entity. Always blogger#blogList",
+                    "type": "string",
+                    "default": "blogger#blogList"
+                }
+            ]
+        },
+        {
+            "name": "PostList",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "items",
+                    "desc": "The list of Posts for this Blog.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Post"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of this entity. Always blogger#postList",
+                    "type": "string",
+                    "default": "blogger#postList"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Pagination token to fetch the next page, if one exists.",
+                    "type": "string"
+                },
+                {
+                    "name": "prevPageToken",
+                    "desc": "Pagination token to fetch the previous page, if one exists.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "User",
+            "type": "object",
+            "fields": [
                 {
                     "name": "locale",
                     "desc": "This user's locale",
@@ -622,16 +606,6 @@
                     ]
                 },
                 {
-                    "name": "selfLink",
-                    "desc": "The API REST URL to fetch this resource from.",
-                    "type": "string"
-                },
-                {
-                    "name": "about",
-                    "desc": "Profile summary information.",
-                    "type": "string"
-                },
-                {
                     "name": "blogs",
                     "desc": "The container of blogs for this user.",
                     "type": "object",
@@ -649,6 +623,32 @@
                     "type": "datetime"
                 },
                 {
+                    "name": "displayName",
+                    "desc": "The display name.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of this entity. Always blogger#user",
+                    "type": "string",
+                    "default": "blogger#user"
+                },
+                {
+                    "name": "about",
+                    "desc": "Profile summary information.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "The identifier for this User.",
+                    "type": "string"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "The API REST URL to fetch this resource from.",
+                    "type": "string"
+                },
+                {
                     "name": "url",
                     "desc": "The user's profile page.",
                     "type": "string"
@@ -657,29 +657,6 @@
         }
     ],
     "resources": [
-        {
-            "name": "blogs",
-            "methods": [
-                {
-                    "name": "get",
-                    "desc": "Gets one blog by id.",
-                    "path": "blogs/{blogId}",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/blogger"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "blogId",
-                            "desc": "The ID of the blog to get.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "response": "Blog"
-                }
-            ]
-        },
         {
             "name": "comments",
             "methods": [
@@ -737,11 +714,6 @@
                     ],
                     "optinalQueryParams": [
                         {
-                            "name": "maxResults",
-                            "desc": "Maximum number of comments to include in the result.",
-                            "type": "uint32"
-                        },
-                        {
                             "name": "pageToken",
                             "desc": "Continuation token if request is paged.",
                             "type": "string"
@@ -755,6 +727,11 @@
                             "name": "fetchBodies",
                             "desc": "Whether the body content of the comments is included.",
                             "type": "bool"
+                        },
+                        {
+                            "name": "maxResults",
+                            "desc": "Maximum number of comments to include in the result.",
+                            "type": "uint32"
                         }
                     ],
                     "response": "CommentList"
@@ -764,30 +741,6 @@
         {
             "name": "pages",
             "methods": [
-                {
-                    "name": "get",
-                    "desc": "Gets one blog page by id.",
-                    "path": "blogs/{blogId}/pages/{pageId}",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/blogger"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "blogId",
-                            "desc": "ID of the blog containing the page.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "pageId",
-                            "desc": "The ID of the page to get.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "response": "Page"
-                },
                 {
                     "name": "list",
                     "desc": "Retrieves pages for a blog, possibly filtered.",
@@ -812,16 +765,11 @@
                         }
                     ],
                     "response": "PageList"
-                }
-            ]
-        },
-        {
-            "name": "posts",
-            "methods": [
+                },
                 {
-                    "name": "list",
-                    "desc": "Retrieves a list of posts, possibly filtered.",
-                    "path": "blogs/{blogId}/posts",
+                    "name": "get",
+                    "desc": "Gets one blog page by id.",
+                    "path": "blogs/{blogId}/pages/{pageId}",
                     "httpMethod": "GET",
                     "scopes": [
                         "https://www.googleapis.com/auth/blogger"
@@ -829,35 +777,24 @@
                     "pathParams": [
                         {
                             "name": "blogId",
-                            "desc": "ID of the blog to fetch posts from.",
+                            "desc": "ID of the blog containing the page.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "pageId",
+                            "desc": "The ID of the page to get.",
                             "required": true,
                             "type": "string"
                         }
                     ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "fetchBodies",
-                            "desc": "Whether the body content of posts is included.",
-                            "type": "bool"
-                        },
-                        {
-                            "name": "maxResults",
-                            "desc": "Maximum number of posts to fetch.",
-                            "type": "uint32"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "Continuation token if the request is paged.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "startDate",
-                            "desc": "Earliest post date to fetch, a date-time with RFC 3339 formatting.",
-                            "type": "datetime"
-                        }
-                    ],
-                    "response": "PostList"
-                },
+                    "response": "Page"
+                }
+            ]
+        },
+        {
+            "name": "posts",
+            "methods": [
                 {
                     "name": "get",
                     "desc": "Get a post by id.",
@@ -881,6 +818,46 @@
                         }
                     ],
                     "response": "Post"
+                },
+                {
+                    "name": "list",
+                    "desc": "Retrieves a list of posts, possibly filtered.",
+                    "path": "blogs/{blogId}/posts",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/blogger"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "blogId",
+                            "desc": "ID of the blog to fetch posts from.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "pageToken",
+                            "desc": "Continuation token if the request is paged.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "startDate",
+                            "desc": "Earliest post date to fetch, a date-time with RFC 3339 formatting.",
+                            "type": "datetime"
+                        },
+                        {
+                            "name": "fetchBodies",
+                            "desc": "Whether the body content of posts is included.",
+                            "type": "bool"
+                        },
+                        {
+                            "name": "maxResults",
+                            "desc": "Maximum number of posts to fetch.",
+                            "type": "uint32"
+                        }
+                    ],
+                    "response": "PostList"
                 }
             ]
         },
@@ -929,6 +906,29 @@
                             "response": "BlogList"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "name": "blogs",
+            "methods": [
+                {
+                    "name": "get",
+                    "desc": "Gets one blog by id.",
+                    "path": "blogs/{blogId}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/blogger"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "blogId",
+                            "desc": "The ID of the blog to get.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "Blog"
                 }
             ]
         }

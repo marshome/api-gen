@@ -17,11 +17,6 @@
     },
     "parameters": [
         {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
-        {
             "name": "prettyPrint",
             "desc": "Returns response with indentations and line breaks.",
             "type": "bool",
@@ -58,80 +53,24 @@
             "name": "key",
             "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
             "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
         }
     ],
     "schemas": [
-        {
-            "name": "ListResponse",
-            "desc": "This is a JSON template to convert a list-response for app state.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "maximumKeyCount",
-                    "desc": "The maximum number of keys allowed for this user.",
-                    "type": "int32"
-                },
-                {
-                    "name": "items",
-                    "desc": "The app state data.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "GetResponse"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#listResponse.",
-                    "type": "string",
-                    "default": "appstate#listResponse"
-                }
-            ]
-        },
-        {
-            "name": "UpdateRequest",
-            "desc": "This is a JSON template for a requests which update app state",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "data",
-                    "desc": "The new app state data that your application is trying to update with.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#updateRequest.",
-                    "type": "string",
-                    "default": "appstate#updateRequest"
-                }
-            ]
-        },
-        {
-            "name": "WriteResult",
-            "desc": "This is a JSON template for an app state write result.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "currentStateVersion",
-                    "desc": "The version of the data for this key on the server.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#writeResult.",
-                    "type": "string",
-                    "default": "appstate#writeResult"
-                },
-                {
-                    "name": "stateKey",
-                    "desc": "The written key.",
-                    "type": "int32"
-                }
-            ]
-        },
         {
             "name": "GetResponse",
             "desc": "This is a JSON template for an app state resource.",
             "type": "object",
             "fields": [
+                {
+                    "name": "currentStateVersion",
+                    "desc": "The current app state version.",
+                    "type": "string"
+                },
                 {
                     "name": "data",
                     "desc": "The requested data.",
@@ -147,11 +86,72 @@
                     "name": "stateKey",
                     "desc": "The key for the data.",
                     "type": "int32"
+                }
+            ]
+        },
+        {
+            "name": "ListResponse",
+            "desc": "This is a JSON template to convert a list-response for app state.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "items",
+                    "desc": "The app state data.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "GetResponse"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#listResponse.",
+                    "type": "string",
+                    "default": "appstate#listResponse"
+                },
+                {
+                    "name": "maximumKeyCount",
+                    "desc": "The maximum number of keys allowed for this user.",
+                    "type": "int32"
+                }
+            ]
+        },
+        {
+            "name": "UpdateRequest",
+            "desc": "This is a JSON template for a requests which update app state",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#updateRequest.",
+                    "type": "string",
+                    "default": "appstate#updateRequest"
+                },
+                {
+                    "name": "data",
+                    "desc": "The new app state data that your application is trying to update with.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "WriteResult",
+            "desc": "This is a JSON template for an app state write result.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "stateKey",
+                    "desc": "The written key.",
+                    "type": "int32"
                 },
                 {
                     "name": "currentStateVersion",
-                    "desc": "The current app state version.",
+                    "desc": "The version of the data for this key on the server.",
                     "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#writeResult.",
+                    "type": "string",
+                    "default": "appstate#writeResult"
                 }
             ]
         }
@@ -160,34 +160,6 @@
         {
             "name": "states",
             "methods": [
-                {
-                    "name": "update",
-                    "desc": "Update the data associated with the input key if and only if the passed version matches the currently stored version. This method is safe in the face of concurrent writes. Maximum per-key size is 128KB.",
-                    "path": "states/{stateKey}",
-                    "httpMethod": "PUT",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/appstate"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "stateKey",
-                            "desc": "The key for the data to be retrieved.",
-                            "required": true,
-                            "type": "int32",
-                            "min": "0",
-                            "max": "3"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "currentStateVersion",
-                            "desc": "The version of the app state your application is attempting to update. If this does not match the current version, this method will return a conflict error. If there is no data stored on the server for this key, the update will succeed irrespective of the value of this parameter.",
-                            "type": "string"
-                        }
-                    ],
-                    "request": "UpdateRequest",
-                    "response": "WriteResult"
-                },
                 {
                     "name": "clear",
                     "desc": "Clears (sets to empty) the data for the passed key if and only if the passed version matches the currently stored version. This method results in a conflict error on version mismatch.",
@@ -271,6 +243,34 @@
                         }
                     ],
                     "response": "ListResponse"
+                },
+                {
+                    "name": "update",
+                    "desc": "Update the data associated with the input key if and only if the passed version matches the currently stored version. This method is safe in the face of concurrent writes. Maximum per-key size is 128KB.",
+                    "path": "states/{stateKey}",
+                    "httpMethod": "PUT",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/appstate"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "stateKey",
+                            "desc": "The key for the data to be retrieved.",
+                            "required": true,
+                            "type": "int32",
+                            "min": "0",
+                            "max": "3"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "currentStateVersion",
+                            "desc": "The version of the app state your application is attempting to update. If this does not match the current version, this method will return a conflict error. If there is no data stored on the server for this key, the update will succeed irrespective of the value of this parameter.",
+                            "type": "string"
+                        }
+                    ],
+                    "request": "UpdateRequest",
+                    "response": "WriteResult"
                 }
             ]
         }

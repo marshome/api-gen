@@ -17,22 +17,6 @@
     },
     "parameters": [
         {
-            "name": "alt",
-            "desc": "Data format for the response.",
-            "type": "string",
-            "default": "atom",
-            "enum": [
-                {
-                    "name": "atom",
-                    "desc": "Responses with Content-Type of application/atom+xml"
-                },
-                {
-                    "name": "json",
-                    "desc": "Responses with Content-Type of application/json"
-                }
-            ]
-        },
-        {
             "name": "fields",
             "desc": "Selector specifying which fields to include in a partial response.",
             "type": "string"
@@ -62,6 +46,22 @@
             "name": "userIp",
             "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
             "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "atom",
+            "enum": [
+                {
+                    "name": "atom",
+                    "desc": "Responses with Content-Type of application/atom+xml"
+                },
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
         }
     ],
     "schemas": [
@@ -71,114 +71,18 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "allowExternalMembers",
-                    "desc": "Are external members allowed to join the group.",
-                    "type": "string"
-                },
-                {
-                    "name": "primaryLanguage",
-                    "desc": "Primary language for the group.",
-                    "type": "string"
-                },
-                {
-                    "name": "whoCanViewMembership",
-                    "desc": "Permissions to view membership. Possible values are: ALL_IN_DOMAIN_CAN_VIEW ALL_MEMBERS_CAN_VIEW ALL_MANAGERS_CAN_VIEW",
-                    "type": "string"
-                },
-                {
-                    "name": "customFooterText",
-                    "desc": "Custom footer text.",
-                    "type": "string"
-                },
-                {
-                    "name": "includeCustomFooter",
-                    "desc": "Whether to include custom footer.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "The type of the resource.",
-                    "type": "string",
-                    "default": "groupsSettings#groups"
-                },
-                {
-                    "name": "membersCanPostAsTheGroup",
-                    "desc": "Can members post using the group email address.",
-                    "type": "string"
-                },
-                {
-                    "name": "whoCanLeaveGroup",
-                    "desc": "Permission to leave the group. Possible values are: ALL_MANAGERS_CAN_LEAVE ALL_MEMBERS_CAN_LEAVE NONE_CAN_LEAVE",
-                    "type": "string"
-                },
-                {
-                    "name": "whoCanViewGroup",
-                    "desc": "Permissions to view group. Possible values are: ANYONE_CAN_VIEW ALL_IN_DOMAIN_CAN_VIEW ALL_MEMBERS_CAN_VIEW ALL_MANAGERS_CAN_VIEW",
-                    "type": "string"
-                },
-                {
-                    "name": "messageDisplayFont",
-                    "desc": "Default message display font. Possible values are: DEFAULT_FONT FIXED_WIDTH_FONT",
-                    "type": "string"
-                },
-                {
-                    "name": "allowGoogleCommunication",
-                    "desc": "Is google allowed to contact admins.",
-                    "type": "string"
-                },
-                {
-                    "name": "allowWebPosting",
-                    "desc": "If posting from web is allowed.",
-                    "type": "string"
-                },
-                {
-                    "name": "defaultMessageDenyNotificationText",
-                    "desc": "Default message deny notification message",
-                    "type": "string"
-                },
-                {
-                    "name": "description",
-                    "desc": "Description of the group",
-                    "type": "string"
-                },
-                {
-                    "name": "email",
-                    "desc": "Email id of the group",
-                    "type": "string"
-                },
-                {
-                    "name": "includeInGlobalAddressList",
-                    "desc": "If this groups should be included in global address list or not.",
-                    "type": "string"
-                },
-                {
-                    "name": "maxMessageBytes",
-                    "desc": "Maximum message size allowed.",
-                    "type": "int32"
-                },
-                {
-                    "name": "replyTo",
-                    "desc": "Whome should the default reply to a message go to. Possible values are: REPLY_TO_CUSTOM REPLY_TO_SENDER REPLY_TO_LIST REPLY_TO_OWNER REPLY_TO_IGNORE REPLY_TO_MANAGERS",
-                    "type": "string"
-                },
-                {
-                    "name": "whoCanAdd",
-                    "desc": "Permissions to add members. Possible values are: ALL_MANAGERS_CAN_ADD ALL_MEMBERS_CAN_ADD NONE_CAN_ADD",
-                    "type": "string"
-                },
-                {
-                    "name": "customReplyTo",
-                    "desc": "Default email to which reply to any message should go.",
-                    "type": "string"
-                },
-                {
-                    "name": "name",
-                    "desc": "Name of the Group",
-                    "type": "string"
-                },
-                {
                     "name": "whoCanJoin",
                     "desc": "Permissions to join the group. Possible values are: ANYONE_CAN_JOIN ALL_IN_DOMAIN_CAN_JOIN INVITED_CAN_JOIN CAN_REQUEST_TO_JOIN",
+                    "type": "string"
+                },
+                {
+                    "name": "whoCanPostMessage",
+                    "desc": "Permissions to post messages to the group. Possible values are: NONE_CAN_POST ALL_MANAGERS_CAN_POST ALL_MEMBERS_CAN_POST ALL_IN_DOMAIN_CAN_POST ANYONE_CAN_POST",
+                    "type": "string"
+                },
+                {
+                    "name": "allowExternalMembers",
+                    "desc": "Are external members allowed to join the group.",
                     "type": "string"
                 },
                 {
@@ -187,8 +91,18 @@
                     "type": "string"
                 },
                 {
-                    "name": "whoCanContactOwner",
-                    "desc": "Permission to contact owner of the group via web UI. Possible values are: ANYONE_CAN_CONTACT ALL_IN_DOMAIN_CAN_CONTACT ALL_MEMBERS_CAN_CONTACT ALL_MANAGERS_CAN_CONTACT",
+                    "name": "includeCustomFooter",
+                    "desc": "Whether to include custom footer.",
+                    "type": "string"
+                },
+                {
+                    "name": "includeInGlobalAddressList",
+                    "desc": "If this groups should be included in global address list or not.",
+                    "type": "string"
+                },
+                {
+                    "name": "whoCanAdd",
+                    "desc": "Permissions to add members. Possible values are: ALL_MANAGERS_CAN_ADD ALL_MEMBERS_CAN_ADD NONE_CAN_ADD",
                     "type": "string"
                 },
                 {
@@ -202,18 +116,34 @@
                     "type": "string"
                 },
                 {
-                    "name": "sendMessageDenyNotification",
-                    "desc": "Should the member be notified if his message is denied by owner.",
+                    "name": "maxMessageBytes",
+                    "desc": "Maximum message size allowed.",
+                    "type": "int32"
+                },
+                {
+                    "name": "replyTo",
+                    "desc": "Whome should the default reply to a message go to. Possible values are: REPLY_TO_CUSTOM REPLY_TO_SENDER REPLY_TO_LIST REPLY_TO_OWNER REPLY_TO_IGNORE REPLY_TO_MANAGERS",
                     "type": "string"
                 },
                 {
-                    "name": "showInGroupDirectory",
-                    "desc": "Is the group listed in groups directory",
+                    "name": "kind",
+                    "desc": "The type of the resource.",
+                    "type": "string",
+                    "default": "groupsSettings#groups"
+                },
+                {
+                    "name": "spamModerationLevel",
+                    "desc": "Moderation level for messages detected as spam. Possible values are: ALLOW MODERATE SILENTLY_MODERATE REJECT",
                     "type": "string"
                 },
                 {
-                    "name": "whoCanPostMessage",
-                    "desc": "Permissions to post messages to the group. Possible values are: NONE_CAN_POST ALL_MANAGERS_CAN_POST ALL_MEMBERS_CAN_POST ALL_IN_DOMAIN_CAN_POST ANYONE_CAN_POST",
+                    "name": "customFooterText",
+                    "desc": "Custom footer text.",
+                    "type": "string"
+                },
+                {
+                    "name": "membersCanPostAsTheGroup",
+                    "desc": "Can members post using the group email address.",
                     "type": "string"
                 },
                 {
@@ -222,8 +152,78 @@
                     "type": "string"
                 },
                 {
-                    "name": "spamModerationLevel",
-                    "desc": "Moderation level for messages detected as spam. Possible values are: ALLOW MODERATE SILENTLY_MODERATE REJECT",
+                    "name": "whoCanContactOwner",
+                    "desc": "Permission to contact owner of the group via web UI. Possible values are: ANYONE_CAN_CONTACT ALL_IN_DOMAIN_CAN_CONTACT ALL_MEMBERS_CAN_CONTACT ALL_MANAGERS_CAN_CONTACT",
+                    "type": "string"
+                },
+                {
+                    "name": "whoCanLeaveGroup",
+                    "desc": "Permission to leave the group. Possible values are: ALL_MANAGERS_CAN_LEAVE ALL_MEMBERS_CAN_LEAVE NONE_CAN_LEAVE",
+                    "type": "string"
+                },
+                {
+                    "name": "whoCanViewMembership",
+                    "desc": "Permissions to view membership. Possible values are: ALL_IN_DOMAIN_CAN_VIEW ALL_MEMBERS_CAN_VIEW ALL_MANAGERS_CAN_VIEW",
+                    "type": "string"
+                },
+                {
+                    "name": "customReplyTo",
+                    "desc": "Default email to which reply to any message should go.",
+                    "type": "string"
+                },
+                {
+                    "name": "defaultMessageDenyNotificationText",
+                    "desc": "Default message deny notification message",
+                    "type": "string"
+                },
+                {
+                    "name": "showInGroupDirectory",
+                    "desc": "Is the group listed in groups directory",
+                    "type": "string"
+                },
+                {
+                    "name": "whoCanViewGroup",
+                    "desc": "Permissions to view group. Possible values are: ANYONE_CAN_VIEW ALL_IN_DOMAIN_CAN_VIEW ALL_MEMBERS_CAN_VIEW ALL_MANAGERS_CAN_VIEW",
+                    "type": "string"
+                },
+                {
+                    "name": "allowGoogleCommunication",
+                    "desc": "Is google allowed to contact admins.",
+                    "type": "string"
+                },
+                {
+                    "name": "allowWebPosting",
+                    "desc": "If posting from web is allowed.",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "desc": "Email id of the group",
+                    "type": "string"
+                },
+                {
+                    "name": "messageDisplayFont",
+                    "desc": "Default message display font. Possible values are: DEFAULT_FONT FIXED_WIDTH_FONT",
+                    "type": "string"
+                },
+                {
+                    "name": "name",
+                    "desc": "Name of the Group",
+                    "type": "string"
+                },
+                {
+                    "name": "description",
+                    "desc": "Description of the group",
+                    "type": "string"
+                },
+                {
+                    "name": "primaryLanguage",
+                    "desc": "Primary language for the group.",
+                    "type": "string"
+                },
+                {
+                    "name": "sendMessageDenyNotification",
+                    "desc": "Should the member be notified if his message is denied by owner.",
                     "type": "string"
                 }
             ]
@@ -233,6 +233,24 @@
         {
             "name": "groups",
             "methods": [
+                {
+                    "name": "get",
+                    "desc": "Gets one resource by id.",
+                    "path": "{groupUniqueId}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/apps.groups.settings"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "groupUniqueId",
+                            "desc": "The resource ID",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "Groups"
+                },
                 {
                     "name": "patch",
                     "desc": "Updates an existing resource. This method supports patch semantics.",
@@ -269,24 +287,6 @@
                         }
                     ],
                     "request": "Groups",
-                    "response": "Groups"
-                },
-                {
-                    "name": "get",
-                    "desc": "Gets one resource by id.",
-                    "path": "{groupUniqueId}",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/apps.groups.settings"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "groupUniqueId",
-                            "desc": "The resource ID",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
                     "response": "Groups"
                 }
             ]

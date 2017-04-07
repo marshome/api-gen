@@ -67,6 +67,11 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "developerPayload",
+                    "desc": "A developer-specified string that contains supplemental information about an order.",
+                    "type": "string"
+                },
+                {
                     "name": "kind",
                     "desc": "This kind represents an inappPurchase object in the androidpublisher service.",
                     "type": "string",
@@ -86,11 +91,6 @@
                     "name": "consumptionState",
                     "desc": "The consumption state of the inapp product. Possible values are:  \n- Yet to be consumed \n- Consumed",
                     "type": "int32"
-                },
-                {
-                    "name": "developerPayload",
-                    "desc": "A developer-specified string that contains supplemental information about an order.",
-                    "type": "string"
                 }
             ]
         },
@@ -100,16 +100,6 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "autoRenewing",
-                    "desc": "Whether the subscription will automatically be renewed when it reaches its current expiry time.",
-                    "type": "bool"
-                },
-                {
-                    "name": "initiationTimestampMsec",
-                    "desc": "Time at which the subscription was granted, in milliseconds since the Epoch.",
-                    "type": "int64"
-                },
-                {
                     "name": "kind",
                     "desc": "This kind represents a subscriptionPurchase object in the androidpublisher service.",
                     "type": "string",
@@ -118,6 +108,16 @@
                 {
                     "name": "validUntilTimestampMsec",
                     "desc": "Time at which the subscription will expire, in milliseconds since the Epoch.",
+                    "type": "int64"
+                },
+                {
+                    "name": "autoRenewing",
+                    "desc": "Whether the subscription will automatically be renewed when it reaches its current expiry time.",
+                    "type": "bool"
+                },
+                {
+                    "name": "initiationTimestampMsec",
+                    "desc": "Time at which the subscription was granted, in milliseconds since the Epoch.",
                     "type": "int64"
                 }
             ]

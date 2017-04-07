@@ -2,7 +2,6 @@ package marsapi
 
 import (
 	"net/http"
-	"github.com/gorilla/mux"
 	"net/url"
 	"io/ioutil"
 	"encoding/json"
@@ -11,79 +10,6 @@ import (
 	"bytes"
 	"context"
 )
-
-type Context struct {
-	HttpResponseWriter http.ResponseWriter
-	HttpRequest        *http.Request
-
-	MethodOptions      *MethodOptions
-	PathParamMap       map[string]string
-	CommonOptions      *CommonOptions
-
-	ServiceResponse    interface{}
-	ServiceError       error
-}
-
-type MethodOptions struct{
-	Scopes                []string
-}
-
-type CommonOptions struct{
-
-}
-
-func ParseCommonOptions(values url.Values)(opts *CommonOptions,err error) {
-	opts = &CommonOptions{}
-
-	return opts, nil
-}
-
-type Router interface {
-	Handle(method string, path string, handlerFunc func(ctx *Context),methodOptions *MethodOptions)
-}
-
-type muxRouter struct {
-	router        mux.Router
-
-	preprocessor  func(ctx *Context)
-	postProcessor func(ctx*Context)
-}
-
-func (r *muxRouter)Handle(httpMethod string, httpPath string,handlerFunc func(ctx *Context),methodOptions *MethodOptions) {
-	r.router.HandleFunc(httpPath, func(httpResponseWriter http.ResponseWriter, httpRequest *http.Request) {
-		ctx := &Context{
-			HttpResponseWriter:httpResponseWriter,
-			HttpRequest:httpRequest,
-			MethodOptions:methodOptions,
-		}
-
-		ctx.PathParamMap = mux.Vars(httpRequest)
-
-		commonOptions,err:= ParseCommonOptions(httpRequest.URL.Query())
-		if err!=nil{
-			return
-		}
-		ctx.CommonOptions=commonOptions
-
-		if r.preprocessor != nil {
-			r.preprocessor(ctx)
-		}
-
-		if handlerFunc != nil {
-			handlerFunc(ctx)
-		}
-
-		if r.postProcessor != nil {
-			r.postProcessor(ctx)
-		}
-
-		ctx.HttpRequest.URL.Query().Encode()
-	}).Methods(httpMethod)
-}
-
-func NewRouter() Router {
-	return &muxRouter{}
-}
 
 // CloseBody is used to close res.Body.
 // Prior to calling Close, it also tries to Read a small amount to see an EOF.

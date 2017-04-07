@@ -12,11 +12,32 @@
     "rootUrl": "https://www.googleapis.com/",
     "auth": {
         "oauth2": [
-            "https://www.googleapis.com/auth/admin.datatransfer.readonly",
-            "https://www.googleapis.com/auth/admin.datatransfer"
+            "https://www.googleapis.com/auth/admin.datatransfer",
+            "https://www.googleapis.com/auth/admin.datatransfer.readonly"
         ]
     },
     "parameters": [
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
         {
             "name": "quotaUser",
             "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
@@ -38,30 +59,98 @@
                     "desc": "Responses with Content-Type of application/json"
                 }
             ]
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
-        },
-        {
-            "name": "key",
-            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
-            "type": "string"
-        },
-        {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
         }
     ],
     "schemas": [
+        {
+            "name": "DataTransfersListResponse",
+            "desc": "Template for a collection of DataTransfer resources.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "Identifies the resource as a collection of data transfer requests.",
+                    "type": "string",
+                    "default": "admin#datatransfer#dataTransfersList"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token which will be used to specify next page in list API.",
+                    "type": "string"
+                },
+                {
+                    "name": "dataTransfers",
+                    "desc": "List of data transfer requests.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "DataTransfer"
+                },
+                {
+                    "name": "etag",
+                    "desc": "ETag of the resource.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Application",
+            "desc": "The JSON template for an Application resource.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "name",
+                    "desc": "The application's name.",
+                    "type": "string"
+                },
+                {
+                    "name": "transferParams",
+                    "desc": "The list of all possible transfer parameters for this application. These parameters can be used to select the data of the user in this application to be transfered.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ApplicationTransferParam"
+                },
+                {
+                    "name": "etag",
+                    "desc": "Etag of the resource.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "The application's ID.",
+                    "type": "int64"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Identifies the resource as a DataTransfer Application Resource.",
+                    "type": "string",
+                    "default": "admin#datatransfer#ApplicationResource"
+                }
+            ]
+        },
+        {
+            "name": "ApplicationDataTransfer",
+            "desc": "Template to map fields of ApplicationDataTransfer resource.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "applicationTransferParams",
+                    "desc": "The transfer parameters for the application. These parameters are used to select the data which will get transfered in context of this application.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ApplicationTransferParam"
+                },
+                {
+                    "name": "applicationTransferStatus",
+                    "desc": "Current status of transfer for this application. (Read-only)",
+                    "type": "string"
+                },
+                {
+                    "name": "applicationId",
+                    "desc": "The application's ID.",
+                    "type": "int64"
+                }
+            ]
+        },
         {
             "name": "ApplicationTransferParam",
             "desc": "Template for application transfer parameters.",
@@ -116,11 +205,6 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "overallTransferStatusCode",
-                    "desc": "Overall transfer status (Read-only).",
-                    "type": "string"
-                },
-                {
                     "name": "requestTime",
                     "desc": "The time at which the data transfer was requested (Read-only).",
                     "type": "datetime"
@@ -157,94 +241,10 @@
                     "name": "oldOwnerUserId",
                     "desc": "ID of the user whose data is being transfered.",
                     "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "DataTransfersListResponse",
-            "desc": "Template for a collection of DataTransfer resources.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "nextPageToken",
-                    "desc": "Continuation token which will be used to specify next page in list API.",
-                    "type": "string"
                 },
                 {
-                    "name": "dataTransfers",
-                    "desc": "List of data transfer requests.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "DataTransfer"
-                },
-                {
-                    "name": "etag",
-                    "desc": "ETag of the resource.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies the resource as a collection of data transfer requests.",
-                    "type": "string",
-                    "default": "admin#datatransfer#dataTransfersList"
-                }
-            ]
-        },
-        {
-            "name": "Application",
-            "desc": "The JSON template for an Application resource.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "etag",
-                    "desc": "Etag of the resource.",
-                    "type": "string"
-                },
-                {
-                    "name": "id",
-                    "desc": "The application's ID.",
-                    "type": "int64"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies the resource as a DataTransfer Application Resource.",
-                    "type": "string",
-                    "default": "admin#datatransfer#ApplicationResource"
-                },
-                {
-                    "name": "name",
-                    "desc": "The application's name.",
-                    "type": "string"
-                },
-                {
-                    "name": "transferParams",
-                    "desc": "The list of all possible transfer parameters for this application. These parameters can be used to select the data of the user in this application to be transfered.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ApplicationTransferParam"
-                }
-            ]
-        },
-        {
-            "name": "ApplicationDataTransfer",
-            "desc": "Template to map fields of ApplicationDataTransfer resource.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "applicationId",
-                    "desc": "The application's ID.",
-                    "type": "int64"
-                },
-                {
-                    "name": "applicationTransferParams",
-                    "desc": "The transfer parameters for the application. These parameters are used to select the data which will get transfered in context of this application.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ApplicationTransferParam"
-                },
-                {
-                    "name": "applicationTransferStatus",
-                    "desc": "Current status of transfer for this application. (Read-only)",
+                    "name": "overallTransferStatusCode",
+                    "desc": "Overall transfer status (Read-only).",
                     "type": "string"
                 }
             ]
@@ -284,8 +284,53 @@
                     ],
                     "optinalQueryParams": [
                         {
+                            "name": "customerId",
+                            "desc": "Immutable ID of the Google Apps account.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "maxResults",
+                            "desc": "Maximum number of results to return. Default is 100.",
+                            "type": "int32",
+                            "min": "1",
+                            "max": "500"
+                        },
+                        {
                             "name": "pageToken",
                             "desc": "Token to specify next page in the list.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "ApplicationsListResponse"
+                }
+            ]
+        },
+        {
+            "name": "transfers",
+            "methods": [
+                {
+                    "name": "list",
+                    "desc": "Lists the transfers for a customer by source user, destination user, or status.",
+                    "path": "transfers",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/admin.datatransfer",
+                        "https://www.googleapis.com/auth/admin.datatransfer.readonly"
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "oldOwnerUserId",
+                            "desc": "Source user's profile ID.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "Token to specify the next page in the list.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "status",
+                            "desc": "Status of the transfer.",
                             "type": "string"
                         },
                         {
@@ -299,15 +344,15 @@
                             "type": "int32",
                             "min": "1",
                             "max": "500"
+                        },
+                        {
+                            "name": "newOwnerUserId",
+                            "desc": "Destination user's profile ID.",
+                            "type": "string"
                         }
                     ],
-                    "response": "ApplicationsListResponse"
-                }
-            ]
-        },
-        {
-            "name": "transfers",
-            "methods": [
+                    "response": "DataTransfersListResponse"
+                },
                 {
                     "name": "get",
                     "desc": "Retrieves a data transfer request by its resource ID.",
@@ -337,51 +382,6 @@
                     ],
                     "request": "DataTransfer",
                     "response": "DataTransfer"
-                },
-                {
-                    "name": "list",
-                    "desc": "Lists the transfers for a customer by source user, destination user, or status.",
-                    "path": "transfers",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/admin.datatransfer",
-                        "https://www.googleapis.com/auth/admin.datatransfer.readonly"
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "customerId",
-                            "desc": "Immutable ID of the Google Apps account.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "maxResults",
-                            "desc": "Maximum number of results to return. Default is 100.",
-                            "type": "int32",
-                            "min": "1",
-                            "max": "500"
-                        },
-                        {
-                            "name": "newOwnerUserId",
-                            "desc": "Destination user's profile ID.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "oldOwnerUserId",
-                            "desc": "Source user's profile ID.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "Token to specify the next page in the list.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "status",
-                            "desc": "Status of the transfer.",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "DataTransfersListResponse"
                 }
             ]
         }

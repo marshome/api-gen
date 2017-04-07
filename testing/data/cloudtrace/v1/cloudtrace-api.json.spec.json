@@ -19,22 +19,6 @@
     },
     "parameters": [
         {
-            "name": "pp",
-            "desc": "Pretty-print response.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
-        {
-            "name": "upload_protocol",
-            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
-            "type": "string"
-        },
-        {
             "name": "uploadType",
             "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
             "type": "string"
@@ -65,11 +49,6 @@
             ]
         },
         {
-            "name": "key",
-            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
-            "type": "string"
-        },
-        {
             "name": "access_token",
             "desc": "OAuth access token.",
             "type": "string"
@@ -82,6 +61,16 @@
         {
             "name": "bearer_token",
             "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
             "type": "string"
         },
         {
@@ -109,9 +98,68 @@
                     "desc": "Responses with Content-Type of application/x-protobuf"
                 }
             ]
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
         }
     ],
     "schemas": [
+        {
+            "name": "ListTracesResponse",
+            "desc": "The response message for the `ListTraces` method.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "traces",
+                    "desc": "List of trace records returned.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Trace"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "If defined, indicates that there are more traces that match the request\nand that this value should be passed to the next request to continue\nretrieving additional traces.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Empty",
+            "desc": "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
+            "type": "object"
+        },
+        {
+            "name": "Trace",
+            "desc": "A trace describes how long it takes for an application to perform an\noperation. It consists of a set of spans, each of which represent a single\ntimed event within the operation.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "spans",
+                    "desc": "Collection of spans in the trace.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "TraceSpan"
+                },
+                {
+                    "name": "traceId",
+                    "desc": "Globally unique identifier for the trace. This identifier is a 128-bit\nnumeric value formatted as a 32-byte hex string.",
+                    "type": "string"
+                },
+                {
+                    "name": "projectId",
+                    "desc": "Project ID of the Cloud project where the trace data is stored.",
+                    "type": "string"
+                }
+            ]
+        },
         {
             "name": "Traces",
             "desc": "List of new or updated traces.",
@@ -131,21 +179,6 @@
             "desc": "A span represents a single timed event within a trace. Spans can be nested\nand form a trace tree. Often, a trace contains a root span that describes the\nend-to-end latency of an operation and, optionally, one or more subspans for\nits suboperations. Spans do not need to be contiguous. There may be gaps\nbetween spans in a trace.",
             "type": "object",
             "fields": [
-                {
-                    "name": "parentSpanId",
-                    "desc": "ID of the parent span, if any. Optional.",
-                    "type": "uint64"
-                },
-                {
-                    "name": "endTime",
-                    "desc": "End time of the span in nanoseconds from the UNIX epoch.",
-                    "type": "datetime"
-                },
-                {
-                    "name": "startTime",
-                    "desc": "Start time of the span in nanoseconds from the UNIX epoch.",
-                    "type": "datetime"
-                },
                 {
                     "name": "kind",
                     "desc": "Distinguishes between spans generated in a particular context. For example,\ntwo spans with the same name may be distinguished using `RPC_CLIENT`\nand `RPC_SERVER` to identify queueing latency associated with the span.",
@@ -180,54 +213,21 @@
                     "name": "spanId",
                     "desc": "Identifier for the span. Must be a 64-bit integer other than 0 and\nunique within a trace.",
                     "type": "uint64"
-                }
-            ]
-        },
-        {
-            "name": "ListTracesResponse",
-            "desc": "The response message for the `ListTraces` method.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "traces",
-                    "desc": "List of trace records returned.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Trace"
                 },
                 {
-                    "name": "nextPageToken",
-                    "desc": "If defined, indicates that there are more traces that match the request\nand that this value should be passed to the next request to continue\nretrieving additional traces.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Empty",
-            "desc": "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
-            "type": "object"
-        },
-        {
-            "name": "Trace",
-            "desc": "A trace describes how long it takes for an application to perform an\noperation. It consists of a set of spans, each of which represent a single\ntimed event within the operation.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "projectId",
-                    "desc": "Project ID of the Cloud project where the trace data is stored.",
-                    "type": "string"
+                    "name": "parentSpanId",
+                    "desc": "ID of the parent span, if any. Optional.",
+                    "type": "uint64"
                 },
                 {
-                    "name": "spans",
-                    "desc": "Collection of spans in the trace.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "TraceSpan"
+                    "name": "endTime",
+                    "desc": "End time of the span in nanoseconds from the UNIX epoch.",
+                    "type": "datetime"
                 },
                 {
-                    "name": "traceId",
-                    "desc": "Globally unique identifier for the trace. This identifier is a 128-bit\nnumeric value formatted as a 32-byte hex string.",
-                    "type": "string"
+                    "name": "startTime",
+                    "desc": "Start time of the span in nanoseconds from the UNIX epoch.",
+                    "type": "datetime"
                 }
             ]
         }
@@ -280,26 +280,6 @@
                             ],
                             "optinalQueryParams": [
                                 {
-                                    "name": "filter",
-                                    "desc": "An optional filter for the request.",
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "endTime",
-                                    "desc": "Start of the time interval (inclusive) during which the trace data was\ncollected from the application.",
-                                    "type": "datetime"
-                                },
-                                {
-                                    "name": "startTime",
-                                    "desc": "End of the time interval (inclusive) during which the trace data was\ncollected from the application.",
-                                    "type": "datetime"
-                                },
-                                {
-                                    "name": "pageToken",
-                                    "desc": "Token identifying the page of results to return. If provided, use the\nvalue of the `next_page_token` field from a previous request. Optional.",
-                                    "type": "string"
-                                },
-                                {
                                     "name": "pageSize",
                                     "desc": "Maximum number of traces to return. If not specified or \u003c= 0, the\nimplementation selects a reasonable value.  The implementation may\nreturn fewer traces than the requested page size. Optional.",
                                     "type": "int32"
@@ -326,6 +306,26 @@
                                 {
                                     "name": "orderBy",
                                     "desc": "Field used to sort the returned traces. Optional.\nCan be one of the following:\n\n*   `trace_id`\n*   `name` (`name` field of root span in the trace)\n*   `duration` (difference between `end_time` and `start_time` fields of\n     the root span)\n*   `start` (`start_time` field of the root span)\n\nDescending order can be specified by appending `desc` to the sort field\n(for example, `name desc`).\n\nOnly one sort field is permitted.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "filter",
+                                    "desc": "An optional filter for the request.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "endTime",
+                                    "desc": "Start of the time interval (inclusive) during which the trace data was\ncollected from the application.",
+                                    "type": "datetime"
+                                },
+                                {
+                                    "name": "startTime",
+                                    "desc": "End of the time interval (inclusive) during which the trace data was\ncollected from the application.",
+                                    "type": "datetime"
+                                },
+                                {
+                                    "name": "pageToken",
+                                    "desc": "Token identifying the page of results to return. If provided, use the\nvalue of the `next_page_token` field from a previous request. Optional.",
                                     "type": "string"
                                 }
                             ],

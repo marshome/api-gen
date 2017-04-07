@@ -52,18 +52,23 @@
             ]
         },
         {
-            "name": "callback",
-            "desc": "JSONP",
-            "type": "string"
-        },
-        {
             "name": "bearer_token",
             "desc": "OAuth bearer token.",
             "type": "string"
         },
         {
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
+            "type": "string"
+        },
+        {
             "name": "access_token",
             "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
             "type": "string"
         },
         {
@@ -77,18 +82,8 @@
             "type": "string"
         },
         {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
-        {
             "name": "uploadType",
             "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
-            "type": "string"
-        },
-        {
-            "name": "upload_protocol",
-            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
             "type": "string"
         },
         {
@@ -98,107 +93,44 @@
             "default": "true"
         },
         {
-            "name": "key",
-            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
-            "type": "string"
-        },
-        {
             "name": "pp",
             "desc": "Pretty-print response.",
             "type": "bool",
             "default": "true"
+        },
+        {
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
         }
     ],
     "schemas": [
-        {
-            "name": "Observation",
-            "desc": "Represents one beacon observed once.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "timestampMs",
-                    "desc": "Time when the beacon was observed.",
-                    "type": "datetime"
-                },
-                {
-                    "name": "advertisedId",
-                    "desc": "The ID advertised by the beacon the client has encountered.\n\nIf the submitted `advertised_id` type is Eddystone-EID, then the client\nmust be authorized to resolve the given beacon. Otherwise no data will be\nreturned for that beacon.\nRequired.",
-                    "type": "ref",
-                    "refType": "AdvertisedId"
-                },
-                {
-                    "name": "telemetry",
-                    "desc": "The array of telemetry bytes received from the beacon. The server is\nresponsible for parsing it. This field may frequently be empty, as\nwith a beacon that transmits telemetry only occasionally.",
-                    "type": "byte"
-                }
-            ]
-        },
-        {
-            "name": "ListDiagnosticsResponse",
-            "desc": "Response that contains the requested diagnostics.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "nextPageToken",
-                    "desc": "Token that can be used for pagination. Returned only if the\nrequest matches more beacons than can be returned in this response.",
-                    "type": "string"
-                },
-                {
-                    "name": "diagnostics",
-                    "desc": "The diagnostics matching the given request.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Diagnostics"
-                }
-            ]
-        },
-        {
-            "name": "BeaconInfo",
-            "desc": "A subset of beacon information served via the `beaconinfo.getforobserved`\nmethod, which you call when users of your app encounter your beacons.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "attachments",
-                    "desc": "Attachments matching the type(s) requested.\nMay be empty if no attachment types were requested.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "AttachmentInfo"
-                },
-                {
-                    "name": "beaconName",
-                    "desc": "The name under which the beacon is registered.",
-                    "type": "string"
-                },
-                {
-                    "name": "advertisedId",
-                    "desc": "The ID advertised by the beacon.",
-                    "type": "ref",
-                    "refType": "AdvertisedId"
-                }
-            ]
-        },
-        {
-            "name": "AttachmentInfo",
-            "desc": "A subset of attachment information served via the\n`beaconinfo.getforobserved` method, used when your users encounter your\nbeacons.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "data",
-                    "desc": "An opaque data container for client-provided data.",
-                    "type": "byte"
-                },
-                {
-                    "name": "namespacedType",
-                    "desc": "Specifies what kind of attachment this is. Tells a client how to\ninterpret the `data` field. Format is \u003cvar\u003enamespace/type\u003c/var\u003e, for\nexample \u003ccode\u003escrupulous-wombat-12345/welcome-message\u003c/code\u003e",
-                    "type": "string"
-                }
-            ]
-        },
         {
             "name": "Beacon",
             "desc": "Details of a beacon device.",
             "type": "object",
             "fields": [
+                {
+                    "name": "provisioningKey",
+                    "desc": "Some beacons may require a user to provide an authorization key before\nchanging any of its configuration (e.g. broadcast frames, transmit power).\nThis field provides a place to store and control access to that key.\nThis field is populated in responses to `GET /v1beta1/beacons/3!beaconId`\nfrom users with write access to the given beacon. That is to say: If the\nuser is authorized to write the beacon's confidential data in the service,\nthe service considers them authorized to configure the beacon. Note\nthat this key grants nothing on the service, only on the beacon itself.",
+                    "type": "byte"
+                },
+                {
+                    "name": "properties",
+                    "desc": "Properties of the beacon device, for example battery type or firmware\nversion.\nOptional.",
+                    "collection": "map",
+                    "type": "string"
+                },
+                {
+                    "name": "placeId",
+                    "desc": "The [Google Places API](/places/place-id) Place ID of the place where\nthe beacon is deployed. This is given when the beacon is registered or\nupdated, not automatically detected in any way.\nOptional.",
+                    "type": "string"
+                },
                 {
                     "name": "beaconName",
                     "desc": "Resource name of this beacon. A beacon name has the format\n\"beacons/N!beaconId\" where the beaconId is the base16 ID broadcast by\nthe beacon and N is a code for the beacon's type. Possible values are\n`3` for Eddystone, `1` for iBeacon, or `5` for AltBeacon.\n\nThis field must be left empty when registering. After reading a beacon,\nclients can use the name for future operations.",
@@ -237,29 +169,6 @@
                     "type": "string"
                 },
                 {
-                    "name": "provisioningKey",
-                    "desc": "Some beacons may require a user to provide an authorization key before\nchanging any of its configuration (e.g. broadcast frames, transmit power).\nThis field provides a place to store and control access to that key.\nThis field is populated in responses to `GET /v1beta1/beacons/3!beaconId`\nfrom users with write access to the given beacon. That is to say: If the\nuser is authorized to write the beacon's confidential data in the service,\nthe service considers them authorized to configure the beacon. Note\nthat this key grants nothing on the service, only on the beacon itself.",
-                    "type": "byte"
-                },
-                {
-                    "name": "properties",
-                    "desc": "Properties of the beacon device, for example battery type or firmware\nversion.\nOptional.",
-                    "collection": "map",
-                    "type": "string"
-                },
-                {
-                    "name": "latLng",
-                    "desc": "The location of the beacon, expressed as a latitude and longitude pair.\nThis location is given when the beacon is registered or updated. It does\nnot necessarily indicate the actual current location of the beacon.\nOptional.",
-                    "type": "ref",
-                    "refType": "LatLng"
-                },
-                {
-                    "name": "indoorLevel",
-                    "desc": "The indoor level information for this beacon, if known. As returned by the\nGoogle Maps API.\nOptional.",
-                    "type": "ref",
-                    "refType": "IndoorLevel"
-                },
-                {
                     "name": "status",
                     "desc": "Current status of the beacon.\nRequired.",
                     "type": "string",
@@ -289,34 +198,22 @@
                     "refType": "EphemeralIdRegistration"
                 },
                 {
-                    "name": "placeId",
-                    "desc": "The [Google Places API](/places/place-id) Place ID of the place where\nthe beacon is deployed. This is given when the beacon is registered or\nupdated, not automatically detected in any way.\nOptional.",
-                    "type": "string"
-                },
-                {
                     "name": "advertisedId",
                     "desc": "The identifier of a beacon as advertised by it. This field must be\npopulated when registering. It may be empty when updating a beacon\nrecord because it is ignored in updates.\n\nWhen registering a beacon that broadcasts Eddystone-EID, this field\nshould contain a \"stable\" Eddystone-UID that identifies the beacon and\nlinks it to its attachments. The stable Eddystone-UID is only used for\nadministering the beacon.",
                     "type": "ref",
                     "refType": "AdvertisedId"
-                }
-            ]
-        },
-        {
-            "name": "Empty",
-            "desc": "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
-            "type": "object"
-        },
-        {
-            "name": "GetInfoForObservedBeaconsResponse",
-            "desc": "Information about the requested beacons, optionally including attachment\ndata.",
-            "type": "object",
-            "fields": [
+                },
                 {
-                    "name": "beacons",
-                    "desc": "Public information about beacons.\nMay be empty if the request matched no beacons.",
-                    "collection": "array",
+                    "name": "latLng",
+                    "desc": "The location of the beacon, expressed as a latitude and longitude pair.\nThis location is given when the beacon is registered or updated. It does\nnot necessarily indicate the actual current location of the beacon.\nOptional.",
                     "type": "ref",
-                    "refType": "BeaconInfo"
+                    "refType": "LatLng"
+                },
+                {
+                    "name": "indoorLevel",
+                    "desc": "The indoor level information for this beacon, if known. As returned by the\nGoogle Maps API.\nOptional.",
+                    "type": "ref",
+                    "refType": "IndoorLevel"
                 }
             ]
         },
@@ -335,41 +232,108 @@
             ]
         },
         {
-            "name": "Date",
-            "desc": "Represents a whole calendar date, e.g. date of birth. The time of day and\ntime zone are either specified elsewhere or are not significant. The date\nis relative to the Proleptic Gregorian Calendar. The day may be 0 to\nrepresent a year and month where the day is not significant, e.g. credit card\nexpiration date. The year may be 0 to represent a month and day independent\nof year, e.g. anniversary date. Related types are google.type.TimeOfDay\nand `google.protobuf.Timestamp`.",
+            "name": "Diagnostics",
+            "desc": "Diagnostics for a single beacon.",
             "type": "object",
             "fields": [
                 {
-                    "name": "month",
-                    "desc": "Month of year. Must be from 1 to 12.",
-                    "type": "int32"
+                    "name": "alerts",
+                    "desc": "An unordered list of Alerts that the beacon has.",
+                    "collection": "array",
+                    "type": "string"
                 },
                 {
-                    "name": "year",
-                    "desc": "Year of date. Must be from 1 to 9999, or 0 if specifying a date without\na year.",
-                    "type": "int32"
+                    "name": "beaconName",
+                    "desc": "Resource name of the beacon. For Eddystone-EID beacons, this may\nbe the beacon's current EID, or the beacon's \"stable\" Eddystone-UID.",
+                    "type": "string"
                 },
                 {
-                    "name": "day",
-                    "desc": "Day of month. Must be from 1 to 31 and valid for the year and month, or 0\nif specifying a year/month where the day is not significant.",
-                    "type": "int32"
+                    "name": "estimatedLowBatteryDate",
+                    "desc": "The date when the battery is expected to be low. If the value is missing\nthen there is no estimate for when the battery will be low.\nThis value is only an estimate, not an exact date.",
+                    "type": "ref",
+                    "refType": "Date"
                 }
             ]
         },
         {
-            "name": "LatLng",
-            "desc": "An object representing a latitude/longitude pair. This is expressed as a pair\nof doubles representing degrees latitude and degrees longitude. Unless\nspecified otherwise, this must conform to the\n\u003ca href=\"http://www.unoosa.org/pdf/icg/2012/template/WGS_84.pdf\"\u003eWGS84\nstandard\u003c/a\u003e. Values must be within normalized ranges.\n\nExample of normalization code in Python:\n\n    def NormalizeLongitude(longitude):\n      \"\"\"Wraps decimal degrees longitude to [-180.0, 180.0].\"\"\"\n      q, r = divmod(longitude, 360.0)\n      if r \u003e 180.0 or (r == 180.0 and q \u003c= -1.0):\n        return r - 360.0\n      return r\n\n    def NormalizeLatLng(latitude, longitude):\n      \"\"\"Wraps decimal degrees latitude and longitude to\n      [-90.0, 90.0] and [-180.0, 180.0], respectively.\"\"\"\n      r = latitude % 360.0\n      if r \u003c= 90.0:\n        return r, NormalizeLongitude(longitude)\n      elif r \u003e= 270.0:\n        return r - 360, NormalizeLongitude(longitude)\n      else:\n        return 180 - r, NormalizeLongitude(longitude + 180.0)\n\n    assert 180.0 == NormalizeLongitude(180.0)\n    assert -180.0 == NormalizeLongitude(-180.0)\n    assert -179.0 == NormalizeLongitude(181.0)\n    assert (0.0, 0.0) == NormalizeLatLng(360.0, 0.0)\n    assert (0.0, 0.0) == NormalizeLatLng(-360.0, 0.0)\n    assert (85.0, 180.0) == NormalizeLatLng(95.0, 0.0)\n    assert (-85.0, -170.0) == NormalizeLatLng(-95.0, 10.0)\n    assert (90.0, 10.0) == NormalizeLatLng(90.0, 10.0)\n    assert (-90.0, -10.0) == NormalizeLatLng(-90.0, -10.0)\n    assert (0.0, -170.0) == NormalizeLatLng(-180.0, 10.0)\n    assert (0.0, -170.0) == NormalizeLatLng(180.0, 10.0)\n    assert (-90.0, 10.0) == NormalizeLatLng(270.0, 10.0)\n    assert (90.0, 10.0) == NormalizeLatLng(-270.0, 10.0)\n\nThe code in logs/storage/validator/logs_validator_traits.cc treats this type\nas if it were annotated as ST_LOCATION.",
+            "name": "IndoorLevel",
+            "desc": "Indoor level, a human-readable string as returned by Google Maps APIs,\nuseful to indicate which floor of a building a beacon is located on.",
             "type": "object",
             "fields": [
                 {
-                    "name": "latitude",
-                    "desc": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
-                    "type": "float64"
+                    "name": "name",
+                    "desc": "The name of this level.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "EphemeralIdRegistrationParams",
+            "desc": "Information a client needs to provision and register beacons that\nbroadcast Eddystone-EID format beacon IDs, using Elliptic curve\nDiffie-Hellman key exchange. See\n[the Eddystone specification](https://github.com/google/eddystone/tree/master/eddystone-eid) at GitHub.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "serviceEcdhPublicKey",
+                    "desc": "The beacon service's public key for use by a beacon to derive its\nIdentity Key using Elliptic Curve Diffie-Hellman key exchange.",
+                    "type": "byte"
                 },
                 {
-                    "name": "longitude",
-                    "desc": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
-                    "type": "float64"
+                    "name": "minRotationPeriodExponent",
+                    "desc": "Indicates the minimum rotation period supported by the service.\nSee EddystoneEidRegistration.rotation_period_exponent",
+                    "type": "uint32"
+                },
+                {
+                    "name": "maxRotationPeriodExponent",
+                    "desc": "Indicates the maximum rotation period supported by the service.\nSee EddystoneEidRegistration.rotation_period_exponent",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "Empty",
+            "desc": "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
+            "type": "object"
+        },
+        {
+            "name": "GetInfoForObservedBeaconsRequest",
+            "desc": "Request for beacon and attachment information about beacons that\na mobile client has encountered \"in the wild\".",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "observations",
+                    "desc": "The beacons that the client has encountered.\nAt least one must be given.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Observation"
+                },
+                {
+                    "name": "namespacedTypes",
+                    "desc": "Specifies what kind of attachments to include in the response.\nWhen given, the response will include only attachments of the given types.\nWhen empty, no attachments will be returned. Must be in the format\n\u003cvar\u003enamespace/type\u003c/var\u003e. Accepts `*` to specify all types in\nall namespaces owned by the client.\nOptional.",
+                    "collection": "array",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Observation",
+            "desc": "Represents one beacon observed once.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "telemetry",
+                    "desc": "The array of telemetry bytes received from the beacon. The server is\nresponsible for parsing it. This field may frequently be empty, as\nwith a beacon that transmits telemetry only occasionally.",
+                    "type": "byte"
+                },
+                {
+                    "name": "timestampMs",
+                    "desc": "Time when the beacon was observed.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "advertisedId",
+                    "desc": "The ID advertised by the beacon the client has encountered.\n\nIf the submitted `advertised_id` type is Eddystone-EID, then the client\nmust be authorized to resolve the given beacon. Otherwise no data will be\nreturned for that beacon.\nRequired.",
+                    "type": "ref",
+                    "refType": "AdvertisedId"
                 }
             ]
         },
@@ -413,115 +377,6 @@
             ]
         },
         {
-            "name": "ListBeaconAttachmentsResponse",
-            "desc": "Response to `ListBeaconAttachments` that contains the requested attachments.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "attachments",
-                    "desc": "The attachments that corresponded to the request params.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "BeaconAttachment"
-                }
-            ]
-        },
-        {
-            "name": "BeaconAttachment",
-            "desc": "Project-specific data associated with a beacon.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "namespacedType",
-                    "desc": "Specifies what kind of attachment this is. Tells a client how to\ninterpret the `data` field. Format is \u003cvar\u003enamespace/type\u003c/var\u003e. Namespace\nprovides type separation between clients. Type describes the type of\n`data`, for use by the client when parsing the `data` field.\nRequired.",
-                    "type": "string"
-                },
-                {
-                    "name": "attachmentName",
-                    "desc": "Resource name of this attachment. Attachment names have the format:\n\u003ccode\u003ebeacons/\u003cvar\u003ebeacon_id\u003c/var\u003e/attachments/\u003cvar\u003eattachment_id\u003c/var\u003e\u003c/code\u003e.\nLeave this empty on creation.",
-                    "type": "string"
-                },
-                {
-                    "name": "creationTimeMs",
-                    "desc": "The UTC time when this attachment was created, in milliseconds since the\nUNIX epoch.",
-                    "type": "datetime"
-                },
-                {
-                    "name": "data",
-                    "desc": "An opaque data container for client-provided data. Must be\n[base64](http://tools.ietf.org/html/rfc4648#section-4) encoded in HTTP\nrequests, and will be so encoded (with padding) in responses.\nRequired.",
-                    "type": "byte"
-                }
-            ]
-        },
-        {
-            "name": "GetInfoForObservedBeaconsRequest",
-            "desc": "Request for beacon and attachment information about beacons that\na mobile client has encountered \"in the wild\".",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "observations",
-                    "desc": "The beacons that the client has encountered.\nAt least one must be given.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Observation"
-                },
-                {
-                    "name": "namespacedTypes",
-                    "desc": "Specifies what kind of attachments to include in the response.\nWhen given, the response will include only attachments of the given types.\nWhen empty, no attachments will be returned. Must be in the format\n\u003cvar\u003enamespace/type\u003c/var\u003e. Accepts `*` to specify all types in\nall namespaces owned by the client.\nOptional.",
-                    "collection": "array",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "ListBeaconsResponse",
-            "desc": "Response that contains list beacon results and pagination help.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "beacons",
-                    "desc": "The beacons that matched the search criteria.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Beacon"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "An opaque pagination token that the client may provide in their next\nrequest to retrieve the next page of results.",
-                    "type": "string"
-                },
-                {
-                    "name": "totalCount",
-                    "desc": "Estimate of the total number of beacons matched by the query. Higher\nvalues may be less accurate.",
-                    "type": "int64"
-                }
-            ]
-        },
-        {
-            "name": "Diagnostics",
-            "desc": "Diagnostics for a single beacon.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "beaconName",
-                    "desc": "Resource name of the beacon. For Eddystone-EID beacons, this may\nbe the beacon's current EID, or the beacon's \"stable\" Eddystone-UID.",
-                    "type": "string"
-                },
-                {
-                    "name": "estimatedLowBatteryDate",
-                    "desc": "The date when the battery is expected to be low. If the value is missing\nthen there is no estimate for when the battery will be low.\nThis value is only an estimate, not an exact date.",
-                    "type": "ref",
-                    "refType": "Date"
-                },
-                {
-                    "name": "alerts",
-                    "desc": "An unordered list of Alerts that the beacon has.",
-                    "collection": "array",
-                    "type": "string"
-                }
-            ]
-        },
-        {
             "name": "DeleteAttachmentsResponse",
             "desc": "Response for a request to delete attachments.",
             "type": "object",
@@ -538,6 +393,16 @@
             "desc": "Write-only registration parameters for beacons using Eddystone-EID format.\nTwo ways of securely registering an Eddystone-EID beacon with the service\nare supported:\n\n1. Perform an ECDH key exchange via this API, including a previous call\n   to `GET /v1beta1/eidparams`. In this case the fields\n   `beacon_ecdh_public_key` and `service_ecdh_public_key` should be\n   populated and `beacon_identity_key` should not be populated. This\n   method ensures that only the two parties in the ECDH key exchange can\n   compute the identity key, which becomes a secret between them.\n2. Derive or obtain the beacon's identity key via other secure means\n   (perhaps an ECDH key exchange between the beacon and a mobile device\n   or any other secure method), and then submit the resulting identity key\n   to the service. In this case `beacon_identity_key` field should be\n   populated, and neither of `beacon_ecdh_public_key` nor\n   `service_ecdh_public_key` fields should be. The security of this method\n   depends on how securely the parties involved (in particular the\n   bluetooth client) handle the identity key, and obviously on how\n   securely the identity key was generated.\n\nSee [the Eddystone specification](https://github.com/google/eddystone/tree/master/eddystone-eid) at GitHub.",
             "type": "object",
             "fields": [
+                {
+                    "name": "beaconEcdhPublicKey",
+                    "desc": "The beacon's public key used for the Elliptic curve Diffie-Hellman\nkey exchange. When this field is populated, `service_ecdh_public_key`\nmust also be populated, and `beacon_identity_key` must not be.",
+                    "type": "byte"
+                },
+                {
+                    "name": "initialClockValue",
+                    "desc": "The initial clock value of the beacon. The beacon's clock must have\nbegun counting at this value immediately prior to transmitting this\nvalue to the resolving service. Significant delay in transmitting this\nvalue to the service risks registration or resolution failures. If a\nvalue is not provided, the default is zero.",
+                    "type": "uint64"
+                },
                 {
                     "name": "beaconIdentityKey",
                     "desc": "The private key of the beacon. If this field is populated,\n`beacon_ecdh_public_key` and `service_ecdh_public_key` must not be\npopulated.",
@@ -557,38 +422,45 @@
                     "name": "initialEid",
                     "desc": "An initial ephemeral ID calculated using the clock value submitted as\n`initial_clock_value`, and the secret key generated by the\nDiffie-Hellman key exchange using `service_ecdh_public_key` and\n`service_ecdh_public_key`. This initial EID value will be used by the\nservice to confirm that the key exchange process was successful.",
                     "type": "byte"
-                },
-                {
-                    "name": "beaconEcdhPublicKey",
-                    "desc": "The beacon's public key used for the Elliptic curve Diffie-Hellman\nkey exchange. When this field is populated, `service_ecdh_public_key`\nmust also be populated, and `beacon_identity_key` must not be.",
-                    "type": "byte"
-                },
-                {
-                    "name": "initialClockValue",
-                    "desc": "The initial clock value of the beacon. The beacon's clock must have\nbegun counting at this value immediately prior to transmitting this\nvalue to the resolving service. Significant delay in transmitting this\nvalue to the service risks registration or resolution failures. If a\nvalue is not provided, the default is zero.",
-                    "type": "uint64"
                 }
             ]
         },
         {
-            "name": "EphemeralIdRegistrationParams",
-            "desc": "Information a client needs to provision and register beacons that\nbroadcast Eddystone-EID format beacon IDs, using Elliptic curve\nDiffie-Hellman key exchange. See\n[the Eddystone specification](https://github.com/google/eddystone/tree/master/eddystone-eid) at GitHub.",
+            "name": "BeaconInfo",
+            "desc": "A subset of beacon information served via the `beaconinfo.getforobserved`\nmethod, which you call when users of your app encounter your beacons.",
             "type": "object",
             "fields": [
                 {
-                    "name": "serviceEcdhPublicKey",
-                    "desc": "The beacon service's public key for use by a beacon to derive its\nIdentity Key using Elliptic Curve Diffie-Hellman key exchange.",
-                    "type": "byte"
+                    "name": "attachments",
+                    "desc": "Attachments matching the type(s) requested.\nMay be empty if no attachment types were requested.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "AttachmentInfo"
                 },
                 {
-                    "name": "minRotationPeriodExponent",
-                    "desc": "Indicates the minimum rotation period supported by the service.\nSee EddystoneEidRegistration.rotation_period_exponent",
-                    "type": "uint32"
+                    "name": "beaconName",
+                    "desc": "The name under which the beacon is registered.",
+                    "type": "string"
                 },
                 {
-                    "name": "maxRotationPeriodExponent",
-                    "desc": "Indicates the maximum rotation period supported by the service.\nSee EddystoneEidRegistration.rotation_period_exponent",
-                    "type": "uint32"
+                    "name": "advertisedId",
+                    "desc": "The ID advertised by the beacon.",
+                    "type": "ref",
+                    "refType": "AdvertisedId"
+                }
+            ]
+        },
+        {
+            "name": "ListBeaconAttachmentsResponse",
+            "desc": "Response to `ListBeaconAttachments` that contains the requested attachments.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "attachments",
+                    "desc": "The attachments that corresponded to the request params.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "BeaconAttachment"
                 }
             ]
         },
@@ -624,19 +496,209 @@
             ]
         },
         {
-            "name": "IndoorLevel",
-            "desc": "Indoor level, a human-readable string as returned by Google Maps APIs,\nuseful to indicate which floor of a building a beacon is located on.",
+            "name": "ListBeaconsResponse",
+            "desc": "Response that contains list beacon results and pagination help.",
             "type": "object",
             "fields": [
                 {
-                    "name": "name",
-                    "desc": "The name of this level.",
+                    "name": "totalCount",
+                    "desc": "Estimate of the total number of beacons matched by the query. Higher\nvalues may be less accurate.",
+                    "type": "int64"
+                },
+                {
+                    "name": "beacons",
+                    "desc": "The beacons that matched the search criteria.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Beacon"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "An opaque pagination token that the client may provide in their next\nrequest to retrieve the next page of results.",
                     "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "ListDiagnosticsResponse",
+            "desc": "Response that contains the requested diagnostics.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "nextPageToken",
+                    "desc": "Token that can be used for pagination. Returned only if the\nrequest matches more beacons than can be returned in this response.",
+                    "type": "string"
+                },
+                {
+                    "name": "diagnostics",
+                    "desc": "The diagnostics matching the given request.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Diagnostics"
+                }
+            ]
+        },
+        {
+            "name": "AttachmentInfo",
+            "desc": "A subset of attachment information served via the\n`beaconinfo.getforobserved` method, used when your users encounter your\nbeacons.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "data",
+                    "desc": "An opaque data container for client-provided data.",
+                    "type": "byte"
+                },
+                {
+                    "name": "namespacedType",
+                    "desc": "Specifies what kind of attachment this is. Tells a client how to\ninterpret the `data` field. Format is \u003cvar\u003enamespace/type\u003c/var\u003e, for\nexample \u003ccode\u003escrupulous-wombat-12345/welcome-message\u003c/code\u003e",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "BeaconAttachment",
+            "desc": "Project-specific data associated with a beacon.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "data",
+                    "desc": "An opaque data container for client-provided data. Must be\n[base64](http://tools.ietf.org/html/rfc4648#section-4) encoded in HTTP\nrequests, and will be so encoded (with padding) in responses.\nRequired.",
+                    "type": "byte"
+                },
+                {
+                    "name": "namespacedType",
+                    "desc": "Specifies what kind of attachment this is. Tells a client how to\ninterpret the `data` field. Format is \u003cvar\u003enamespace/type\u003c/var\u003e. Namespace\nprovides type separation between clients. Type describes the type of\n`data`, for use by the client when parsing the `data` field.\nRequired.",
+                    "type": "string"
+                },
+                {
+                    "name": "attachmentName",
+                    "desc": "Resource name of this attachment. Attachment names have the format:\n\u003ccode\u003ebeacons/\u003cvar\u003ebeacon_id\u003c/var\u003e/attachments/\u003cvar\u003eattachment_id\u003c/var\u003e\u003c/code\u003e.\nLeave this empty on creation.",
+                    "type": "string"
+                },
+                {
+                    "name": "creationTimeMs",
+                    "desc": "The UTC time when this attachment was created, in milliseconds since the\nUNIX epoch.",
+                    "type": "datetime"
+                }
+            ]
+        },
+        {
+            "name": "GetInfoForObservedBeaconsResponse",
+            "desc": "Information about the requested beacons, optionally including attachment\ndata.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "beacons",
+                    "desc": "Public information about beacons.\nMay be empty if the request matched no beacons.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "BeaconInfo"
+                }
+            ]
+        },
+        {
+            "name": "Date",
+            "desc": "Represents a whole calendar date, e.g. date of birth. The time of day and\ntime zone are either specified elsewhere or are not significant. The date\nis relative to the Proleptic Gregorian Calendar. The day may be 0 to\nrepresent a year and month where the day is not significant, e.g. credit card\nexpiration date. The year may be 0 to represent a month and day independent\nof year, e.g. anniversary date. Related types are google.type.TimeOfDay\nand `google.protobuf.Timestamp`.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "month",
+                    "desc": "Month of year. Must be from 1 to 12.",
+                    "type": "int32"
+                },
+                {
+                    "name": "year",
+                    "desc": "Year of date. Must be from 1 to 9999, or 0 if specifying a date without\na year.",
+                    "type": "int32"
+                },
+                {
+                    "name": "day",
+                    "desc": "Day of month. Must be from 1 to 31 and valid for the year and month, or 0\nif specifying a year/month where the day is not significant.",
+                    "type": "int32"
+                }
+            ]
+        },
+        {
+            "name": "LatLng",
+            "desc": "An object representing a latitude/longitude pair. This is expressed as a pair\nof doubles representing degrees latitude and degrees longitude. Unless\nspecified otherwise, this must conform to the\n\u003ca href=\"http://www.unoosa.org/pdf/icg/2012/template/WGS_84.pdf\"\u003eWGS84\nstandard\u003c/a\u003e. Values must be within normalized ranges.\n\nExample of normalization code in Python:\n\n    def NormalizeLongitude(longitude):\n      \"\"\"Wraps decimal degrees longitude to [-180.0, 180.0].\"\"\"\n      q, r = divmod(longitude, 360.0)\n      if r \u003e 180.0 or (r == 180.0 and q \u003c= -1.0):\n        return r - 360.0\n      return r\n\n    def NormalizeLatLng(latitude, longitude):\n      \"\"\"Wraps decimal degrees latitude and longitude to\n      [-90.0, 90.0] and [-180.0, 180.0], respectively.\"\"\"\n      r = latitude % 360.0\n      if r \u003c= 90.0:\n        return r, NormalizeLongitude(longitude)\n      elif r \u003e= 270.0:\n        return r - 360, NormalizeLongitude(longitude)\n      else:\n        return 180 - r, NormalizeLongitude(longitude + 180.0)\n\n    assert 180.0 == NormalizeLongitude(180.0)\n    assert -180.0 == NormalizeLongitude(-180.0)\n    assert -179.0 == NormalizeLongitude(181.0)\n    assert (0.0, 0.0) == NormalizeLatLng(360.0, 0.0)\n    assert (0.0, 0.0) == NormalizeLatLng(-360.0, 0.0)\n    assert (85.0, 180.0) == NormalizeLatLng(95.0, 0.0)\n    assert (-85.0, -170.0) == NormalizeLatLng(-95.0, 10.0)\n    assert (90.0, 10.0) == NormalizeLatLng(90.0, 10.0)\n    assert (-90.0, -10.0) == NormalizeLatLng(-90.0, -10.0)\n    assert (0.0, -170.0) == NormalizeLatLng(-180.0, 10.0)\n    assert (0.0, -170.0) == NormalizeLatLng(180.0, 10.0)\n    assert (-90.0, 10.0) == NormalizeLatLng(270.0, 10.0)\n    assert (90.0, 10.0) == NormalizeLatLng(-270.0, 10.0)\n\nThe code in logs/storage/validator/logs_validator_traits.cc treats this type\nas if it were annotated as ST_LOCATION.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "longitude",
+                    "desc": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+                    "type": "float64"
+                },
+                {
+                    "name": "latitude",
+                    "desc": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+                    "type": "float64"
                 }
             ]
         }
     ],
     "resources": [
+        {
+            "name": "beaconinfo",
+            "methods": [
+                {
+                    "name": "getforobserved",
+                    "desc": "Given one or more beacon observations, returns any beacon information\nand attachments accessible to your application. Authorize by using the\n[API key](https://developers.google.com/beacons/proximity/how-tos/authorizing#APIKey)\nfor the application.",
+                    "path": "v1beta1/beaconinfo:getforobserved",
+                    "httpMethod": "POST",
+                    "request": "GetInfoForObservedBeaconsRequest",
+                    "response": "GetInfoForObservedBeaconsResponse"
+                }
+            ]
+        },
+        {
+            "name": "namespaces",
+            "methods": [
+                {
+                    "name": "list",
+                    "desc": "Lists all attachment namespaces owned by your Google Developers Console\nproject. Attachment data associated with a beacon must include a\nnamespaced type, and the namespace must be owned by your project.\n\nAuthenticate using an [OAuth access token](https://developers.google.com/identity/protocols/OAuth2)\nfrom a signed-in user with **viewer**, **Is owner** or **Can edit**\npermissions in the Google Developers Console project.",
+                    "path": "v1beta1/namespaces",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/userlocation.beacon.registry"
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projectId",
+                            "desc": "The project id to list namespaces under.\nOptional.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "ListNamespacesResponse"
+                },
+                {
+                    "name": "update",
+                    "desc": "Updates the information about the specified namespace. Only the namespace\nvisibility can be updated.",
+                    "path": "v1beta1/{+namespaceName}",
+                    "httpMethod": "PUT",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/userlocation.beacon.registry"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "namespaceName",
+                            "desc": "Resource name of this namespace. Namespaces names have the format:\n\u003ccode\u003enamespaces/\u003cvar\u003enamespace\u003c/var\u003e\u003c/code\u003e.",
+                            "required": true,
+                            "type": "string",
+                            "pattern": "^namespaces/[^/]+$"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projectId",
+                            "desc": "The project id of the namespace to update. If the project id is not\nspecified then the project making the request is used. The project id\nmust match the project that owns the beacon.\nOptional.",
+                            "type": "string"
+                        }
+                    ],
+                    "request": "Namespace",
+                    "response": "Namespace"
+                }
+            ]
+        },
         {
             "name": "v1beta1",
             "methods": [
@@ -655,32 +717,6 @@
         {
             "name": "beacons",
             "methods": [
-                {
-                    "name": "activate",
-                    "desc": "Activates a beacon. A beacon that is active will return information\nand attachment data when queried via `beaconinfo.getforobserved`.\nCalling this method on an already active beacon will do nothing (but\nwill return a successful response code).\n\nAuthenticate using an [OAuth access token](https://developers.google.com/identity/protocols/OAuth2)\nfrom a signed-in user with **Is owner** or **Can edit** permissions in the\nGoogle Developers Console project.",
-                    "path": "v1beta1/{+beaconName}:activate",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/userlocation.beacon.registry"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "beaconName",
-                            "desc": "Beacon that should be activated. A beacon name has the format\n\"beacons/N!beaconId\" where the beaconId is the base16 ID broadcast by\nthe beacon and N is a code for the beacon's type. Possible values are\n`3` for Eddystone-UID, `4` for Eddystone-EID, `1` for iBeacon, or `5`\nfor AltBeacon. For Eddystone-EID beacons, you may use either the\ncurrent EID or the beacon's \"stable\" UID.\nRequired.",
-                            "required": true,
-                            "type": "string",
-                            "pattern": "^beacons/[^/]+$"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "projectId",
-                            "desc": "The project id of the beacon to activate. If the project id is not\nspecified then the project making the request is used. The project id\nmust match the project that owns the beacon.\nOptional.",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "Empty"
-                },
                 {
                     "name": "deactivate",
                     "desc": "Deactivates a beacon. Once deactivated, the API will not return\ninformation nor attachment data for the beacon when queried via\n`beaconinfo.getforobserved`. Calling this method on an already inactive\nbeacon will do nothing (but will return a successful response code).\n\nAuthenticate using an [OAuth access token](https://developers.google.com/identity/protocols/OAuth2)\nfrom a signed-in user with **Is owner** or **Can edit** permissions in the\nGoogle Developers Console project.",
@@ -717,11 +753,6 @@
                     ],
                     "optinalQueryParams": [
                         {
-                            "name": "q",
-                            "desc": "Filter query string that supports the following field filters:\n\n* **description:`\"\u003cstring\u003e\"`**\n  For example: **description:\"Room 3\"**\n  Returns beacons whose description matches tokens in the string \"Room 3\"\n  (not necessarily that exact string).\n  The string must be double-quoted.\n* **status:`\u003cenum\u003e`**\n  For example: **status:active**\n  Returns beacons whose status matches the given value. Values must be\n  one of the Beacon.Status enum values (case insensitive). Accepts\n  multiple filters which will be combined with OR logic.\n* **stability:`\u003cenum\u003e`**\n  For example: **stability:mobile**\n  Returns beacons whose expected stability matches the given value.\n  Values must be one of the Beacon.Stability enum values (case\n  insensitive). Accepts multiple filters which will be combined with\n  OR logic.\n* **place\\_id:`\"\u003cstring\u003e\"`**\n  For example: **place\\_id:\"ChIJVSZzVR8FdkgRXGmmm6SslKw=\"**\n  Returns beacons explicitly registered at the given place, expressed as\n  a Place ID obtained from [Google Places API](/places/place-id). Does not\n  match places inside the given place. Does not consider the beacon's\n  actual location (which may be different from its registered place).\n  Accepts multiple filters that will be combined with OR logic. The place\n  ID must be double-quoted.\n* **registration\\_time`[\u003c|\u003e|\u003c=|\u003e=]\u003cinteger\u003e`**\n  For example: **registration\\_time\u003e=1433116800**\n  Returns beacons whose registration time matches the given filter.\n  Supports the operators: \u003c, \u003e, \u003c=, and \u003e=. Timestamp must be expressed as\n  an integer number of seconds since midnight January 1, 1970 UTC. Accepts\n  at most two filters that will be combined with AND logic, to support\n  \"between\" semantics. If more than two are supplied, the latter ones are\n  ignored.\n* **lat:`\u003cdouble\u003e lng:\u003cdouble\u003e radius:\u003cinteger\u003e`**\n  For example: **lat:51.1232343 lng:-1.093852 radius:1000**\n  Returns beacons whose registered location is within the given circle.\n  When any of these fields are given, all are required. Latitude and\n  longitude must be decimal degrees between -90.0 and 90.0 and between\n  -180.0 and 180.0 respectively. Radius must be an integer number of\n  meters between 10 and 1,000,000 (1000 km).\n* **property:`\"\u003cstring\u003e=\u003cstring\u003e\"`**\n  For example: **property:\"battery-type=CR2032\"**\n  Returns beacons which have a property of the given name and value.\n  Supports multiple filters which will be combined with OR logic.\n  The entire name=value string must be double-quoted as one string.\n* **attachment\\_type:`\"\u003cstring\u003e\"`**\n  For example: **attachment_type:\"my-namespace/my-type\"**\n  Returns beacons having at least one attachment of the given namespaced\n  type. Supports \"any within this namespace\" via the partial wildcard\n  syntax: \"my-namespace/*\". Supports multiple filters which will be\n  combined with OR logic. The string must be double-quoted.\n* **indoor\\_level:`\"\u003cstring\u003e\"`**\n  For example: **indoor\\_level:\"1\"**\n  Returns beacons which are located on the given indoor level. Accepts\n  multiple filters that will be combined with OR logic.\n\nMultiple filters on the same field are combined with OR logic (except\nregistration_time which is combined with AND logic).\nMultiple filters on different fields are combined with AND logic.\nFilters should be separated by spaces.\n\nAs with any HTTP query string parameter, the whole filter expression must\nbe URL-encoded.\n\nExample REST request:\n`GET /v1beta1/beacons?q=status:active%20lat:51.123%20lng:-1.095%20radius:1000`",
-                            "type": "string"
-                        },
-                        {
                             "name": "pageSize",
                             "desc": "The maximum number of records to return for this request, up to a\nserver-defined upper limit.",
                             "type": "int32"
@@ -734,6 +765,11 @@
                         {
                             "name": "projectId",
                             "desc": "The project id to list beacons under. If not present then the project\ncredential that made the request is used as the project.\nOptional.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "q",
+                            "desc": "Filter query string that supports the following field filters:\n\n* **description:`\"\u003cstring\u003e\"`**\n  For example: **description:\"Room 3\"**\n  Returns beacons whose description matches tokens in the string \"Room 3\"\n  (not necessarily that exact string).\n  The string must be double-quoted.\n* **status:`\u003cenum\u003e`**\n  For example: **status:active**\n  Returns beacons whose status matches the given value. Values must be\n  one of the Beacon.Status enum values (case insensitive). Accepts\n  multiple filters which will be combined with OR logic.\n* **stability:`\u003cenum\u003e`**\n  For example: **stability:mobile**\n  Returns beacons whose expected stability matches the given value.\n  Values must be one of the Beacon.Stability enum values (case\n  insensitive). Accepts multiple filters which will be combined with\n  OR logic.\n* **place\\_id:`\"\u003cstring\u003e\"`**\n  For example: **place\\_id:\"ChIJVSZzVR8FdkgRXGmmm6SslKw=\"**\n  Returns beacons explicitly registered at the given place, expressed as\n  a Place ID obtained from [Google Places API](/places/place-id). Does not\n  match places inside the given place. Does not consider the beacon's\n  actual location (which may be different from its registered place).\n  Accepts multiple filters that will be combined with OR logic. The place\n  ID must be double-quoted.\n* **registration\\_time`[\u003c|\u003e|\u003c=|\u003e=]\u003cinteger\u003e`**\n  For example: **registration\\_time\u003e=1433116800**\n  Returns beacons whose registration time matches the given filter.\n  Supports the operators: \u003c, \u003e, \u003c=, and \u003e=. Timestamp must be expressed as\n  an integer number of seconds since midnight January 1, 1970 UTC. Accepts\n  at most two filters that will be combined with AND logic, to support\n  \"between\" semantics. If more than two are supplied, the latter ones are\n  ignored.\n* **lat:`\u003cdouble\u003e lng:\u003cdouble\u003e radius:\u003cinteger\u003e`**\n  For example: **lat:51.1232343 lng:-1.093852 radius:1000**\n  Returns beacons whose registered location is within the given circle.\n  When any of these fields are given, all are required. Latitude and\n  longitude must be decimal degrees between -90.0 and 90.0 and between\n  -180.0 and 180.0 respectively. Radius must be an integer number of\n  meters between 10 and 1,000,000 (1000 km).\n* **property:`\"\u003cstring\u003e=\u003cstring\u003e\"`**\n  For example: **property:\"battery-type=CR2032\"**\n  Returns beacons which have a property of the given name and value.\n  Supports multiple filters which will be combined with OR logic.\n  The entire name=value string must be double-quoted as one string.\n* **attachment\\_type:`\"\u003cstring\u003e\"`**\n  For example: **attachment_type:\"my-namespace/my-type\"**\n  Returns beacons having at least one attachment of the given namespaced\n  type. Supports \"any within this namespace\" via the partial wildcard\n  syntax: \"my-namespace/*\". Supports multiple filters which will be\n  combined with OR logic. The string must be double-quoted.\n* **indoor\\_level:`\"\u003cstring\u003e\"`**\n  For example: **indoor\\_level:\"1\"**\n  Returns beacons which are located on the given indoor level. Accepts\n  multiple filters that will be combined with OR logic.\n\nMultiple filters on the same field are combined with OR logic (except\nregistration_time which is combined with AND logic).\nMultiple filters on different fields are combined with AND logic.\nFilters should be separated by spaces.\n\nAs with any HTTP query string parameter, the whole filter expression must\nbe URL-encoded.\n\nExample REST request:\n`GET /v1beta1/beacons?q=status:active%20lat:51.123%20lng:-1.095%20radius:1000`",
                             "type": "string"
                         }
                     ],
@@ -861,95 +897,38 @@
                         }
                     ],
                     "response": "Empty"
+                },
+                {
+                    "name": "activate",
+                    "desc": "Activates a beacon. A beacon that is active will return information\nand attachment data when queried via `beaconinfo.getforobserved`.\nCalling this method on an already active beacon will do nothing (but\nwill return a successful response code).\n\nAuthenticate using an [OAuth access token](https://developers.google.com/identity/protocols/OAuth2)\nfrom a signed-in user with **Is owner** or **Can edit** permissions in the\nGoogle Developers Console project.",
+                    "path": "v1beta1/{+beaconName}:activate",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/userlocation.beacon.registry"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "beaconName",
+                            "desc": "Beacon that should be activated. A beacon name has the format\n\"beacons/N!beaconId\" where the beaconId is the base16 ID broadcast by\nthe beacon and N is a code for the beacon's type. Possible values are\n`3` for Eddystone-UID, `4` for Eddystone-EID, `1` for iBeacon, or `5`\nfor AltBeacon. For Eddystone-EID beacons, you may use either the\ncurrent EID or the beacon's \"stable\" UID.\nRequired.",
+                            "required": true,
+                            "type": "string",
+                            "pattern": "^beacons/[^/]+$"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projectId",
+                            "desc": "The project id of the beacon to activate. If the project id is not\nspecified then the project making the request is used. The project id\nmust match the project that owns the beacon.\nOptional.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "Empty"
                 }
             ],
             "resources": [
                 {
-                    "name": "diagnostics",
-                    "methods": [
-                        {
-                            "name": "list",
-                            "desc": "List the diagnostics for a single beacon. You can also list diagnostics for\nall the beacons owned by your Google Developers Console project by using\nthe beacon name `beacons/-`.\n\nAuthenticate using an [OAuth access token](https://developers.google.com/identity/protocols/OAuth2)\nfrom a signed-in user with **viewer**, **Is owner** or **Can edit**\npermissions in the Google Developers Console project.",
-                            "path": "v1beta1/{+beaconName}/diagnostics",
-                            "httpMethod": "GET",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/userlocation.beacon.registry"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "beaconName",
-                                    "desc": "Beacon that the diagnostics are for.",
-                                    "required": true,
-                                    "type": "string",
-                                    "pattern": "^beacons/[^/]+$"
-                                }
-                            ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "pageToken",
-                                    "desc": "Requests results that occur after the `page_token`, obtained from the\nresponse to a previous request. Optional.",
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "projectId",
-                                    "desc": "Requests only diagnostic records for the given project id. If not set,\nthen the project making the request will be used for looking up\ndiagnostic records. Optional.",
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "pageSize",
-                                    "desc": "Specifies the maximum number of results to return. Defaults to\n10. Maximum 1000. Optional.",
-                                    "type": "int32"
-                                },
-                                {
-                                    "name": "alertFilter",
-                                    "desc": "Requests only beacons that have the given alert. For example, to find\nbeacons that have low batteries use `alert_filter=LOW_BATTERY`.",
-                                    "type": "string",
-                                    "enum": [
-                                        {
-                                            "name": "ALERT_UNSPECIFIED"
-                                        },
-                                        {
-                                            "name": "WRONG_LOCATION"
-                                        },
-                                        {
-                                            "name": "LOW_BATTERY"
-                                        }
-                                    ]
-                                }
-                            ],
-                            "response": "ListDiagnosticsResponse"
-                        }
-                    ]
-                },
-                {
                     "name": "attachments",
                     "methods": [
-                        {
-                            "name": "delete",
-                            "desc": "Deletes the specified attachment for the given beacon. Each attachment has\na unique attachment name (`attachmentName`) which is returned when you\nfetch the attachment data via this API. You specify this with the delete\nrequest to control which attachment is removed. This operation cannot be\nundone.\n\nAuthenticate using an [OAuth access token](https://developers.google.com/identity/protocols/OAuth2)\nfrom a signed-in user with **Is owner** or **Can edit** permissions in the\nGoogle Developers Console project.",
-                            "path": "v1beta1/{+attachmentName}",
-                            "httpMethod": "DELETE",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/userlocation.beacon.registry"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "attachmentName",
-                                    "desc": "The attachment name (`attachmentName`) of\nthe attachment to remove. For example:\n`beacons/3!893737abc9/attachments/c5e937-af0-494-959-ec49d12738`. For\nEddystone-EID beacons, the beacon ID portion (`3!893737abc9`) may be the\nbeacon's current EID, or its \"stable\" Eddystone-UID.\nRequired.",
-                                    "required": true,
-                                    "type": "string",
-                                    "pattern": "^beacons/[^/]+/attachments/[^/]+$"
-                                }
-                            ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "projectId",
-                                    "desc": "The project id of the attachment to delete. If not provided, the project\nthat is making the request is used.\nOptional.",
-                                    "type": "string"
-                                }
-                            ],
-                            "response": "Empty"
-                        },
                         {
                             "name": "create",
                             "desc": "Associates the given data with the specified beacon. Attachment data must\ncontain two parts:\n\u003cul\u003e\n\u003cli\u003eA namespaced type.\u003c/li\u003e\n\u003cli\u003eThe actual attachment data itself.\u003c/li\u003e\n\u003c/ul\u003e\nThe namespaced type consists of two parts, the namespace and the type.\nThe namespace must be one of the values returned by the `namespaces`\nendpoint, while the type can be a string of any characters except for the\nforward slash (`/`) up to 100 characters in length.\n\nAttachment data can be up to 1024 bytes long.\n\nAuthenticate using an [OAuth access token](https://developers.google.com/identity/protocols/OAuth2)\nfrom a signed-in user with **Is owner** or **Can edit** permissions in the\nGoogle Developers Console project.",
@@ -996,13 +975,13 @@
                             ],
                             "optinalQueryParams": [
                                 {
-                                    "name": "projectId",
-                                    "desc": "The project id to list beacon attachments under. This field can be\nused when \"*\" is specified to mean all attachment namespaces. Projects\nmay have multiple attachments with multiple namespaces. If \"*\" is\nspecified and the projectId string is empty, then the project\nmaking the request is used.\nOptional.",
+                                    "name": "namespacedType",
+                                    "desc": "Specifies the namespace and type of attachment to include in response in\n\u003cvar\u003enamespace/type\u003c/var\u003e format. Accepts `*/*` to specify\n\"all types in all namespaces\".",
                                     "type": "string"
                                 },
                                 {
-                                    "name": "namespacedType",
-                                    "desc": "Specifies the namespace and type of attachment to include in response in\n\u003cvar\u003enamespace/type\u003c/var\u003e format. Accepts `*/*` to specify\n\"all types in all namespaces\".",
+                                    "name": "projectId",
+                                    "desc": "The project id to list beacon attachments under. This field can be\nused when \"*\" is specified to mean all attachment namespaces. Projects\nmay have multiple attachments with multiple namespaces. If \"*\" is\nspecified and the projectId string is empty, then the project\nmaking the request is used.\nOptional.",
                                     "type": "string"
                                 }
                             ],
@@ -1027,81 +1006,102 @@
                             ],
                             "optinalQueryParams": [
                                 {
-                                    "name": "namespacedType",
-                                    "desc": "Specifies the namespace and type of attachments to delete in\n`namespace/type` format. Accepts `*/*` to specify\n\"all types in all namespaces\".\nOptional.",
+                                    "name": "projectId",
+                                    "desc": "The project id to delete beacon attachments under. This field can be\nused when \"*\" is specified to mean all attachment namespaces. Projects\nmay have multiple attachments with multiple namespaces. If \"*\" is\nspecified and the projectId string is empty, then the project\nmaking the request is used.\nOptional.",
                                     "type": "string"
                                 },
                                 {
-                                    "name": "projectId",
-                                    "desc": "The project id to delete beacon attachments under. This field can be\nused when \"*\" is specified to mean all attachment namespaces. Projects\nmay have multiple attachments with multiple namespaces. If \"*\" is\nspecified and the projectId string is empty, then the project\nmaking the request is used.\nOptional.",
+                                    "name": "namespacedType",
+                                    "desc": "Specifies the namespace and type of attachments to delete in\n`namespace/type` format. Accepts `*/*` to specify\n\"all types in all namespaces\".\nOptional.",
                                     "type": "string"
                                 }
                             ],
                             "response": "DeleteAttachmentsResponse"
+                        },
+                        {
+                            "name": "delete",
+                            "desc": "Deletes the specified attachment for the given beacon. Each attachment has\na unique attachment name (`attachmentName`) which is returned when you\nfetch the attachment data via this API. You specify this with the delete\nrequest to control which attachment is removed. This operation cannot be\nundone.\n\nAuthenticate using an [OAuth access token](https://developers.google.com/identity/protocols/OAuth2)\nfrom a signed-in user with **Is owner** or **Can edit** permissions in the\nGoogle Developers Console project.",
+                            "path": "v1beta1/{+attachmentName}",
+                            "httpMethod": "DELETE",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/userlocation.beacon.registry"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "attachmentName",
+                                    "desc": "The attachment name (`attachmentName`) of\nthe attachment to remove. For example:\n`beacons/3!893737abc9/attachments/c5e937-af0-494-959-ec49d12738`. For\nEddystone-EID beacons, the beacon ID portion (`3!893737abc9`) may be the\nbeacon's current EID, or its \"stable\" Eddystone-UID.\nRequired.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^beacons/[^/]+/attachments/[^/]+$"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "projectId",
+                                    "desc": "The project id of the attachment to delete. If not provided, the project\nthat is making the request is used.\nOptional.",
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "Empty"
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "name": "beaconinfo",
-            "methods": [
-                {
-                    "name": "getforobserved",
-                    "desc": "Given one or more beacon observations, returns any beacon information\nand attachments accessible to your application. Authorize by using the\n[API key](https://developers.google.com/beacons/proximity/how-tos/authorizing#APIKey)\nfor the application.",
-                    "path": "v1beta1/beaconinfo:getforobserved",
-                    "httpMethod": "POST",
-                    "request": "GetInfoForObservedBeaconsRequest",
-                    "response": "GetInfoForObservedBeaconsResponse"
-                }
-            ]
-        },
-        {
-            "name": "namespaces",
-            "methods": [
-                {
-                    "name": "update",
-                    "desc": "Updates the information about the specified namespace. Only the namespace\nvisibility can be updated.",
-                    "path": "v1beta1/{+namespaceName}",
-                    "httpMethod": "PUT",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/userlocation.beacon.registry"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "namespaceName",
-                            "desc": "Resource name of this namespace. Namespaces names have the format:\n\u003ccode\u003enamespaces/\u003cvar\u003enamespace\u003c/var\u003e\u003c/code\u003e.",
-                            "required": true,
-                            "type": "string",
-                            "pattern": "^namespaces/[^/]+$"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "projectId",
-                            "desc": "The project id of the namespace to update. If the project id is not\nspecified then the project making the request is used. The project id\nmust match the project that owns the beacon.\nOptional.",
-                            "type": "string"
-                        }
-                    ],
-                    "request": "Namespace",
-                    "response": "Namespace"
                 },
                 {
-                    "name": "list",
-                    "desc": "Lists all attachment namespaces owned by your Google Developers Console\nproject. Attachment data associated with a beacon must include a\nnamespaced type, and the namespace must be owned by your project.\n\nAuthenticate using an [OAuth access token](https://developers.google.com/identity/protocols/OAuth2)\nfrom a signed-in user with **viewer**, **Is owner** or **Can edit**\npermissions in the Google Developers Console project.",
-                    "path": "v1beta1/namespaces",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/userlocation.beacon.registry"
-                    ],
-                    "optinalQueryParams": [
+                    "name": "diagnostics",
+                    "methods": [
                         {
-                            "name": "projectId",
-                            "desc": "The project id to list namespaces under.\nOptional.",
-                            "type": "string"
+                            "name": "list",
+                            "desc": "List the diagnostics for a single beacon. You can also list diagnostics for\nall the beacons owned by your Google Developers Console project by using\nthe beacon name `beacons/-`.\n\nAuthenticate using an [OAuth access token](https://developers.google.com/identity/protocols/OAuth2)\nfrom a signed-in user with **viewer**, **Is owner** or **Can edit**\npermissions in the Google Developers Console project.",
+                            "path": "v1beta1/{+beaconName}/diagnostics",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/userlocation.beacon.registry"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "beaconName",
+                                    "desc": "Beacon that the diagnostics are for.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^beacons/[^/]+$"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "pageSize",
+                                    "desc": "Specifies the maximum number of results to return. Defaults to\n10. Maximum 1000. Optional.",
+                                    "type": "int32"
+                                },
+                                {
+                                    "name": "alertFilter",
+                                    "desc": "Requests only beacons that have the given alert. For example, to find\nbeacons that have low batteries use `alert_filter=LOW_BATTERY`.",
+                                    "type": "string",
+                                    "enum": [
+                                        {
+                                            "name": "ALERT_UNSPECIFIED"
+                                        },
+                                        {
+                                            "name": "WRONG_LOCATION"
+                                        },
+                                        {
+                                            "name": "LOW_BATTERY"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "pageToken",
+                                    "desc": "Requests results that occur after the `page_token`, obtained from the\nresponse to a previous request. Optional.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "projectId",
+                                    "desc": "Requests only diagnostic records for the given project id. If not set,\nthen the project making the request will be used for looking up\ndiagnostic records. Optional.",
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "ListDiagnosticsResponse"
                         }
-                    ],
-                    "response": "ListNamespacesResponse"
+                    ]
                 }
             ]
         }

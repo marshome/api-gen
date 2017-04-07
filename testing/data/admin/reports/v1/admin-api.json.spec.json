@@ -18,23 +18,6 @@
     },
     "parameters": [
         {
-            "name": "userIp",
-            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
-            "type": "string"
-        },
-        {
-            "name": "alt",
-            "desc": "Data format for the response.",
-            "type": "string",
-            "default": "json",
-            "enum": [
-                {
-                    "name": "json",
-                    "desc": "Responses with Content-Type of application/json"
-                }
-            ]
-        },
-        {
             "name": "fields",
             "desc": "Selector specifying which fields to include in a partial response.",
             "type": "string"
@@ -59,9 +42,85 @@
             "name": "quotaUser",
             "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
             "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
         }
     ],
     "schemas": [
+        {
+            "name": "Channel",
+            "desc": "An notification channel used to watch for resource changes.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "resourceUri",
+                    "desc": "A version-specific identifier for the watched resource.",
+                    "type": "string"
+                },
+                {
+                    "name": "expiration",
+                    "desc": "Date and time of notification channel expiration, expressed as a Unix timestamp, in milliseconds. Optional.",
+                    "type": "int64"
+                },
+                {
+                    "name": "params",
+                    "desc": "Additional parameters controlling delivery channel behavior. Optional.",
+                    "collection": "map",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Identifies this as a notification channel used to watch for changes to a resource. Value: the fixed string \"api#channel\".",
+                    "type": "string",
+                    "default": "api#channel"
+                },
+                {
+                    "name": "payload",
+                    "desc": "A Boolean value to indicate whether payload is wanted. Optional.",
+                    "type": "bool"
+                },
+                {
+                    "name": "resourceId",
+                    "desc": "An opaque ID that identifies the resource being watched on this channel. Stable across different API versions.",
+                    "type": "string"
+                },
+                {
+                    "name": "token",
+                    "desc": "An arbitrary string delivered to the target address with each notification delivered over this channel. Optional.",
+                    "type": "string"
+                },
+                {
+                    "name": "type",
+                    "desc": "The type of delivery mechanism used for this channel.",
+                    "type": "string"
+                },
+                {
+                    "name": "address",
+                    "desc": "The address where notifications are delivered for this channel.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "A UUID or similar unique string that identifies this channel.",
+                    "type": "string"
+                }
+            ]
+        },
         {
             "name": "UsageReport",
             "desc": "JSON template for a usage report.",
@@ -78,11 +137,6 @@
                     "type": "object",
                     "fields": [
                         {
-                            "name": "userEmail",
-                            "desc": "user's email.",
-                            "type": "string"
-                        },
-                        {
                             "name": "customerId",
                             "desc": "Obfuscated customer id for the record.",
                             "type": "string"
@@ -95,6 +149,11 @@
                         {
                             "name": "type",
                             "desc": "The type of item, can be a customer or user.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "userEmail",
+                            "desc": "user's email.",
                             "type": "string"
                         }
                     ]
@@ -117,21 +176,6 @@
                     "type": "object",
                     "fields": [
                         {
-                            "name": "boolValue",
-                            "desc": "Boolean value of the parameter.",
-                            "type": "bool"
-                        },
-                        {
-                            "name": "datetimeValue",
-                            "desc": "RFC 3339 formatted value of the parameter.",
-                            "type": "datetime"
-                        },
-                        {
-                            "name": "intValue",
-                            "desc": "Integral value of the parameter.",
-                            "type": "int64"
-                        },
-                        {
                             "name": "msgValue",
                             "desc": "Nested message value of the parameter.",
                             "collection": "array",
@@ -149,6 +193,21 @@
                             "name": "stringValue",
                             "desc": "String value of the parameter.",
                             "type": "string"
+                        },
+                        {
+                            "name": "boolValue",
+                            "desc": "Boolean value of the parameter.",
+                            "type": "bool"
+                        },
+                        {
+                            "name": "datetimeValue",
+                            "desc": "RFC 3339 formatted value of the parameter.",
+                            "type": "datetime"
+                        },
+                        {
+                            "name": "intValue",
+                            "desc": "Integral value of the parameter.",
+                            "type": "int64"
                         }
                     ]
                 }
@@ -159,42 +218,6 @@
             "desc": "JSON template for a collection of usage reports.",
             "type": "object",
             "fields": [
-                {
-                    "name": "warnings",
-                    "desc": "Warnings if any.",
-                    "collection": "array",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "code",
-                            "desc": "Machine readable code / warning type.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "data",
-                            "desc": "Key-Value pairs to give detailed information on the warning.",
-                            "collection": "array",
-                            "type": "object",
-                            "fields": [
-                                {
-                                    "name": "value",
-                                    "desc": "Value associated with a key-value pair to give detailed information on the warning.",
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "key",
-                                    "desc": "Key associated with a key-value pair to give detailed information on the warning.",
-                                    "type": "string"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "message",
-                            "desc": "Human readable message for the warning.",
-                            "type": "string"
-                        }
-                    ]
-                },
                 {
                     "name": "etag",
                     "desc": "ETag of the resource.",
@@ -217,6 +240,42 @@
                     "collection": "array",
                     "type": "ref",
                     "refType": "UsageReport"
+                },
+                {
+                    "name": "warnings",
+                    "desc": "Warnings if any.",
+                    "collection": "array",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "code",
+                            "desc": "Machine readable code / warning type.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "data",
+                            "desc": "Key-Value pairs to give detailed information on the warning.",
+                            "collection": "array",
+                            "type": "object",
+                            "fields": [
+                                {
+                                    "name": "key",
+                                    "desc": "Key associated with a key-value pair to give detailed information on the warning.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "value",
+                                    "desc": "Value associated with a key-value pair to give detailed information on the warning.",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "message",
+                            "desc": "Human readable message for the warning.",
+                            "type": "string"
+                        }
+                    ]
                 }
             ]
         },
@@ -225,6 +284,13 @@
             "desc": "JSON template for a collection of activites.",
             "type": "object",
             "fields": [
+                {
+                    "name": "items",
+                    "desc": "Each record in read response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Activity"
+                },
                 {
                     "name": "kind",
                     "desc": "Kind of list response this is.",
@@ -240,13 +306,6 @@
                     "name": "etag",
                     "desc": "ETag of the resource.",
                     "type": "string"
-                },
-                {
-                    "name": "items",
-                    "desc": "Each record in read response.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Activity"
                 }
             ]
         },
@@ -255,11 +314,6 @@
             "desc": "JSON template for the activity resource.",
             "type": "object",
             "fields": [
-                {
-                    "name": "ipAddress",
-                    "desc": "IP Address of the user doing the action.",
-                    "type": "string"
-                },
                 {
                     "name": "kind",
                     "desc": "Kind of resource this is.",
@@ -277,16 +331,6 @@
                     "type": "object",
                     "fields": [
                         {
-                            "name": "callerType",
-                            "desc": "User or OAuth 2LO request.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "email",
-                            "desc": "Email address of the user.",
-                            "type": "string"
-                        },
-                        {
                             "name": "key",
                             "desc": "For OAuth 2LO API requests, consumer_key of the requestor.",
                             "type": "string"
@@ -294,6 +338,16 @@
                         {
                             "name": "profileId",
                             "desc": "Obfuscated user id of the user.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "callerType",
+                            "desc": "User or OAuth 2LO request.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "email",
+                            "desc": "Email address of the user.",
                             "type": "string"
                         }
                     ]
@@ -367,11 +421,6 @@
                     "type": "object",
                     "fields": [
                         {
-                            "name": "uniqueQualifier",
-                            "desc": "Unique qualifier if multiple events have the same time.",
-                            "type": "int64"
-                        },
-                        {
                             "name": "applicationName",
                             "desc": "Application name to which the event belongs.",
                             "type": "string"
@@ -385,133 +434,23 @@
                             "name": "time",
                             "desc": "Time of occurrence of the activity.",
                             "type": "datetime"
+                        },
+                        {
+                            "name": "uniqueQualifier",
+                            "desc": "Unique qualifier if multiple events have the same time.",
+                            "type": "int64"
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "name": "Channel",
-            "desc": "An notification channel used to watch for resource changes.",
-            "type": "object",
-            "fields": [
+                },
                 {
-                    "name": "token",
-                    "desc": "An arbitrary string delivered to the target address with each notification delivered over this channel. Optional.",
+                    "name": "ipAddress",
+                    "desc": "IP Address of the user doing the action.",
                     "type": "string"
-                },
-                {
-                    "name": "type",
-                    "desc": "The type of delivery mechanism used for this channel.",
-                    "type": "string"
-                },
-                {
-                    "name": "expiration",
-                    "desc": "Date and time of notification channel expiration, expressed as a Unix timestamp, in milliseconds. Optional.",
-                    "type": "int64"
-                },
-                {
-                    "name": "payload",
-                    "desc": "A Boolean value to indicate whether payload is wanted. Optional.",
-                    "type": "bool"
-                },
-                {
-                    "name": "resourceId",
-                    "desc": "An opaque ID that identifies the resource being watched on this channel. Stable across different API versions.",
-                    "type": "string"
-                },
-                {
-                    "name": "params",
-                    "desc": "Additional parameters controlling delivery channel behavior. Optional.",
-                    "collection": "map",
-                    "type": "string"
-                },
-                {
-                    "name": "resourceUri",
-                    "desc": "A version-specific identifier for the watched resource.",
-                    "type": "string"
-                },
-                {
-                    "name": "address",
-                    "desc": "The address where notifications are delivered for this channel.",
-                    "type": "string"
-                },
-                {
-                    "name": "id",
-                    "desc": "A UUID or similar unique string that identifies this channel.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies this as a notification channel used to watch for changes to a resource. Value: the fixed string \"api#channel\".",
-                    "type": "string",
-                    "default": "api#channel"
                 }
             ]
         }
     ],
     "resources": [
-        {
-            "name": "userUsageReport",
-            "methods": [
-                {
-                    "name": "get",
-                    "desc": "Retrieves a report which is a collection of properties / statistics for a set of users.",
-                    "path": "usage/users/{userKey}/dates/{date}",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/admin.reports.usage.readonly"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "userKey",
-                            "desc": "Represents the profile id or the user email for which the data should be filtered.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "date",
-                            "desc": "Represents the date in yyyy-mm-dd format for which the data is to be fetched.",
-                            "required": true,
-                            "type": "string",
-                            "pattern": "(\\d){4}-(\\d){2}-(\\d){2}"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "parameters",
-                            "desc": "Represents the application name, parameter name pairs to fetch in csv as app_name1:param_name1, app_name2:param_name2.",
-                            "type": "string",
-                            "pattern": "(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[^,]+,)*(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[^,]+)"
-                        },
-                        {
-                            "name": "customerId",
-                            "desc": "Represents the customer for which the data is to be fetched.",
-                            "type": "string",
-                            "pattern": "C.+"
-                        },
-                        {
-                            "name": "filters",
-                            "desc": "Represents the set of filters including parameter operator value.",
-                            "type": "string",
-                            "pattern": "(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[a-z0-9_]+[\u003c,\u003c=,==,\u003e=,\u003e,!=][^,]+,)*(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[a-z0-9_]+[\u003c,\u003c=,==,\u003e=,\u003e,!=][^,]+)"
-                        },
-                        {
-                            "name": "maxResults",
-                            "desc": "Maximum number of results to return. Maximum allowed is 1000",
-                            "type": "uint32",
-                            "max": "1000"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "Token to specify next page.",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "UsageReports"
-                }
-            ]
-        },
         {
             "name": "activities",
             "methods": [
@@ -547,15 +486,16 @@
                             "max": "1000"
                         },
                         {
-                            "name": "pageToken",
-                            "desc": "Token to specify next page.",
-                            "type": "string"
+                            "name": "startTime",
+                            "desc": "Return events which occurred at or after this time.",
+                            "type": "string",
+                            "pattern": "(\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d)T(\\d\\d):(\\d\\d):(\\d\\d)(?:\\.(\\d+))?(?:(Z)|([-+])(\\d\\d):(\\d\\d))"
                         },
                         {
-                            "name": "filters",
-                            "desc": "Event parameters in the form [parameter1 name][operator][parameter1 value],[parameter2 name][operator][parameter2 value],...",
+                            "name": "customerId",
+                            "desc": "Represents the customer for which the data is to be fetched.",
                             "type": "string",
-                            "pattern": "(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+,)*(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+)"
+                            "pattern": "C.+"
                         },
                         {
                             "name": "endTime",
@@ -564,15 +504,15 @@
                             "pattern": "(\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d)T(\\d\\d):(\\d\\d):(\\d\\d)(?:\\.(\\d+))?(?:(Z)|([-+])(\\d\\d):(\\d\\d))"
                         },
                         {
-                            "name": "eventName",
-                            "desc": "Name of the event being queried.",
-                            "type": "string"
+                            "name": "filters",
+                            "desc": "Event parameters in the form [parameter1 name][operator][parameter1 value],[parameter2 name][operator][parameter2 value],...",
+                            "type": "string",
+                            "pattern": "(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+,)*(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+)"
                         },
                         {
-                            "name": "startTime",
-                            "desc": "Return events which occurred at or after this time.",
-                            "type": "string",
-                            "pattern": "(\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d)T(\\d\\d):(\\d\\d):(\\d\\d)(?:\\.(\\d+))?(?:(Z)|([-+])(\\d\\d):(\\d\\d))"
+                            "name": "pageToken",
+                            "desc": "Token to specify next page.",
+                            "type": "string"
                         },
                         {
                             "name": "actorIpAddress",
@@ -580,10 +520,9 @@
                             "type": "string"
                         },
                         {
-                            "name": "customerId",
-                            "desc": "Represents the customer for which the data is to be fetched.",
-                            "type": "string",
-                            "pattern": "C.+"
+                            "name": "eventName",
+                            "desc": "Name of the event being queried.",
+                            "type": "string"
                         }
                     ],
                     "response": "Activities"
@@ -613,6 +552,19 @@
                     ],
                     "optinalQueryParams": [
                         {
+                            "name": "customerId",
+                            "desc": "Represents the customer for which the data is to be fetched.",
+                            "type": "string",
+                            "pattern": "C.+"
+                        },
+                        {
+                            "name": "maxResults",
+                            "desc": "Number of activity records to be shown in each page.",
+                            "type": "int32",
+                            "min": "1",
+                            "max": "1000"
+                        },
+                        {
                             "name": "pageToken",
                             "desc": "Token to specify next page.",
                             "type": "string"
@@ -644,19 +596,6 @@
                             "desc": "Event parameters in the form [parameter1 name][operator][parameter1 value],[parameter2 name][operator][parameter2 value],...",
                             "type": "string",
                             "pattern": "(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+,)*(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+)"
-                        },
-                        {
-                            "name": "customerId",
-                            "desc": "Represents the customer for which the data is to be fetched.",
-                            "type": "string",
-                            "pattern": "C.+"
-                        },
-                        {
-                            "name": "maxResults",
-                            "desc": "Number of activity records to be shown in each page.",
-                            "type": "int32",
-                            "min": "1",
-                            "max": "1000"
                         }
                     ],
                     "request": "Channel",
@@ -701,10 +640,65 @@
                     ],
                     "optinalQueryParams": [
                         {
+                            "name": "pageToken",
+                            "desc": "Token to specify next page.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "parameters",
+                            "desc": "Represents the application name, parameter name pairs to fetch in csv as app_name1:param_name1, app_name2:param_name2.",
+                            "type": "string",
+                            "pattern": "(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[^,]+,)*(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[^,]+)"
+                        },
+                        {
                             "name": "customerId",
                             "desc": "Represents the customer for which the data is to be fetched.",
                             "type": "string",
                             "pattern": "C.+"
+                        }
+                    ],
+                    "response": "UsageReports"
+                }
+            ]
+        },
+        {
+            "name": "userUsageReport",
+            "methods": [
+                {
+                    "name": "get",
+                    "desc": "Retrieves a report which is a collection of properties / statistics for a set of users.",
+                    "path": "usage/users/{userKey}/dates/{date}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/admin.reports.usage.readonly"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "userKey",
+                            "desc": "Represents the profile id or the user email for which the data should be filtered.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "date",
+                            "desc": "Represents the date in yyyy-mm-dd format for which the data is to be fetched.",
+                            "required": true,
+                            "type": "string",
+                            "pattern": "(\\d){4}-(\\d){2}-(\\d){2}"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "filters",
+                            "desc": "Represents the set of filters including parameter operator value.",
+                            "type": "string",
+                            "pattern": "(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[a-z0-9_]+[\u003c,\u003c=,==,\u003e=,\u003e,!=][^,]+,)*(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[a-z0-9_]+[\u003c,\u003c=,==,\u003e=,\u003e,!=][^,]+)"
+                        },
+                        {
+                            "name": "maxResults",
+                            "desc": "Maximum number of results to return. Maximum allowed is 1000",
+                            "type": "uint32",
+                            "max": "1000"
                         },
                         {
                             "name": "pageToken",
@@ -716,6 +710,12 @@
                             "desc": "Represents the application name, parameter name pairs to fetch in csv as app_name1:param_name1, app_name2:param_name2.",
                             "type": "string",
                             "pattern": "(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[^,]+,)*(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[^,]+)"
+                        },
+                        {
+                            "name": "customerId",
+                            "desc": "Represents the customer for which the data is to be fetched.",
+                            "type": "string",
+                            "pattern": "C.+"
                         }
                     ],
                     "response": "UsageReports"

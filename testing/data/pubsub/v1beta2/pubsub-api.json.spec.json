@@ -18,33 +18,13 @@
     },
     "parameters": [
         {
-            "name": "upload_protocol",
-            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
-            "type": "string"
-        },
-        {
-            "name": "access_token",
-            "desc": "OAuth access token.",
-            "type": "string"
-        },
-        {
             "name": "quotaUser",
             "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
             "type": "string"
         },
         {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
-        {
-            "name": "bearer_token",
-            "desc": "OAuth bearer token.",
-            "type": "string"
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
             "type": "string"
         },
         {
@@ -70,6 +50,11 @@
         {
             "name": "callback",
             "desc": "JSONP",
+            "type": "string"
+        },
+        {
+            "name": "access_token",
+            "desc": "OAuth access token.",
             "type": "string"
         },
         {
@@ -104,13 +89,82 @@
             "default": "true"
         },
         {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
             "name": "prettyPrint",
             "desc": "Returns response with indentations and line breaks.",
             "type": "bool",
             "default": "true"
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
         }
     ],
     "schemas": [
+        {
+            "name": "Subscription",
+            "desc": "A subscription resource.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "name",
+                    "desc": "The name of the subscription. It must have the format\n`\"projects/{project}/subscriptions/{subscription}\"`. `{subscription}` must\nstart with a letter, and contain only letters (`[A-Za-z]`), numbers\n(`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`),\nplus (`+`) or percent signs (`%`). It must be between 3 and 255 characters\nin length, and it must not start with `\"goog\"`.",
+                    "type": "string"
+                },
+                {
+                    "name": "topic",
+                    "desc": "The name of the topic from which this subscription is receiving messages.\nThe value of this field will be `_deleted-topic_` if the topic has been\ndeleted.",
+                    "type": "string"
+                },
+                {
+                    "name": "pushConfig",
+                    "desc": "If push delivery is used with this subscription, this field is\nused to configure it. An empty `pushConfig` signifies that the subscriber\nwill pull and ack messages using API methods.",
+                    "type": "ref",
+                    "refType": "PushConfig"
+                },
+                {
+                    "name": "ackDeadlineSeconds",
+                    "desc": "This value is the maximum time after a subscriber receives a message\nbefore the subscriber should acknowledge the message. After message\ndelivery but before the ack deadline expires and before the message is\nacknowledged, it is an outstanding message and will not be delivered\nagain during that time (on a best-effort basis).\n\nFor pull subscriptions, this value is used as the initial value for the ack\ndeadline. To override this value for a given message, call\n`ModifyAckDeadline` with the corresponding `ack_id` if using pull.\nThe maximum custom deadline you can specify is 600 seconds (10 minutes).\n\nFor push delivery, this value is also used to set the request timeout for\nthe call to the push endpoint.\n\nIf the subscriber never acknowledges the message, the Pub/Sub\nsystem will eventually redeliver the message.\n\nIf this parameter is 0, a default value of 10 seconds is used.",
+                    "type": "int32"
+                }
+            ]
+        },
+        {
+            "name": "ModifyPushConfigRequest",
+            "desc": "Request for the ModifyPushConfig method.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "pushConfig",
+                    "desc": "The push configuration for future deliveries.\n\nAn empty `pushConfig` indicates that the Pub/Sub system should\nstop pushing messages from the given subscription and allow\nmessages to be pulled and acknowledged - effectively pausing\nthe subscription if `Pull` is not called.",
+                    "type": "ref",
+                    "refType": "PushConfig"
+                }
+            ]
+        },
+        {
+            "name": "AcknowledgeRequest",
+            "desc": "Request for the Acknowledge method.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "ackIds",
+                    "desc": "The acknowledgment ID for the messages being acknowledged that was returned\nby the Pub/Sub system in the `Pull` response. Must not be empty.",
+                    "collection": "array",
+                    "type": "string"
+                }
+            ]
+        },
         {
             "name": "PushConfig",
             "desc": "Configuration for a push delivery endpoint.",
@@ -147,62 +201,28 @@
             ]
         },
         {
-            "name": "Subscription",
-            "desc": "A subscription resource.",
+            "name": "PublishResponse",
+            "desc": "Response for the `Publish` method.",
             "type": "object",
             "fields": [
                 {
-                    "name": "pushConfig",
-                    "desc": "If push delivery is used with this subscription, this field is\nused to configure it. An empty `pushConfig` signifies that the subscriber\nwill pull and ack messages using API methods.",
-                    "type": "ref",
-                    "refType": "PushConfig"
-                },
-                {
-                    "name": "ackDeadlineSeconds",
-                    "desc": "This value is the maximum time after a subscriber receives a message\nbefore the subscriber should acknowledge the message. After message\ndelivery but before the ack deadline expires and before the message is\nacknowledged, it is an outstanding message and will not be delivered\nagain during that time (on a best-effort basis).\n\nFor pull subscriptions, this value is used as the initial value for the ack\ndeadline. To override this value for a given message, call\n`ModifyAckDeadline` with the corresponding `ack_id` if using pull.\nThe maximum custom deadline you can specify is 600 seconds (10 minutes).\n\nFor push delivery, this value is also used to set the request timeout for\nthe call to the push endpoint.\n\nIf the subscriber never acknowledges the message, the Pub/Sub\nsystem will eventually redeliver the message.\n\nIf this parameter is 0, a default value of 10 seconds is used.",
-                    "type": "int32"
-                },
-                {
-                    "name": "name",
-                    "desc": "The name of the subscription. It must have the format\n`\"projects/{project}/subscriptions/{subscription}\"`. `{subscription}` must\nstart with a letter, and contain only letters (`[A-Za-z]`), numbers\n(`[0-9]`), dashes (`-`), underscores (`_`), periods (`.`), tildes (`~`),\nplus (`+`) or percent signs (`%`). It must be between 3 and 255 characters\nin length, and it must not start with `\"goog\"`.",
-                    "type": "string"
-                },
-                {
-                    "name": "topic",
-                    "desc": "The name of the topic from which this subscription is receiving messages.\nThe value of this field will be `_deleted-topic_` if the topic has been\ndeleted.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "PublishRequest",
-            "desc": "Request for the Publish method.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "messages",
-                    "desc": "The messages to publish.",
+                    "name": "messageIds",
+                    "desc": "The server-assigned ID of each published message, in the same order as\nthe messages in the request. IDs are guaranteed to be unique within\nthe topic.",
                     "collection": "array",
-                    "type": "ref",
-                    "refType": "PubsubMessage"
+                    "type": "string"
                 }
             ]
         },
         {
-            "name": "ReceivedMessage",
-            "desc": "A message and its corresponding acknowledgment ID.",
+            "name": "TestIamPermissionsRequest",
+            "desc": "Request message for `TestIamPermissions` method.",
             "type": "object",
             "fields": [
                 {
-                    "name": "ackId",
-                    "desc": "This ID can be used to acknowledge the received message.",
+                    "name": "permissions",
+                    "desc": "The set of permissions to check for the `resource`. Permissions with\nwildcards (such as '*' or 'storage.*') are not allowed. For more\ninformation see\n[IAM Overview](https://cloud.google.com/iam/docs/overview#permissions).",
+                    "collection": "array",
                     "type": "string"
-                },
-                {
-                    "name": "message",
-                    "desc": "The message.",
-                    "type": "ref",
-                    "refType": "PubsubMessage"
                 }
             ]
         },
@@ -219,33 +239,10 @@
             ]
         },
         {
-            "name": "ModifyPushConfigRequest",
-            "desc": "Request for the ModifyPushConfig method.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "pushConfig",
-                    "desc": "The push configuration for future deliveries.\n\nAn empty `pushConfig` indicates that the Pub/Sub system should\nstop pushing messages from the given subscription and allow\nmessages to be pulled and acknowledged - effectively pausing\nthe subscription if `Pull` is not called.",
-                    "type": "ref",
-                    "refType": "PushConfig"
-                }
-            ]
-        },
-        {
             "name": "PubsubMessage",
             "desc": "A message data and its attributes. The message payload must not be empty;\nit must contain either a non-empty data field, or at least one attribute.",
             "type": "object",
             "fields": [
-                {
-                    "name": "publishTime",
-                    "desc": "The time at which the message was published, populated by the server when\nit receives the `Publish` call. It must not be populated by the\npublisher in a `Publish` call.",
-                    "type": "datetime"
-                },
-                {
-                    "name": "data",
-                    "desc": "The message payload. For JSON requests, the value of this field must be\n[base64-encoded](https://tools.ietf.org/html/rfc4648).",
-                    "type": "byte"
-                },
                 {
                     "name": "attributes",
                     "desc": "Optional attributes for this message.",
@@ -256,6 +253,16 @@
                     "name": "messageId",
                     "desc": "ID of this message, assigned by the server when the message is published.\nGuaranteed to be unique within the topic. This value may be read by a\nsubscriber that receives a `PubsubMessage` via a `Pull` call or a push\ndelivery. It must not be populated by the publisher in a `Publish` call.",
                     "type": "string"
+                },
+                {
+                    "name": "publishTime",
+                    "desc": "The time at which the message was published, populated by the server when\nit receives the `Publish` call. It must not be populated by the\npublisher in a `Publish` call.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "data",
+                    "desc": "The message payload. For JSON requests, the value of this field must be\n[base64-encoded](https://tools.ietf.org/html/rfc4648).",
+                    "type": "byte"
                 }
             ]
         },
@@ -278,39 +285,6 @@
             ]
         },
         {
-            "name": "ListTopicsResponse",
-            "desc": "Response for the `ListTopics` method.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "topics",
-                    "desc": "The resulting topics.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Topic"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "If not empty, indicates that there may be more topics that match the\nrequest; this value should be passed in a new `ListTopicsRequest`.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "PullResponse",
-            "desc": "Response for the `Pull` method.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "receivedMessages",
-                    "desc": "Received Pub/Sub messages. The Pub/Sub system will return zero messages if\nthere are no more available in the backlog. The Pub/Sub system may return\nfewer than the `maxMessages` requested even if there are more messages\navailable in the backlog.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ReceivedMessage"
-                }
-            ]
-        },
-        {
             "name": "TestIamPermissionsResponse",
             "desc": "Response message for `TestIamPermissions` method.",
             "type": "object",
@@ -318,43 +292,6 @@
                 {
                     "name": "permissions",
                     "desc": "A subset of `TestPermissionsRequest.permissions` that the caller is\nallowed.",
-                    "collection": "array",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Policy",
-            "desc": "Defines an Identity and Access Management (IAM) policy. It is used to\nspecify access control policies for Cloud Platform resources.\n\n\nA `Policy` consists of a list of `bindings`. A `Binding` binds a list of\n`members` to a `role`, where the members can be user accounts, Google groups,\nGoogle domains, and service accounts. A `role` is a named list of permissions\ndefined by IAM.\n\n**Example**\n\n    {\n      \"bindings\": [\n        {\n          \"role\": \"roles/owner\",\n          \"members\": [\n            \"user:mike@example.com\",\n            \"group:admins@example.com\",\n            \"domain:google.com\",\n            \"serviceAccount:my-other-app@appspot.gserviceaccount.com\",\n          ]\n        },\n        {\n          \"role\": \"roles/viewer\",\n          \"members\": [\"user:sean@example.com\"]\n        }\n      ]\n    }\n\nFor a description of IAM and its features, see the\n[IAM developer's guide](https://cloud.google.com/iam).",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "bindings",
-                    "desc": "Associates a list of `members` to a `role`.\nMultiple `bindings` must not be specified for the same `role`.\n`bindings` with no members will result in an error.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Binding"
-                },
-                {
-                    "name": "etag",
-                    "desc": "`etag` is used for optimistic concurrency control as a way to help\nprevent simultaneous updates of a policy from overwriting each other.\nIt is strongly suggested that systems make use of the `etag` in the\nread-modify-write cycle to perform policy updates in order to avoid race\nconditions: An `etag` is returned in the response to `getIamPolicy`, and\nsystems are expected to put that etag in the request to `setIamPolicy` to\nensure that their change will be applied to the same version of the policy.\n\nIf no `etag` is provided in the call to `setIamPolicy`, then the existing\npolicy is overwritten blindly.",
-                    "type": "byte"
-                },
-                {
-                    "name": "version",
-                    "desc": "Version of the `Policy`. The default version is 0.",
-                    "type": "int32"
-                }
-            ]
-        },
-        {
-            "name": "TestIamPermissionsRequest",
-            "desc": "Request message for `TestIamPermissions` method.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "permissions",
-                    "desc": "The set of permissions to check for the `resource`. Permissions with\nwildcards (such as '*' or 'storage.*') are not allowed. For more\ninformation see\n[IAM Overview](https://cloud.google.com/iam/docs/overview#permissions).",
                     "collection": "array",
                     "type": "string"
                 }
@@ -397,15 +334,58 @@
             ]
         },
         {
-            "name": "AcknowledgeRequest",
-            "desc": "Request for the Acknowledge method.",
+            "name": "PullResponse",
+            "desc": "Response for the `Pull` method.",
             "type": "object",
             "fields": [
                 {
-                    "name": "ackIds",
-                    "desc": "The acknowledgment ID for the messages being acknowledged that was returned\nby the Pub/Sub system in the `Pull` response. Must not be empty.",
+                    "name": "receivedMessages",
+                    "desc": "Received Pub/Sub messages. The Pub/Sub system will return zero messages if\nthere are no more available in the backlog. The Pub/Sub system may return\nfewer than the `maxMessages` requested even if there are more messages\navailable in the backlog.",
                     "collection": "array",
+                    "type": "ref",
+                    "refType": "ReceivedMessage"
+                }
+            ]
+        },
+        {
+            "name": "ReceivedMessage",
+            "desc": "A message and its corresponding acknowledgment ID.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "ackId",
+                    "desc": "This ID can be used to acknowledge the received message.",
                     "type": "string"
+                },
+                {
+                    "name": "message",
+                    "desc": "The message.",
+                    "type": "ref",
+                    "refType": "PubsubMessage"
+                }
+            ]
+        },
+        {
+            "name": "Policy",
+            "desc": "Defines an Identity and Access Management (IAM) policy. It is used to\nspecify access control policies for Cloud Platform resources.\n\n\nA `Policy` consists of a list of `bindings`. A `Binding` binds a list of\n`members` to a `role`, where the members can be user accounts, Google groups,\nGoogle domains, and service accounts. A `role` is a named list of permissions\ndefined by IAM.\n\n**Example**\n\n    {\n      \"bindings\": [\n        {\n          \"role\": \"roles/owner\",\n          \"members\": [\n            \"user:mike@example.com\",\n            \"group:admins@example.com\",\n            \"domain:google.com\",\n            \"serviceAccount:my-other-app@appspot.gserviceaccount.com\",\n          ]\n        },\n        {\n          \"role\": \"roles/viewer\",\n          \"members\": [\"user:sean@example.com\"]\n        }\n      ]\n    }\n\nFor a description of IAM and its features, see the\n[IAM developer's guide](https://cloud.google.com/iam).",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "etag",
+                    "desc": "`etag` is used for optimistic concurrency control as a way to help\nprevent simultaneous updates of a policy from overwriting each other.\nIt is strongly suggested that systems make use of the `etag` in the\nread-modify-write cycle to perform policy updates in order to avoid race\nconditions: An `etag` is returned in the response to `getIamPolicy`, and\nsystems are expected to put that etag in the request to `setIamPolicy` to\nensure that their change will be applied to the same version of the policy.\n\nIf no `etag` is provided in the call to `setIamPolicy`, then the existing\npolicy is overwritten blindly.",
+                    "type": "byte"
+                },
+                {
+                    "name": "version",
+                    "desc": "Version of the `Policy`. The default version is 0.",
+                    "type": "int32"
+                },
+                {
+                    "name": "bindings",
+                    "desc": "Associates a list of `members` to a `role`.\nMultiple `bindings` must not be specified for the same `role`.\n`bindings` with no members will result in an error.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Binding"
                 }
             ]
         },
@@ -413,6 +393,25 @@
             "name": "Empty",
             "desc": "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
             "type": "object"
+        },
+        {
+            "name": "ListTopicsResponse",
+            "desc": "Response for the `ListTopics` method.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "nextPageToken",
+                    "desc": "If not empty, indicates that there may be more topics that match the\nrequest; this value should be passed in a new `ListTopicsRequest`.",
+                    "type": "string"
+                },
+                {
+                    "name": "topics",
+                    "desc": "The resulting topics.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Topic"
+                }
+            ]
         },
         {
             "name": "ListTopicSubscriptionsResponse",
@@ -452,15 +451,16 @@
             ]
         },
         {
-            "name": "PublishResponse",
-            "desc": "Response for the `Publish` method.",
+            "name": "PublishRequest",
+            "desc": "Request for the Publish method.",
             "type": "object",
             "fields": [
                 {
-                    "name": "messageIds",
-                    "desc": "The server-assigned ID of each published message, in the same order as\nthe messages in the request. IDs are guaranteed to be unique within\nthe topic.",
+                    "name": "messages",
+                    "desc": "The messages to publish.",
                     "collection": "array",
-                    "type": "string"
+                    "type": "ref",
+                    "refType": "PubsubMessage"
                 }
             ]
         }
@@ -472,47 +472,6 @@
                 {
                     "name": "topics",
                     "methods": [
-                        {
-                            "name": "get",
-                            "desc": "Gets the configuration of a topic.",
-                            "path": "v1beta2/{+topic}",
-                            "httpMethod": "GET",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/cloud-platform",
-                                "https://www.googleapis.com/auth/pubsub"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "topic",
-                                    "desc": "The name of the topic to get.",
-                                    "required": true,
-                                    "type": "string",
-                                    "pattern": "^projects/[^/]+/topics/[^/]+$"
-                                }
-                            ],
-                            "response": "Topic"
-                        },
-                        {
-                            "name": "publish",
-                            "desc": "Adds one or more messages to the topic. Returns `NOT_FOUND` if the topic\ndoes not exist. The message payload must not be empty; it must contain\n either a non-empty data field, or at least one attribute.",
-                            "path": "v1beta2/{+topic}:publish",
-                            "httpMethod": "POST",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/cloud-platform",
-                                "https://www.googleapis.com/auth/pubsub"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "topic",
-                                    "desc": "The messages in the request will be published on this topic.",
-                                    "required": true,
-                                    "type": "string",
-                                    "pattern": "^projects/[^/]+/topics/[^/]+$"
-                                }
-                            ],
-                            "request": "PublishRequest",
-                            "response": "PublishResponse"
-                        },
                         {
                             "name": "testIamPermissions",
                             "desc": "Returns permissions that a caller has on the specified resource.\nIf the resource does not exist, this will return an empty set of\npermissions, not a NOT_FOUND error.\n\nNote: This operation is designed to be used for building permission-aware\nUIs and command-line tools, not for authorization checking. This operation\nmay \"fail open\" without warning.",
@@ -647,6 +606,47 @@
                                 }
                             ],
                             "response": "Policy"
+                        },
+                        {
+                            "name": "get",
+                            "desc": "Gets the configuration of a topic.",
+                            "path": "v1beta2/{+topic}",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/cloud-platform",
+                                "https://www.googleapis.com/auth/pubsub"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "topic",
+                                    "desc": "The name of the topic to get.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^projects/[^/]+/topics/[^/]+$"
+                                }
+                            ],
+                            "response": "Topic"
+                        },
+                        {
+                            "name": "publish",
+                            "desc": "Adds one or more messages to the topic. Returns `NOT_FOUND` if the topic\ndoes not exist. The message payload must not be empty; it must contain\n either a non-empty data field, or at least one attribute.",
+                            "path": "v1beta2/{+topic}:publish",
+                            "httpMethod": "POST",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/cloud-platform",
+                                "https://www.googleapis.com/auth/pubsub"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "topic",
+                                    "desc": "The messages in the request will be published on this topic.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^projects/[^/]+/topics/[^/]+$"
+                                }
+                            ],
+                            "request": "PublishRequest",
+                            "response": "PublishResponse"
                         }
                     ],
                     "resources": [
@@ -673,14 +673,14 @@
                                     ],
                                     "optinalQueryParams": [
                                         {
-                                            "name": "pageToken",
-                                            "desc": "The value returned by the last `ListTopicSubscriptionsResponse`; indicates\nthat this is a continuation of a prior `ListTopicSubscriptions` call, and\nthat the system should return the next page of data.",
-                                            "type": "string"
-                                        },
-                                        {
                                             "name": "pageSize",
                                             "desc": "Maximum number of subscription names to return.",
                                             "type": "int32"
+                                        },
+                                        {
+                                            "name": "pageToken",
+                                            "desc": "The value returned by the last `ListTopicSubscriptionsResponse`; indicates\nthat this is a continuation of a prior `ListTopicSubscriptions` call, and\nthat the system should return the next page of data.",
+                                            "type": "string"
                                         }
                                     ],
                                     "response": "ListTopicSubscriptionsResponse"
@@ -693,10 +693,10 @@
                     "name": "subscriptions",
                     "methods": [
                         {
-                            "name": "modifyPushConfig",
-                            "desc": "Modifies the `PushConfig` for a specified subscription.\n\nThis may be used to change a push subscription to a pull one (signified by\nan empty `PushConfig`) or vice versa, or change the endpoint URL and other\nattributes of a push subscription. Messages will accumulate for delivery\ncontinuously through the call regardless of changes to the `PushConfig`.",
-                            "path": "v1beta2/{+subscription}:modifyPushConfig",
-                            "httpMethod": "POST",
+                            "name": "delete",
+                            "desc": "Deletes an existing subscription. All pending messages in the subscription\nare immediately dropped. Calls to `Pull` after deletion will return\n`NOT_FOUND`. After a subscription is deleted, a new one may be created with\nthe same name, but the new one has no association with the old\nsubscription, or its topic unless the same topic is specified.",
+                            "path": "v1beta2/{+subscription}",
+                            "httpMethod": "DELETE",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform",
                                 "https://www.googleapis.com/auth/pubsub"
@@ -704,67 +704,13 @@
                             "pathParams": [
                                 {
                                     "name": "subscription",
-                                    "desc": "The name of the subscription.",
+                                    "desc": "The subscription to delete.",
                                     "required": true,
                                     "type": "string",
                                     "pattern": "^projects/[^/]+/subscriptions/[^/]+$"
                                 }
                             ],
-                            "request": "ModifyPushConfigRequest",
                             "response": "Empty"
-                        },
-                        {
-                            "name": "pull",
-                            "desc": "Pulls messages from the server. Returns an empty list if there are no\nmessages available in the backlog. The server may return `UNAVAILABLE` if\nthere are too many concurrent pull requests pending for the given\nsubscription.",
-                            "path": "v1beta2/{+subscription}:pull",
-                            "httpMethod": "POST",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/cloud-platform",
-                                "https://www.googleapis.com/auth/pubsub"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "subscription",
-                                    "desc": "The subscription from which messages should be pulled.",
-                                    "required": true,
-                                    "type": "string",
-                                    "pattern": "^projects/[^/]+/subscriptions/[^/]+$"
-                                }
-                            ],
-                            "request": "PullRequest",
-                            "response": "PullResponse"
-                        },
-                        {
-                            "name": "list",
-                            "desc": "Lists matching subscriptions.",
-                            "path": "v1beta2/{+project}/subscriptions",
-                            "httpMethod": "GET",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/cloud-platform",
-                                "https://www.googleapis.com/auth/pubsub"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "project",
-                                    "desc": "The name of the cloud project that subscriptions belong to.",
-                                    "required": true,
-                                    "type": "string",
-                                    "pattern": "^projects/[^/]+$"
-                                }
-                            ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "pageSize",
-                                    "desc": "Maximum number of subscriptions to return.",
-                                    "type": "int32"
-                                },
-                                {
-                                    "name": "pageToken",
-                                    "desc": "The value returned by the last `ListSubscriptionsResponse`; indicates that\nthis is a continuation of a prior `ListSubscriptions` call, and that the\nsystem should return the next page of data.",
-                                    "type": "string"
-                                }
-                            ],
-                            "response": "ListSubscriptionsResponse"
                         },
                         {
                             "name": "create",
@@ -828,9 +774,9 @@
                             "response": "Subscription"
                         },
                         {
-                            "name": "testIamPermissions",
-                            "desc": "Returns permissions that a caller has on the specified resource.\nIf the resource does not exist, this will return an empty set of\npermissions, not a NOT_FOUND error.\n\nNote: This operation is designed to be used for building permission-aware\nUIs and command-line tools, not for authorization checking. This operation\nmay \"fail open\" without warning.",
-                            "path": "v1beta2/{+resource}:testIamPermissions",
+                            "name": "pull",
+                            "desc": "Pulls messages from the server. Returns an empty list if there are no\nmessages available in the backlog. The server may return `UNAVAILABLE` if\nthere are too many concurrent pull requests pending for the given\nsubscription.",
+                            "path": "v1beta2/{+subscription}:pull",
                             "httpMethod": "POST",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform",
@@ -838,21 +784,21 @@
                             ],
                             "pathParams": [
                                 {
-                                    "name": "resource",
-                                    "desc": "REQUIRED: The resource for which the policy detail is being requested.\n`resource` is usually specified as a path. For example, a Project\nresource is specified as `projects/{project}`.",
+                                    "name": "subscription",
+                                    "desc": "The subscription from which messages should be pulled.",
                                     "required": true,
                                     "type": "string",
                                     "pattern": "^projects/[^/]+/subscriptions/[^/]+$"
                                 }
                             ],
-                            "request": "TestIamPermissionsRequest",
-                            "response": "TestIamPermissionsResponse"
+                            "request": "PullRequest",
+                            "response": "PullResponse"
                         },
                         {
-                            "name": "delete",
-                            "desc": "Deletes an existing subscription. All pending messages in the subscription\nare immediately dropped. Calls to `Pull` after deletion will return\n`NOT_FOUND`. After a subscription is deleted, a new one may be created with\nthe same name, but the new one has no association with the old\nsubscription, or its topic unless the same topic is specified.",
-                            "path": "v1beta2/{+subscription}",
-                            "httpMethod": "DELETE",
+                            "name": "modifyPushConfig",
+                            "desc": "Modifies the `PushConfig` for a specified subscription.\n\nThis may be used to change a push subscription to a pull one (signified by\nan empty `PushConfig`) or vice versa, or change the endpoint URL and other\nattributes of a push subscription. Messages will accumulate for delivery\ncontinuously through the call regardless of changes to the `PushConfig`.",
+                            "path": "v1beta2/{+subscription}:modifyPushConfig",
+                            "httpMethod": "POST",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform",
                                 "https://www.googleapis.com/auth/pubsub"
@@ -860,13 +806,46 @@
                             "pathParams": [
                                 {
                                     "name": "subscription",
-                                    "desc": "The subscription to delete.",
+                                    "desc": "The name of the subscription.",
                                     "required": true,
                                     "type": "string",
                                     "pattern": "^projects/[^/]+/subscriptions/[^/]+$"
                                 }
                             ],
+                            "request": "ModifyPushConfigRequest",
                             "response": "Empty"
+                        },
+                        {
+                            "name": "list",
+                            "desc": "Lists matching subscriptions.",
+                            "path": "v1beta2/{+project}/subscriptions",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/cloud-platform",
+                                "https://www.googleapis.com/auth/pubsub"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "project",
+                                    "desc": "The name of the cloud project that subscriptions belong to.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^projects/[^/]+$"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "pageToken",
+                                    "desc": "The value returned by the last `ListSubscriptionsResponse`; indicates that\nthis is a continuation of a prior `ListSubscriptions` call, and that the\nsystem should return the next page of data.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "pageSize",
+                                    "desc": "Maximum number of subscriptions to return.",
+                                    "type": "int32"
+                                }
+                            ],
+                            "response": "ListSubscriptionsResponse"
                         },
                         {
                             "name": "setIamPolicy",
@@ -930,6 +909,27 @@
                             ],
                             "request": "ModifyAckDeadlineRequest",
                             "response": "Empty"
+                        },
+                        {
+                            "name": "testIamPermissions",
+                            "desc": "Returns permissions that a caller has on the specified resource.\nIf the resource does not exist, this will return an empty set of\npermissions, not a NOT_FOUND error.\n\nNote: This operation is designed to be used for building permission-aware\nUIs and command-line tools, not for authorization checking. This operation\nmay \"fail open\" without warning.",
+                            "path": "v1beta2/{+resource}:testIamPermissions",
+                            "httpMethod": "POST",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/cloud-platform",
+                                "https://www.googleapis.com/auth/pubsub"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "resource",
+                                    "desc": "REQUIRED: The resource for which the policy detail is being requested.\n`resource` is usually specified as a path. For example, a Project\nresource is specified as `projects/{project}`.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^projects/[^/]+/subscriptions/[^/]+$"
+                                }
+                            ],
+                            "request": "TestIamPermissionsRequest",
+                            "response": "TestIamPermissionsResponse"
                         }
                     ]
                 }

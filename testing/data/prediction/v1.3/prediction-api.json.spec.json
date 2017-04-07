@@ -65,25 +65,6 @@
     ],
     "schemas": [
         {
-            "name": "Input",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "input",
-                    "desc": "Input to the model for a prediction",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "csvInstance",
-                            "desc": "A list of input features, these can be strings or doubles.",
-                            "collection": "array",
-                            "type": "any"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "name": "Output",
             "type": "object",
             "fields": [
@@ -138,6 +119,11 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "trainingStatus",
+                    "desc": "The current status of the training job. This can be one of following: RUNNING; DONE; ERROR; ERROR: TRAINING JOB NOT FOUND",
+                    "type": "string"
+                },
+                {
                     "name": "utility",
                     "desc": "A class weighting function, which allows the importance weights for classes to be specified [Categorical models only].",
                     "collection": "array",
@@ -163,6 +149,21 @@
                     "desc": "Model metadata.",
                     "type": "object",
                     "fields": [
+                        {
+                            "name": "numberInstances",
+                            "desc": "Number of valid data instances used in the trained model.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "classWeightedAccuracy",
+                            "desc": "Estimated accuracy of model taking utility weights into account [Categorical models only].",
+                            "type": "float64"
+                        },
+                        {
+                            "name": "classificationAccuracy",
+                            "desc": "A number between 0.0 and 1.0, where 1.0 is 100% accurate. This is an estimate, based on the amount and quality of the training data, of the estimated prediction accuracy. You can use this is a guide to decide whether the results are accurate enough for your needs. This estimate will be more reliable if your real input data is similar to your training data [Categorical models only].",
+                            "type": "float64"
+                        },
                         {
                             "name": "confusionMatrix",
                             "desc": "An output confusion matrix. This shows an estimate for how this model will do in predictions. This is first indexed by the true class label. For each true class label, this provides a pair {predicted_label, count}, where count is the estimated number of times the model will predict the predicted label given the true label. Will not output if more then 100 classes [Categorical models only].",
@@ -193,32 +194,12 @@
                             "name": "numberClasses",
                             "desc": "Number of classes in the trained model [Categorical models only].",
                             "type": "int64"
-                        },
-                        {
-                            "name": "numberInstances",
-                            "desc": "Number of valid data instances used in the trained model.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "classWeightedAccuracy",
-                            "desc": "Estimated accuracy of model taking utility weights into account [Categorical models only].",
-                            "type": "float64"
-                        },
-                        {
-                            "name": "classificationAccuracy",
-                            "desc": "A number between 0.0 and 1.0, where 1.0 is 100% accurate. This is an estimate, based on the amount and quality of the training data, of the estimated prediction accuracy. You can use this is a guide to decide whether the results are accurate enough for your needs. This estimate will be more reliable if your real input data is similar to your training data [Categorical models only].",
-                            "type": "float64"
                         }
                     ]
                 },
                 {
                     "name": "selfLink",
                     "desc": "A URL to re-request this resource.",
-                    "type": "string"
-                },
-                {
-                    "name": "trainingStatus",
-                    "desc": "The current status of the training job. This can be one of following: RUNNING; DONE; ERROR; ERROR: TRAINING JOB NOT FOUND",
                     "type": "string"
                 }
             ]
@@ -228,20 +209,63 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "classLabel",
-                    "desc": "The true class label of this instance",
-                    "type": "string"
-                },
-                {
                     "name": "csvInstance",
                     "desc": "The input features for this instance",
                     "collection": "array",
                     "type": "any"
+                },
+                {
+                    "name": "classLabel",
+                    "desc": "The true class label of this instance",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Input",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "input",
+                    "desc": "Input to the model for a prediction",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "csvInstance",
+                            "desc": "A list of input features, these can be strings or doubles.",
+                            "collection": "array",
+                            "type": "any"
+                        }
+                    ]
                 }
             ]
         }
     ],
     "resources": [
+        {
+            "name": "hostedmodels",
+            "methods": [
+                {
+                    "name": "predict",
+                    "desc": "Submit input and request an output against a hosted model",
+                    "path": "hostedmodels/{hostedModelName}/predict",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/prediction"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "hostedModelName",
+                            "desc": "The name of a hosted model",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "Input",
+                    "response": "Output"
+                }
+            ]
+        },
         {
             "name": "training",
             "methods": [
@@ -331,30 +355,6 @@
                     ],
                     "request": "Update",
                     "response": "Training"
-                }
-            ]
-        },
-        {
-            "name": "hostedmodels",
-            "methods": [
-                {
-                    "name": "predict",
-                    "desc": "Submit input and request an output against a hosted model",
-                    "path": "hostedmodels/{hostedModelName}/predict",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/prediction"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "hostedModelName",
-                            "desc": "The name of a hosted model",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "request": "Input",
-                    "response": "Output"
                 }
             ]
         }

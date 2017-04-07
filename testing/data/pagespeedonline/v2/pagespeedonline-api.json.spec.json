@@ -79,11 +79,6 @@
                             "type": "object",
                             "fields": [
                                 {
-                                    "name": "width",
-                                    "desc": "The width of the rect.",
-                                    "type": "int32"
-                                },
-                                {
                                     "name": "height",
                                     "desc": "The height of the rect.",
                                     "type": "int32"
@@ -96,6 +91,11 @@
                                 {
                                     "name": "top",
                                     "desc": "The top coordinate of the rect, in page coordinates.",
+                                    "type": "int32"
+                                },
+                                {
+                                    "name": "width",
+                                    "desc": "The width of the rect.",
                                     "type": "int32"
                                 }
                             ]
@@ -152,6 +152,26 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "data",
+                    "desc": "Image data base64 encoded.",
+                    "type": "byte"
+                },
+                {
+                    "name": "height",
+                    "desc": "Height of screenshot in pixels.",
+                    "type": "int32"
+                },
+                {
+                    "name": "key",
+                    "desc": "Unique string key, if any, identifying this image.",
+                    "type": "string"
+                },
+                {
+                    "name": "mime_type",
+                    "desc": "Mime type of image data (e.g. \"image/jpeg\").",
+                    "type": "string"
+                },
+                {
                     "name": "page_rect",
                     "desc": "The region of the page that is captured by this image, with dimensions measured in CSS pixels.",
                     "type": "object",
@@ -182,26 +202,6 @@
                     "name": "width",
                     "desc": "Width of screenshot in pixels.",
                     "type": "int32"
-                },
-                {
-                    "name": "data",
-                    "desc": "Image data base64 encoded.",
-                    "type": "byte"
-                },
-                {
-                    "name": "height",
-                    "desc": "Height of screenshot in pixels.",
-                    "type": "int32"
-                },
-                {
-                    "name": "key",
-                    "desc": "Unique string key, if any, identifying this image.",
-                    "type": "string"
-                },
-                {
-                    "name": "mime_type",
-                    "desc": "Mime type of image data (e.g. \"image/jpeg\").",
-                    "type": "string"
                 }
             ]
         },
@@ -225,6 +225,12 @@
                             "collection": "map",
                             "type": "object",
                             "fields": [
+                                {
+                                    "name": "groups",
+                                    "desc": "List of rule groups that this rule belongs to. Each entry in the list is one of \"SPEED\" or \"USABILITY\".",
+                                    "collection": "array",
+                                    "type": "string"
+                                },
                                 {
                                     "name": "localizedRuleName",
                                     "desc": "Localized name of the rule, intended for presentation to a user.",
@@ -275,22 +281,16 @@
                                             ]
                                         }
                                     ]
-                                },
-                                {
-                                    "name": "groups",
-                                    "desc": "List of rule groups that this rule belongs to. Each entry in the list is one of \"SPEED\" or \"USABILITY\".",
-                                    "collection": "array",
-                                    "type": "string"
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "name": "invalidRules",
-                    "desc": "List of rules that were specified in the request, but which the server did not know how to instantiate.",
-                    "collection": "array",
-                    "type": "string"
+                    "name": "kind",
+                    "desc": "Kind of result.",
+                    "type": "string",
+                    "default": "pagespeedonline#result"
                 },
                 {
                     "name": "pageStats",
@@ -298,48 +298,8 @@
                     "type": "object",
                     "fields": [
                         {
-                            "name": "numberHosts",
-                            "desc": "Number of unique hosts referenced by the page.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "numberResources",
-                            "desc": "Number of HTTP resources loaded by the page.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "numberStaticResources",
-                            "desc": "Number of static (i.e. cacheable) resources on the page.",
-                            "type": "int32"
-                        },
-                        {
                             "name": "otherResponseBytes",
                             "desc": "Number of response bytes for other resources on the page.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "htmlResponseBytes",
-                            "desc": "Number of uncompressed response bytes for the main HTML document and all iframes on the page.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "imageResponseBytes",
-                            "desc": "Number of response bytes for image resources on the page.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "javascriptResponseBytes",
-                            "desc": "Number of uncompressed response bytes for JS resources on the page.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "numberCssResources",
-                            "desc": "Number of CSS resources referenced by the page.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "totalRequestBytes",
-                            "desc": "Total size of all request bytes sent by the page.",
                             "type": "int64"
                         },
                         {
@@ -353,6 +313,41 @@
                             "type": "int64"
                         },
                         {
+                            "name": "htmlResponseBytes",
+                            "desc": "Number of uncompressed response bytes for the main HTML document and all iframes on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "imageResponseBytes",
+                            "desc": "Number of response bytes for image resources on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "numberResources",
+                            "desc": "Number of HTTP resources loaded by the page.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "numberStaticResources",
+                            "desc": "Number of static (i.e. cacheable) resources on the page.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "javascriptResponseBytes",
+                            "desc": "Number of uncompressed response bytes for JS resources on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "numberCssResources",
+                            "desc": "Number of CSS resources referenced by the page.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "numberHosts",
+                            "desc": "Number of unique hosts referenced by the page.",
+                            "type": "int32"
+                        },
+                        {
                             "name": "numberJsResources",
                             "desc": "Number of JavaScript resources referenced by the page.",
                             "type": "int32"
@@ -360,6 +355,11 @@
                         {
                             "name": "textResponseBytes",
                             "desc": "Number of uncompressed response bytes for text resources not covered by other statistics (i.e non-HTML, non-script, non-CSS resources) on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "totalRequestBytes",
+                            "desc": "Total size of all request bytes sent by the page.",
                             "type": "int64"
                         }
                     ]
@@ -378,21 +378,9 @@
                     ]
                 },
                 {
-                    "name": "version",
-                    "desc": "The version of PageSpeed used to generate these results.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "major",
-                            "desc": "The major version number of PageSpeed used to generate these results.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "minor",
-                            "desc": "The minor version number of PageSpeed used to generate these results.",
-                            "type": "int32"
-                        }
-                    ]
+                    "name": "title",
+                    "desc": "Title of the page, as displayed in the browser's title bar.",
+                    "type": "string"
                 },
                 {
                     "name": "id",
@@ -400,10 +388,10 @@
                     "type": "string"
                 },
                 {
-                    "name": "kind",
-                    "desc": "Kind of result.",
-                    "type": "string",
-                    "default": "pagespeedonline#result"
+                    "name": "invalidRules",
+                    "desc": "List of rules that were specified in the request, but which the server did not know how to instantiate.",
+                    "collection": "array",
+                    "type": "string"
                 },
                 {
                     "name": "responseCode",
@@ -417,9 +405,21 @@
                     "refType": "PagespeedApiImageV2"
                 },
                 {
-                    "name": "title",
-                    "desc": "Title of the page, as displayed in the browser's title bar.",
-                    "type": "string"
+                    "name": "version",
+                    "desc": "The version of PageSpeed used to generate these results.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "minor",
+                            "desc": "The minor version number of PageSpeed used to generate these results.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "major",
+                            "desc": "The major version number of PageSpeed used to generate these results.",
+                            "type": "int32"
+                        }
+                    ]
                 }
             ]
         }
@@ -443,6 +443,12 @@
                         }
                     ],
                     "optinalQueryParams": [
+                        {
+                            "name": "locale",
+                            "desc": "The locale used to localize formatted results",
+                            "type": "string",
+                            "pattern": "[a-zA-Z]+(_[a-zA-Z]+)?"
+                        },
                         {
                             "name": "rule",
                             "desc": "A PageSpeed rule to run; if none are given, all rules are run",
@@ -475,12 +481,6 @@
                             "desc": "Indicates if third party resources should be filtered out before PageSpeed analysis.",
                             "type": "bool",
                             "default": "false"
-                        },
-                        {
-                            "name": "locale",
-                            "desc": "The locale used to localize formatted results",
-                            "type": "string",
-                            "pattern": "[a-zA-Z]+(_[a-zA-Z]+)?"
                         }
                     ],
                     "response": "Result"

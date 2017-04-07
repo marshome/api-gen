@@ -18,18 +18,6 @@
     },
     "parameters": [
         {
-            "name": "alt",
-            "desc": "Data format for the response.",
-            "type": "string",
-            "default": "json",
-            "enum": [
-                {
-                    "name": "json",
-                    "desc": "Responses with Content-Type of application/json"
-                }
-            ]
-        },
-        {
             "name": "fields",
             "desc": "Selector specifying which fields to include in a partial response.",
             "type": "string"
@@ -59,50 +47,30 @@
             "name": "userIp",
             "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
             "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
         }
     ],
     "schemas": [
         {
-            "name": "TaskList",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "kind",
-                    "desc": "Type of the resource. This is always \"tasks#taskList\".",
-                    "type": "string",
-                    "default": "tasks#taskList"
-                },
-                {
-                    "name": "selfLink",
-                    "desc": "URL pointing to this task list. Used to retrieve, update, or delete this task list.",
-                    "type": "string"
-                },
-                {
-                    "name": "title",
-                    "desc": "Title of the task list.",
-                    "type": "string"
-                },
-                {
-                    "name": "updated",
-                    "desc": "Last modification time of the task list (as a RFC 3339 timestamp).",
-                    "type": "datetime"
-                },
-                {
-                    "name": "etag",
-                    "desc": "ETag of the resource.",
-                    "type": "string"
-                },
-                {
-                    "name": "id",
-                    "desc": "Task list identifier.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
             "name": "TaskLists",
             "type": "object",
             "fields": [
+                {
+                    "name": "nextPageToken",
+                    "desc": "Token that can be used to request the next page of this result.",
+                    "type": "string"
+                },
                 {
                     "name": "etag",
                     "desc": "ETag of the resource.",
@@ -120,11 +88,6 @@
                     "desc": "Type of the resource. This is always \"tasks#taskLists\".",
                     "type": "string",
                     "default": "tasks#taskLists"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "Token that can be used to request the next page of this result.",
-                    "type": "string"
                 }
             ]
         },
@@ -132,11 +95,6 @@
             "name": "Tasks",
             "type": "object",
             "fields": [
-                {
-                    "name": "etag",
-                    "desc": "ETag of the resource.",
-                    "type": "string"
-                },
                 {
                     "name": "items",
                     "desc": "Collection of tasks.",
@@ -154,6 +112,11 @@
                     "name": "nextPageToken",
                     "desc": "Token used to access the next page of this result.",
                     "type": "string"
+                },
+                {
+                    "name": "etag",
+                    "desc": "ETag of the resource.",
+                    "type": "string"
                 }
             ]
         },
@@ -162,9 +125,14 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "status",
-                    "desc": "Status of the task. This is either \"needsAction\" or \"completed\".",
-                    "type": "string"
+                    "name": "updated",
+                    "desc": "Last modification time of the task (as a RFC 3339 timestamp).",
+                    "type": "datetime"
+                },
+                {
+                    "name": "completed",
+                    "desc": "Completion date of the task (as a RFC 3339 timestamp). This field is omitted if the task has not been completed.",
+                    "type": "datetime"
                 },
                 {
                     "name": "deleted",
@@ -172,24 +140,13 @@
                     "type": "bool"
                 },
                 {
-                    "name": "kind",
-                    "desc": "Type of the resource. This is always \"tasks#task\".",
-                    "type": "string",
-                    "default": "tasks#task"
-                },
-                {
-                    "name": "notes",
-                    "desc": "Notes describing the task. Optional.",
-                    "type": "string"
+                    "name": "due",
+                    "desc": "Due date of the task (as a RFC 3339 timestamp). Optional.",
+                    "type": "datetime"
                 },
                 {
                     "name": "selfLink",
                     "desc": "URL pointing to this task. Used to retrieve, update, or delete this task.",
-                    "type": "string"
-                },
-                {
-                    "name": "etag",
-                    "desc": "ETag of the resource.",
                     "type": "string"
                 },
                 {
@@ -198,29 +155,14 @@
                     "type": "string"
                 },
                 {
-                    "name": "updated",
-                    "desc": "Last modification time of the task (as a RFC 3339 timestamp).",
-                    "type": "datetime"
-                },
-                {
-                    "name": "due",
-                    "desc": "Due date of the task (as a RFC 3339 timestamp). Optional.",
-                    "type": "datetime"
-                },
-                {
-                    "name": "id",
-                    "desc": "Task identifier.",
+                    "name": "status",
+                    "desc": "Status of the task. This is either \"needsAction\" or \"completed\".",
                     "type": "string"
                 },
                 {
-                    "name": "position",
-                    "desc": "String indicating the position of the task among its sibling tasks under the same parent task or at the top level. If this string is greater than another task's corresponding position string according to lexicographical ordering, the task is positioned after the other task under the same parent task (or at the top level). This field is read-only. Use the \"move\" method to move the task to another position.",
+                    "name": "etag",
+                    "desc": "ETag of the resource.",
                     "type": "string"
-                },
-                {
-                    "name": "completed",
-                    "desc": "Completion date of the task (as a RFC 3339 timestamp). This field is omitted if the task has not been completed.",
-                    "type": "datetime"
                 },
                 {
                     "name": "hidden",
@@ -251,17 +193,290 @@
                     ]
                 },
                 {
+                    "name": "notes",
+                    "desc": "Notes describing the task. Optional.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "Task identifier.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Type of the resource. This is always \"tasks#task\".",
+                    "type": "string",
+                    "default": "tasks#task"
+                },
+                {
+                    "name": "position",
+                    "desc": "String indicating the position of the task among its sibling tasks under the same parent task or at the top level. If this string is greater than another task's corresponding position string according to lexicographical ordering, the task is positioned after the other task under the same parent task (or at the top level). This field is read-only. Use the \"move\" method to move the task to another position.",
+                    "type": "string"
+                },
+                {
                     "name": "title",
                     "desc": "Title of the task.",
                     "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "TaskList",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "etag",
+                    "desc": "ETag of the resource.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "Task list identifier.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Type of the resource. This is always \"tasks#taskList\".",
+                    "type": "string",
+                    "default": "tasks#taskList"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "URL pointing to this task list. Used to retrieve, update, or delete this task list.",
+                    "type": "string"
+                },
+                {
+                    "name": "title",
+                    "desc": "Title of the task list.",
+                    "type": "string"
+                },
+                {
+                    "name": "updated",
+                    "desc": "Last modification time of the task list (as a RFC 3339 timestamp).",
+                    "type": "datetime"
                 }
             ]
         }
     ],
     "resources": [
         {
+            "name": "tasklists",
+            "methods": [
+                {
+                    "name": "delete",
+                    "desc": "Deletes the authenticated user's specified task list.",
+                    "path": "users/@me/lists/{tasklist}",
+                    "httpMethod": "DELETE",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/tasks"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "tasklist",
+                            "desc": "Task list identifier.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "get",
+                    "desc": "Returns the authenticated user's specified task list.",
+                    "path": "users/@me/lists/{tasklist}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/tasks",
+                        "https://www.googleapis.com/auth/tasks.readonly"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "tasklist",
+                            "desc": "Task list identifier.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "TaskList"
+                },
+                {
+                    "name": "insert",
+                    "desc": "Creates a new task list and adds it to the authenticated user's task lists.",
+                    "path": "users/@me/lists",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/tasks"
+                    ],
+                    "request": "TaskList",
+                    "response": "TaskList"
+                },
+                {
+                    "name": "list",
+                    "desc": "Returns all the authenticated user's task lists.",
+                    "path": "users/@me/lists",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/tasks",
+                        "https://www.googleapis.com/auth/tasks.readonly"
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "maxResults",
+                            "desc": "Maximum number of task lists returned on one page. Optional. The default is 100.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "Token specifying the result page to return. Optional.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "TaskLists"
+                },
+                {
+                    "name": "patch",
+                    "desc": "Updates the authenticated user's specified task list. This method supports patch semantics.",
+                    "path": "users/@me/lists/{tasklist}",
+                    "httpMethod": "PATCH",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/tasks"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "tasklist",
+                            "desc": "Task list identifier.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "TaskList",
+                    "response": "TaskList"
+                },
+                {
+                    "name": "update",
+                    "desc": "Updates the authenticated user's specified task list.",
+                    "path": "users/@me/lists/{tasklist}",
+                    "httpMethod": "PUT",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/tasks"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "tasklist",
+                            "desc": "Task list identifier.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "TaskList",
+                    "response": "TaskList"
+                }
+            ]
+        },
+        {
             "name": "tasks",
             "methods": [
+                {
+                    "name": "insert",
+                    "desc": "Creates a new task on the specified task list.",
+                    "path": "lists/{tasklist}/tasks",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/tasks"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "tasklist",
+                            "desc": "Task list identifier.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "previous",
+                            "desc": "Previous sibling task identifier. If the task is created at the first position among its siblings, this parameter is omitted. Optional.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "parent",
+                            "desc": "Parent task identifier. If the task is created at the top level, this parameter is omitted. Optional.",
+                            "type": "string"
+                        }
+                    ],
+                    "request": "Task",
+                    "response": "Task"
+                },
+                {
+                    "name": "list",
+                    "desc": "Returns all tasks in the specified task list.",
+                    "path": "lists/{tasklist}/tasks",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/tasks",
+                        "https://www.googleapis.com/auth/tasks.readonly"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "tasklist",
+                            "desc": "Task list identifier.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "updatedMin",
+                            "desc": "Lower bound for a task's last modification time (as a RFC 3339 timestamp) to filter by. Optional. The default is not to filter by last modification time.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "completedMax",
+                            "desc": "Upper bound for a task's completion date (as a RFC 3339 timestamp) to filter by. Optional. The default is not to filter by completion date.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "dueMin",
+                            "desc": "Lower bound for a task's due date (as a RFC 3339 timestamp) to filter by. Optional. The default is not to filter by due date.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "Token specifying the result page to return. Optional.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "showDeleted",
+                            "desc": "Flag indicating whether deleted tasks are returned in the result. Optional. The default is False.",
+                            "type": "bool"
+                        },
+                        {
+                            "name": "showHidden",
+                            "desc": "Flag indicating whether hidden tasks are returned in the result. Optional. The default is False.",
+                            "type": "bool"
+                        },
+                        {
+                            "name": "completedMin",
+                            "desc": "Lower bound for a task's completion date (as a RFC 3339 timestamp) to filter by. Optional. The default is not to filter by completion date.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "dueMax",
+                            "desc": "Upper bound for a task's due date (as a RFC 3339 timestamp) to filter by. Optional. The default is not to filter by due date.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "maxResults",
+                            "desc": "Maximum number of task lists returned on one page. Optional. The default is 100.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "showCompleted",
+                            "desc": "Flag indicating whether completed tasks are returned in the result. Optional. The default is True.",
+                            "type": "bool"
+                        }
+                    ],
+                    "response": "Tasks"
+                },
                 {
                     "name": "move",
                     "desc": "Moves the specified task to another position in the task list. This can include putting it as a child task under a new parent and/or move it to a different position among its sibling tasks.",
@@ -412,221 +627,6 @@
                         }
                     ],
                     "response": "Task"
-                },
-                {
-                    "name": "insert",
-                    "desc": "Creates a new task on the specified task list.",
-                    "path": "lists/{tasklist}/tasks",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/tasks"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "tasklist",
-                            "desc": "Task list identifier.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "parent",
-                            "desc": "Parent task identifier. If the task is created at the top level, this parameter is omitted. Optional.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "previous",
-                            "desc": "Previous sibling task identifier. If the task is created at the first position among its siblings, this parameter is omitted. Optional.",
-                            "type": "string"
-                        }
-                    ],
-                    "request": "Task",
-                    "response": "Task"
-                },
-                {
-                    "name": "list",
-                    "desc": "Returns all tasks in the specified task list.",
-                    "path": "lists/{tasklist}/tasks",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/tasks",
-                        "https://www.googleapis.com/auth/tasks.readonly"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "tasklist",
-                            "desc": "Task list identifier.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "dueMin",
-                            "desc": "Lower bound for a task's due date (as a RFC 3339 timestamp) to filter by. Optional. The default is not to filter by due date.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "maxResults",
-                            "desc": "Maximum number of task lists returned on one page. Optional. The default is 100.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "Token specifying the result page to return. Optional.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "showDeleted",
-                            "desc": "Flag indicating whether deleted tasks are returned in the result. Optional. The default is False.",
-                            "type": "bool"
-                        },
-                        {
-                            "name": "showHidden",
-                            "desc": "Flag indicating whether hidden tasks are returned in the result. Optional. The default is False.",
-                            "type": "bool"
-                        },
-                        {
-                            "name": "completedMax",
-                            "desc": "Upper bound for a task's completion date (as a RFC 3339 timestamp) to filter by. Optional. The default is not to filter by completion date.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "completedMin",
-                            "desc": "Lower bound for a task's completion date (as a RFC 3339 timestamp) to filter by. Optional. The default is not to filter by completion date.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "dueMax",
-                            "desc": "Upper bound for a task's due date (as a RFC 3339 timestamp) to filter by. Optional. The default is not to filter by due date.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "updatedMin",
-                            "desc": "Lower bound for a task's last modification time (as a RFC 3339 timestamp) to filter by. Optional. The default is not to filter by last modification time.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "showCompleted",
-                            "desc": "Flag indicating whether completed tasks are returned in the result. Optional. The default is True.",
-                            "type": "bool"
-                        }
-                    ],
-                    "response": "Tasks"
-                }
-            ]
-        },
-        {
-            "name": "tasklists",
-            "methods": [
-                {
-                    "name": "patch",
-                    "desc": "Updates the authenticated user's specified task list. This method supports patch semantics.",
-                    "path": "users/@me/lists/{tasklist}",
-                    "httpMethod": "PATCH",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/tasks"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "tasklist",
-                            "desc": "Task list identifier.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "request": "TaskList",
-                    "response": "TaskList"
-                },
-                {
-                    "name": "update",
-                    "desc": "Updates the authenticated user's specified task list.",
-                    "path": "users/@me/lists/{tasklist}",
-                    "httpMethod": "PUT",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/tasks"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "tasklist",
-                            "desc": "Task list identifier.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "request": "TaskList",
-                    "response": "TaskList"
-                },
-                {
-                    "name": "delete",
-                    "desc": "Deletes the authenticated user's specified task list.",
-                    "path": "users/@me/lists/{tasklist}",
-                    "httpMethod": "DELETE",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/tasks"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "tasklist",
-                            "desc": "Task list identifier.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "get",
-                    "desc": "Returns the authenticated user's specified task list.",
-                    "path": "users/@me/lists/{tasklist}",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/tasks",
-                        "https://www.googleapis.com/auth/tasks.readonly"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "tasklist",
-                            "desc": "Task list identifier.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "response": "TaskList"
-                },
-                {
-                    "name": "insert",
-                    "desc": "Creates a new task list and adds it to the authenticated user's task lists.",
-                    "path": "users/@me/lists",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/tasks"
-                    ],
-                    "request": "TaskList",
-                    "response": "TaskList"
-                },
-                {
-                    "name": "list",
-                    "desc": "Returns all the authenticated user's task lists.",
-                    "path": "users/@me/lists",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/tasks",
-                        "https://www.googleapis.com/auth/tasks.readonly"
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "maxResults",
-                            "desc": "Maximum number of task lists returned on one page. Optional. The default is 100.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "Token specifying the result page to return. Optional.",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "TaskLists"
                 }
             ]
         }

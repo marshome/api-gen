@@ -18,6 +18,27 @@
     },
     "parameters": [
         {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
             "name": "userIp",
             "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
             "type": "string"
@@ -37,27 +58,6 @@
         {
             "name": "fields",
             "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
-        },
-        {
-            "name": "key",
-            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
-            "type": "string"
-        },
-        {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
             "type": "string"
         }
     ],
@@ -155,12 +155,6 @@
                     "type": "object",
                     "fields": [
                         {
-                            "name": "adminEmails",
-                            "desc": "Email addresses of users who are \"admins\" of the TaskQueue. This means they can control the queue, eg set ACLs for the queue.",
-                            "collection": "array",
-                            "type": "string"
-                        },
-                        {
                             "name": "consumerEmails",
                             "desc": "Email addresses of users who can \"consume\" tasks from the TaskQueue. This means they can Dequeue and Delete tasks from the queue.",
                             "collection": "array",
@@ -169,6 +163,12 @@
                         {
                             "name": "producerEmails",
                             "desc": "Email addresses of users who can \"produce\" tasks into the TaskQueue. This means they can Insert tasks into the queue.",
+                            "collection": "array",
+                            "type": "string"
+                        },
+                        {
+                            "name": "adminEmails",
+                            "desc": "Email addresses of users who are \"admins\" of the TaskQueue. This means they can control the queue, eg set ACLs for the queue.",
                             "collection": "array",
                             "type": "string"
                         }

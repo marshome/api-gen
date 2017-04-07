@@ -13,6 +13,26 @@
     "auth": {},
     "parameters": [
         {
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        },
+        {
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
             "name": "oauth_token",
             "desc": "OAuth 2.0 token for the current user.",
             "type": "string"
@@ -29,6 +49,11 @@
             "type": "string"
         },
         {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
             "name": "$.xgafv",
             "desc": "V1 error format.",
             "type": "string",
@@ -42,37 +67,6 @@
                     "desc": "v2 error format"
                 }
             ]
-        },
-        {
-            "name": "callback",
-            "desc": "JSONP",
-            "type": "string"
-        },
-        {
-            "name": "access_token",
-            "desc": "OAuth access token.",
-            "type": "string"
-        },
-        {
-            "name": "pp",
-            "desc": "Pretty-print response.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "bearer_token",
-            "desc": "OAuth bearer token.",
-            "type": "string"
-        },
-        {
-            "name": "upload_protocol",
-            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
-            "type": "string"
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
         },
         {
             "name": "alt",
@@ -100,12 +94,65 @@
             "type": "string"
         },
         {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
             "type": "string"
         }
     ],
     "schemas": [
+        {
+            "name": "BlockedResource",
+            "desc": "Blocked resource.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "url",
+                    "desc": "URL of the blocked resource.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "TestStatus",
+            "desc": "Final state of the test, including error details if necessary.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "details",
+                    "desc": "Error details if applicable.",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "desc": "Status of the test.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "TEST_STATUS_UNSPECIFIED",
+                            "desc": "Internal error when running this test. Please try running the test again."
+                        },
+                        {
+                            "name": "COMPLETE",
+                            "desc": "Inspection has completed without errors."
+                        },
+                        {
+                            "name": "INTERNAL_ERROR",
+                            "desc": "Inspection terminated in an error state. This indicates a problem in\nGoogle's infrastructure, not a user error. Please try again later."
+                        },
+                        {
+                            "name": "PAGE_UNREACHABLE",
+                            "desc": "Google can not access the URL because of a user error such as a robots.txt\nblockage, a 403 or 500 code etc. Please make sure that the URL provided is\naccessible by Googlebot and is not password protected."
+                        }
+                    ]
+                }
+            ]
+        },
         {
             "name": "Image",
             "desc": "Describe image data.",
@@ -188,6 +235,25 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "screenshot",
+                    "desc": "Screenshot of the requested URL.",
+                    "type": "ref",
+                    "refType": "Image"
+                },
+                {
+                    "name": "testStatus",
+                    "desc": "Final state of the test, can be either complete or an error.",
+                    "type": "ref",
+                    "refType": "TestStatus"
+                },
+                {
+                    "name": "resourceIssues",
+                    "desc": "Information about embedded resources issues.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ResourceIssue"
+                },
+                {
                     "name": "mobileFriendliness",
                     "desc": "Test verdict, whether the page is mobile friendly or not.",
                     "type": "string",
@@ -212,25 +278,6 @@
                     "collection": "array",
                     "type": "ref",
                     "refType": "MobileFriendlyIssue"
-                },
-                {
-                    "name": "screenshot",
-                    "desc": "Screenshot of the requested URL.",
-                    "type": "ref",
-                    "refType": "Image"
-                },
-                {
-                    "name": "testStatus",
-                    "desc": "Final state of the test, can be either complete or an error.",
-                    "type": "ref",
-                    "refType": "TestStatus"
-                },
-                {
-                    "name": "resourceIssues",
-                    "desc": "Information about embedded resources issues.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ResourceIssue"
                 }
             ]
         },
@@ -244,53 +291,6 @@
                     "desc": "Describes a blocked resource issue.",
                     "type": "ref",
                     "refType": "BlockedResource"
-                }
-            ]
-        },
-        {
-            "name": "BlockedResource",
-            "desc": "Blocked resource.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "url",
-                    "desc": "URL of the blocked resource.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "TestStatus",
-            "desc": "Final state of the test, including error details if necessary.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "details",
-                    "desc": "Error details if applicable.",
-                    "type": "string"
-                },
-                {
-                    "name": "status",
-                    "desc": "Status of the test.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "TEST_STATUS_UNSPECIFIED",
-                            "desc": "Internal error when running this test. Please try running the test again."
-                        },
-                        {
-                            "name": "COMPLETE",
-                            "desc": "Inspection has completed without errors."
-                        },
-                        {
-                            "name": "INTERNAL_ERROR",
-                            "desc": "Inspection terminated in an error state. This indicates a problem in\nGoogle's infrastructure, not a user error. Please try again later."
-                        },
-                        {
-                            "name": "PAGE_UNREACHABLE",
-                            "desc": "Google can not access the URL because of a user error such as a robots.txt\nblockage, a 403 or 500 code etc. Please make sure that the URL provided is\naccessible by Googlebot and is not password protected."
-                        }
-                    ]
                 }
             ]
         }

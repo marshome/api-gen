@@ -16,23 +16,6 @@
     "auth": {},
     "parameters": [
         {
-            "name": "alt",
-            "desc": "Data format for the response.",
-            "type": "string",
-            "default": "json",
-            "enum": [
-                {
-                    "name": "json",
-                    "desc": "Responses with Content-Type of application/json"
-                }
-            ]
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
-        },
-        {
             "name": "key",
             "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
             "type": "string"
@@ -57,9 +40,55 @@
             "name": "userIp",
             "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
             "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
         }
     ],
     "schemas": [
+        {
+            "name": "TranslationsListResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "translations",
+                    "desc": "Translations contains list of translation results of given text",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "TranslationsResource"
+                }
+            ]
+        },
+        {
+            "name": "TranslationsResource",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "translatedText",
+                    "desc": "The translation.",
+                    "type": "string"
+                },
+                {
+                    "name": "detectedSourceLanguage",
+                    "desc": "Detected source language if source parameter is unspecified.",
+                    "type": "string"
+                }
+            ]
+        },
         {
             "name": "DetectionsListResponse",
             "type": "object",
@@ -80,11 +109,6 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "language",
-                    "desc": "The language we detect",
-                    "type": "string"
-                },
-                {
                     "name": "confidence",
                     "desc": "The confidence of the detection resul of this language.",
                     "type": "float32"
@@ -93,6 +117,11 @@
                     "name": "isReliable",
                     "desc": "A boolean to indicate is the language detection result reliable.",
                     "type": "bool"
+                },
+                {
+                    "name": "language",
+                    "desc": "The language we detect",
+                    "type": "string"
                 }
             ]
         },
@@ -121,35 +150,6 @@
                 {
                     "name": "name",
                     "desc": "The localized name of the language if target parameter is given.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "TranslationsListResponse",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "translations",
-                    "desc": "Translations contains list of translation results of given text",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "TranslationsResource"
-                }
-            ]
-        },
-        {
-            "name": "TranslationsResource",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "detectedSourceLanguage",
-                    "desc": "Detected source language if source parameter is unspecified.",
-                    "type": "string"
-                },
-                {
-                    "name": "translatedText",
-                    "desc": "The translation.",
                     "type": "string"
                 }
             ]
@@ -219,11 +219,6 @@
                     ],
                     "optinalQueryParams": [
                         {
-                            "name": "source",
-                            "desc": "The source language of the text",
-                            "type": "string"
-                        },
-                        {
                             "name": "cid",
                             "desc": "The customization id for translate",
                             "type": "string"
@@ -242,6 +237,11 @@
                                     "desc": "Specifies the input is in plain textual format"
                                 }
                             ]
+                        },
+                        {
+                            "name": "source",
+                            "desc": "The source language of the text",
+                            "type": "string"
                         }
                     ],
                     "response": "TranslationsListResponse"

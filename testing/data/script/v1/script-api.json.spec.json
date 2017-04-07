@@ -12,23 +12,38 @@
     "rootUrl": "https://script.googleapis.com/",
     "auth": {
         "oauth2": [
-            "https://www.googleapis.com/auth/admin.directory.user",
             "https://mail.google.com/",
             "https://www.googleapis.com/auth/forms",
-            "https://www.google.com/m8/feeds",
+            "https://www.googleapis.com/auth/forms.currentonly",
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/groups",
+            "https://www.googleapis.com/auth/admin.directory.user",
             "https://www.googleapis.com/auth/admin.directory.group",
             "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.google.com/m8/feeds",
             "https://www.googleapis.com/auth/userinfo.email",
-            "https://www.google.com/calendar/feeds",
-            "https://www.googleapis.com/auth/groups",
-            "https://www.googleapis.com/auth/forms.currentonly",
-            "https://www.googleapis.com/auth/drive"
+            "https://www.google.com/calendar/feeds"
         ]
     },
     "parameters": [
         {
-            "name": "upload_protocol",
-            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "uploadType",
+            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
             "type": "string"
         },
         {
@@ -45,53 +60,6 @@
                     "desc": "v2 error format"
                 }
             ]
-        },
-        {
-            "name": "access_token",
-            "desc": "OAuth access token.",
-            "type": "string"
-        },
-        {
-            "name": "pp",
-            "desc": "Pretty-print response.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "key",
-            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
-            "type": "string"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
-            "type": "string"
-        },
-        {
-            "name": "bearer_token",
-            "desc": "OAuth bearer token.",
-            "type": "string"
-        },
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "uploadType",
-            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
-            "type": "string"
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
-        },
-        {
-            "name": "callback",
-            "desc": "JSONP",
-            "type": "string"
         },
         {
             "name": "alt",
@@ -114,47 +82,44 @@
             ]
         },
         {
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
             "name": "oauth_token",
             "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
             "type": "string"
         }
     ],
     "schemas": [
-        {
-            "name": "Operation",
-            "desc": "The response will not arrive until the function finishes executing. The maximum runtime is listed in the guide to [limitations in Apps Script](https://developers.google.com/apps-script/guides/services/quotas#current_limitations).\n\u003cp\u003eIf the script function returns successfully, the `response` field will contain an `ExecutionResponse` object with the function's return value in the object's `result` field.\u003c/p\u003e\n\u003cp\u003eIf the script function (or Apps Script itself) throws an exception, the `error` field will contain a `Status` object. The `Status` object's `details` field will contain an array with a single `ExecutionError` object that provides information about the nature of the error.\u003c/p\u003e\n\u003cp\u003eIf the `run` call itself fails (for example, because of a malformed request or an authorization error), the method will return an HTTP response code in the 4XX range with a different format for the response body. Client libraries will automatically convert a 4XX response into an exception class.\u003c/p\u003e",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "name",
-                    "desc": "This field is not used.",
-                    "type": "string"
-                },
-                {
-                    "name": "error",
-                    "desc": "If a `run` call succeeds but the script function (or Apps Script itself) throws an exception, this field will contain a `Status` object. The `Status` object's `details` field will contain an array with a single `ExecutionError` object that provides information about the nature of the error.",
-                    "type": "ref",
-                    "refType": "Status"
-                },
-                {
-                    "name": "metadata",
-                    "desc": "This field is not used.",
-                    "collection": "map",
-                    "type": "any"
-                },
-                {
-                    "name": "done",
-                    "desc": "This field is not used.",
-                    "type": "bool"
-                },
-                {
-                    "name": "response",
-                    "desc": "If the script function returns successfully, this field will contain an `ExecutionResponse` object with the function's return value as the object's `result` field.",
-                    "collection": "map",
-                    "type": "any"
-                }
-            ]
-        },
         {
             "name": "ScriptStackTraceElement",
             "desc": "A stack trace through the script that shows where the execution failed.",
@@ -228,6 +193,16 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "sessionState",
+                    "desc": "For Android add-ons only. An ID that represents the user's current session\nin the Android app for Google Docs or Sheets, included as extra data in the\n[`Intent`](https://developer.android.com/guide/components/intents-filters.html)\nthat launches the add-on. When an Android add-on is run with a session\nstate, it gains the privileges of a\n[bound](https://developers.google.com/apps-script/guides/bound) script \u0026mdash;\nthat is, it can access information like the user's current cursor position\n(in Docs) or selected cell (in Sheets). To retrieve the state, call\n`Intent.getStringExtra(\"com.google.android.apps.docs.addons.SessionState\")`.\nOptional.",
+                    "type": "string"
+                },
+                {
+                    "name": "function",
+                    "desc": "The name of the function to execute in the given script. The name does not\ninclude parentheses or parameters.",
+                    "type": "string"
+                },
+                {
                     "name": "devMode",
                     "desc": "If `true` and the user is an owner of the script, the script runs at the\nmost recently saved version rather than the version deployed for use with\nthe Execution API. Optional; default is `false`.",
                     "type": "bool"
@@ -237,16 +212,6 @@
                     "desc": "The parameters to be passed to the function being executed. The object type\nfor each parameter should match the expected type in Apps Script.\nParameters cannot be Apps Script-specific object types (such as a\n`Document` or a `Calendar`); they can only be primitive types such as\n`string`, `number`, `array`, `object`, or `boolean`. Optional.",
                     "collection": "array",
                     "type": "any"
-                },
-                {
-                    "name": "sessionState",
-                    "desc": "For Android add-ons only. An ID that represents the user's current session\nin the Android app for Google Docs or Sheets, included as extra data in the\n[`Intent`](https://developer.android.com/guide/components/intents-filters.html)\nthat launches the add-on. When an Android add-on is run with a session\nstate, it gains the privileges of a\n[bound](https://developers.google.com/apps-script/guides/bound) script \u0026mdash;\nthat is, it can access information like the user's current cursor position\n(in Docs) or selected cell (in Sheets). To retrieve the state, call\n`Intent.getStringExtra(\"com.google.android.apps.docs.addons.SessionState\")`.\nOptional.",
-                    "type": "string"
-                },
-                {
-                    "name": "function",
-                    "desc": "The name of the function to execute in the given script. The name does not\ninclude parentheses or parameters.",
-                    "type": "string"
                 }
             ]
         },
@@ -258,6 +223,41 @@
                 {
                     "name": "result",
                     "desc": "The return value of the script function. The type matches the object type\nreturned in Apps Script. Functions called through the Execution API cannot\nreturn Apps Script-specific objects (such as a `Document` or a `Calendar`);\nthey can only return primitive types such as a `string`, `number`, `array`,\n`object`, or `boolean`.",
+                    "type": "any"
+                }
+            ]
+        },
+        {
+            "name": "Operation",
+            "desc": "The response will not arrive until the function finishes executing. The maximum runtime is listed in the guide to [limitations in Apps Script](https://developers.google.com/apps-script/guides/services/quotas#current_limitations).\n\u003cp\u003eIf the script function returns successfully, the `response` field will contain an `ExecutionResponse` object with the function's return value in the object's `result` field.\u003c/p\u003e\n\u003cp\u003eIf the script function (or Apps Script itself) throws an exception, the `error` field will contain a `Status` object. The `Status` object's `details` field will contain an array with a single `ExecutionError` object that provides information about the nature of the error.\u003c/p\u003e\n\u003cp\u003eIf the `run` call itself fails (for example, because of a malformed request or an authorization error), the method will return an HTTP response code in the 4XX range with a different format for the response body. Client libraries will automatically convert a 4XX response into an exception class.\u003c/p\u003e",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "done",
+                    "desc": "This field is not used.",
+                    "type": "bool"
+                },
+                {
+                    "name": "response",
+                    "desc": "If the script function returns successfully, this field will contain an `ExecutionResponse` object with the function's return value as the object's `result` field.",
+                    "collection": "map",
+                    "type": "any"
+                },
+                {
+                    "name": "name",
+                    "desc": "This field is not used.",
+                    "type": "string"
+                },
+                {
+                    "name": "error",
+                    "desc": "If a `run` call succeeds but the script function (or Apps Script itself) throws an exception, this field will contain a `Status` object. The `Status` object's `details` field will contain an array with a single `ExecutionError` object that provides information about the nature of the error.",
+                    "type": "ref",
+                    "refType": "Status"
+                },
+                {
+                    "name": "metadata",
+                    "desc": "This field is not used.",
+                    "collection": "map",
                     "type": "any"
                 }
             ]

@@ -21,6 +21,22 @@
     },
     "parameters": [
         {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        },
+        {
             "name": "alt",
             "desc": "Data format for the response.",
             "type": "string",
@@ -46,63 +62,28 @@
             "name": "oauth_token",
             "desc": "OAuth 2.0 token for the current user.",
             "type": "string"
-        },
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
-            "type": "string"
-        },
-        {
-            "name": "userIp",
-            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
-            "type": "string"
         }
     ],
     "schemas": [
         {
-            "name": "Activity",
-            "desc": "An Activity resource is a combined view of multiple events. An activity has a list of individual events and a combined view of the common fields among all events.",
+            "name": "Parent",
+            "desc": "Contains information about a parent object. For example, a folder in Drive is a parent for all files within it.",
             "type": "object",
             "fields": [
                 {
-                    "name": "combinedEvent",
-                    "desc": "The fields common to all of the singleEvents that make up the Activity.",
-                    "type": "ref",
-                    "refType": "Event"
+                    "name": "id",
+                    "desc": "The parent's ID.",
+                    "type": "string"
                 },
                 {
-                    "name": "singleEvents",
-                    "desc": "A list of all the Events that make up the Activity.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Event"
-                }
-            ]
-        },
-        {
-            "name": "Move",
-            "desc": "Contains information about changes in an object's parents as a result of a move type event.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "addedParents",
-                    "desc": "The added parent(s).",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Parent"
+                    "name": "isRoot",
+                    "desc": "Whether this is the root folder.",
+                    "type": "bool"
                 },
                 {
-                    "name": "removedParents",
-                    "desc": "The removed parent(s).",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Parent"
+                    "name": "title",
+                    "desc": "The parent's title.",
+                    "type": "string"
                 }
             ]
         },
@@ -111,25 +92,6 @@
             "desc": "Contains information about the permissions and type of access allowed with regards to a Google Drive object. This is a subset of the fields contained in a corresponding Drive Permissions object.",
             "type": "object",
             "fields": [
-                {
-                    "name": "type",
-                    "desc": "Indicates how widely permissions are granted.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "anyone"
-                        },
-                        {
-                            "name": "domain"
-                        },
-                        {
-                            "name": "group"
-                        },
-                        {
-                            "name": "user"
-                        }
-                    ]
-                },
                 {
                     "name": "user",
                     "desc": "The user's information if the type is USER.",
@@ -169,27 +131,74 @@
                             "name": "writer"
                         }
                     ]
+                },
+                {
+                    "name": "type",
+                    "desc": "Indicates how widely permissions are granted.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "anyone"
+                        },
+                        {
+                            "name": "domain"
+                        },
+                        {
+                            "name": "group"
+                        },
+                        {
+                            "name": "user"
+                        }
+                    ]
                 }
             ]
         },
         {
-            "name": "PermissionChange",
-            "desc": "Contains information about a Drive object's permissions that changed as a result of a permissionChange type event.",
+            "name": "Photo",
+            "desc": "Photo information for a user.",
             "type": "object",
             "fields": [
                 {
-                    "name": "removedPermissions",
-                    "desc": "Lists all Permission objects removed.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Permission"
+                    "name": "url",
+                    "desc": "The URL of the photo.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Rename",
+            "desc": "Contains information about a renametype event.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "newTitle",
+                    "desc": "The new title.",
+                    "type": "string"
                 },
                 {
-                    "name": "addedPermissions",
-                    "desc": "Lists all Permission objects added.",
+                    "name": "oldTitle",
+                    "desc": "The old title.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Activity",
+            "desc": "An Activity resource is a combined view of multiple events. An activity has a list of individual events and a combined view of the common fields among all events.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "combinedEvent",
+                    "desc": "The fields common to all of the singleEvents that make up the Activity.",
+                    "type": "ref",
+                    "refType": "Event"
+                },
+                {
+                    "name": "singleEvents",
+                    "desc": "A list of all the Events that make up the Activity.",
                     "collection": "array",
                     "type": "ref",
-                    "refType": "Permission"
+                    "refType": "Event"
                 }
             ]
         },
@@ -198,25 +207,6 @@
             "desc": "Represents the changes associated with an action taken by a user.",
             "type": "object",
             "fields": [
-                {
-                    "name": "move",
-                    "desc": "Extra information for move type events, such as changes in an object's parents.",
-                    "type": "ref",
-                    "refType": "Move"
-                },
-                {
-                    "name": "permissionChanges",
-                    "desc": "Extra information for permissionChange type events, such as the user or group the new permission applies to.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "PermissionChange"
-                },
-                {
-                    "name": "user",
-                    "desc": "Represents the user responsible for the event.",
-                    "type": "ref",
-                    "refType": "User"
-                },
                 {
                     "name": "additionalEventTypes",
                     "desc": "Additional event types. Some events may have multiple types when multiple actions are part of a single event. For example, creating a document, renaming it, and sharing it may be part of a single file-creation event.",
@@ -274,6 +264,19 @@
                     ]
                 },
                 {
+                    "name": "move",
+                    "desc": "Extra information for move type events, such as changes in an object's parents.",
+                    "type": "ref",
+                    "refType": "Move"
+                },
+                {
+                    "name": "permissionChanges",
+                    "desc": "Extra information for permissionChange type events, such as the user or group the new permission applies to.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "PermissionChange"
+                },
+                {
                     "name": "rename",
                     "desc": "Extra information for rename type events, such as the old and new names.",
                     "type": "ref",
@@ -284,6 +287,12 @@
                     "desc": "Information specific to the Target object modified by the event.",
                     "type": "ref",
                     "refType": "Target"
+                },
+                {
+                    "name": "user",
+                    "desc": "Represents the user responsible for the event.",
+                    "type": "ref",
+                    "refType": "User"
                 }
             ]
         },
@@ -302,79 +311,6 @@
                 {
                     "name": "nextPageToken",
                     "desc": "Token for the next page of results.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Parent",
-            "desc": "Contains information about a parent object. For example, a folder in Drive is a parent for all files within it.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "id",
-                    "desc": "The parent's ID.",
-                    "type": "string"
-                },
-                {
-                    "name": "isRoot",
-                    "desc": "Whether this is the root folder.",
-                    "type": "bool"
-                },
-                {
-                    "name": "title",
-                    "desc": "The parent's title.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Photo",
-            "desc": "Photo information for a user.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "url",
-                    "desc": "The URL of the photo.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Rename",
-            "desc": "Contains information about a renametype event.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "newTitle",
-                    "desc": "The new title.",
-                    "type": "string"
-                },
-                {
-                    "name": "oldTitle",
-                    "desc": "The old title.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Target",
-            "desc": "Information about the object modified by the event.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "id",
-                    "desc": "The ID of the target. For example, in Google Drive, this is the file or folder ID.",
-                    "type": "string"
-                },
-                {
-                    "name": "mimeType",
-                    "desc": "The MIME type of the target.",
-                    "type": "string"
-                },
-                {
-                    "name": "name",
-                    "desc": "The name of the target. For example, in Google Drive, this is the title of the file.",
                     "type": "string"
                 }
             ]
@@ -411,6 +347,70 @@
                     "refType": "Photo"
                 }
             ]
+        },
+        {
+            "name": "Move",
+            "desc": "Contains information about changes in an object's parents as a result of a move type event.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "removedParents",
+                    "desc": "The removed parent(s).",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Parent"
+                },
+                {
+                    "name": "addedParents",
+                    "desc": "The added parent(s).",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Parent"
+                }
+            ]
+        },
+        {
+            "name": "PermissionChange",
+            "desc": "Contains information about a Drive object's permissions that changed as a result of a permissionChange type event.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "addedPermissions",
+                    "desc": "Lists all Permission objects added.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Permission"
+                },
+                {
+                    "name": "removedPermissions",
+                    "desc": "Lists all Permission objects removed.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Permission"
+                }
+            ]
+        },
+        {
+            "name": "Target",
+            "desc": "Information about the object modified by the event.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "The ID of the target. For example, in Google Drive, this is the file or folder ID.",
+                    "type": "string"
+                },
+                {
+                    "name": "mimeType",
+                    "desc": "The MIME type of the target.",
+                    "type": "string"
+                },
+                {
+                    "name": "name",
+                    "desc": "The name of the target. For example, in Google Drive, this is the title of the file.",
+                    "type": "string"
+                }
+            ]
         }
     ],
     "resources": [
@@ -430,26 +430,6 @@
                         "https://www.googleapis.com/auth/drive.readonly"
                     ],
                     "optinalQueryParams": [
-                        {
-                            "name": "groupingStrategy",
-                            "desc": "Indicates the strategy to use when grouping singleEvents items in the associated combinedEvent object.",
-                            "type": "string",
-                            "default": "driveUi",
-                            "enum": [
-                                {
-                                    "name": "driveUi"
-                                },
-                                {
-                                    "name": "none"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "pageSize",
-                            "desc": "The maximum number of events to return on a page. The response includes a continuation token if there are more events.",
-                            "type": "int32",
-                            "default": "50"
-                        },
                         {
                             "name": "pageToken",
                             "desc": "A token to retrieve a specific page of results.",
@@ -475,6 +455,26 @@
                             "name": "drive.fileId",
                             "desc": "Identifies the Drive item to return activities for.",
                             "type": "string"
+                        },
+                        {
+                            "name": "groupingStrategy",
+                            "desc": "Indicates the strategy to use when grouping singleEvents items in the associated combinedEvent object.",
+                            "type": "string",
+                            "default": "driveUi",
+                            "enum": [
+                                {
+                                    "name": "driveUi"
+                                },
+                                {
+                                    "name": "none"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "pageSize",
+                            "desc": "The maximum number of events to return on a page. The response includes a continuation token if there are more events.",
+                            "type": "int32",
+                            "default": "50"
                         }
                     ],
                     "response": "ListActivitiesResponse"

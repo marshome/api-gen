@@ -12,11 +12,32 @@
     "rootUrl": "https://www.googleapis.com/",
     "auth": {
         "oauth2": [
-            "https://www.googleapis.com/auth/adexchange.seller.readonly",
-            "https://www.googleapis.com/auth/adexchange.seller"
+            "https://www.googleapis.com/auth/adexchange.seller",
+            "https://www.googleapis.com/auth/adexchange.seller.readonly"
         ]
     },
     "parameters": [
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "csv",
+                    "desc": "Responses with Content-Type of text/csv"
+                },
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
         {
             "name": "key",
             "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
@@ -42,50 +63,83 @@
             "name": "userIp",
             "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
             "type": "string"
-        },
-        {
-            "name": "alt",
-            "desc": "Data format for the response.",
-            "type": "string",
-            "default": "json",
-            "enum": [
-                {
-                    "name": "csv",
-                    "desc": "Responses with Content-Type of text/csv"
-                },
-                {
-                    "name": "json",
-                    "desc": "Responses with Content-Type of application/json"
-                }
-            ]
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
         }
     ],
     "schemas": [
         {
-            "name": "UrlChannels",
+            "name": "UrlChannel",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "Unique identifier of this URL channel. This should be considered an opaque identifier; it is not safe to rely on it being in any particular format.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is, in this case adexchangeseller#urlChannel.",
+                    "type": "string",
+                    "default": "adexchangeseller#urlChannel"
+                },
+                {
+                    "name": "urlPattern",
+                    "desc": "URL Pattern of this URL channel. Does not include \"http://\" or \"https://\". Example: www.example.com/home",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "AdClient",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "arcOptIn",
+                    "desc": "Whether this ad client is opted in to ARC.",
+                    "type": "bool"
+                },
+                {
+                    "name": "id",
+                    "desc": "Unique identifier of this ad client.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is, in this case adexchangeseller#adClient.",
+                    "type": "string",
+                    "default": "adexchangeseller#adClient"
+                },
+                {
+                    "name": "productCode",
+                    "desc": "This ad client's product code, which corresponds to the PRODUCT_CODE report dimension.",
+                    "type": "string"
+                },
+                {
+                    "name": "supportsReporting",
+                    "desc": "Whether this ad client supports being reported on.",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "AdClients",
             "type": "object",
             "fields": [
                 {
                     "name": "items",
-                    "desc": "The URL channels returned in this list response.",
+                    "desc": "The ad clients returned in this list response.",
                     "collection": "array",
                     "type": "ref",
-                    "refType": "UrlChannel"
+                    "refType": "AdClient"
                 },
                 {
                     "name": "kind",
-                    "desc": "Kind of list this is, in this case adexchangeseller#urlChannels.",
+                    "desc": "Kind of list this is, in this case adexchangeseller#adClients.",
                     "type": "string",
-                    "default": "adexchangeseller#urlChannels"
+                    "default": "adexchangeseller#adClients"
                 },
                 {
                     "name": "nextPageToken",
-                    "desc": "Continuation token used to page through URL channels. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
+                    "desc": "Continuation token used to page through ad clients. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
                     "type": "string"
                 },
                 {
@@ -128,172 +182,41 @@
             ]
         },
         {
-            "name": "AdUnits",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "nextPageToken",
-                    "desc": "Continuation token used to page through ad units. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
-                    "type": "string"
-                },
-                {
-                    "name": "etag",
-                    "desc": "ETag of this response for caching purposes.",
-                    "type": "string"
-                },
-                {
-                    "name": "items",
-                    "desc": "The ad units returned in this list response.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "AdUnit"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of list this is, in this case adexchangeseller#adUnits.",
-                    "type": "string",
-                    "default": "adexchangeseller#adUnits"
-                }
-            ]
-        },
-        {
-            "name": "CustomChannels",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "etag",
-                    "desc": "ETag of this response for caching purposes.",
-                    "type": "string"
-                },
-                {
-                    "name": "items",
-                    "desc": "The custom channels returned in this list response.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "CustomChannel"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of list this is, in this case adexchangeseller#customChannels.",
-                    "type": "string",
-                    "default": "adexchangeseller#customChannels"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "Continuation token used to page through custom channels. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "SavedReport",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "id",
-                    "desc": "Unique identifier of this saved report.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of resource this is, in this case adexchangeseller#savedReport.",
-                    "type": "string",
-                    "default": "adexchangeseller#savedReport"
-                },
-                {
-                    "name": "name",
-                    "desc": "This saved report's name.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "UrlChannel",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "id",
-                    "desc": "Unique identifier of this URL channel. This should be considered an opaque identifier; it is not safe to rely on it being in any particular format.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of resource this is, in this case adexchangeseller#urlChannel.",
-                    "type": "string",
-                    "default": "adexchangeseller#urlChannel"
-                },
-                {
-                    "name": "urlPattern",
-                    "desc": "URL Pattern of this URL channel. Does not include \"http://\" or \"https://\". Example: www.example.com/home",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "AdClient",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "id",
-                    "desc": "Unique identifier of this ad client.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of resource this is, in this case adexchangeseller#adClient.",
-                    "type": "string",
-                    "default": "adexchangeseller#adClient"
-                },
-                {
-                    "name": "productCode",
-                    "desc": "This ad client's product code, which corresponds to the PRODUCT_CODE report dimension.",
-                    "type": "string"
-                },
-                {
-                    "name": "supportsReporting",
-                    "desc": "Whether this ad client supports being reported on.",
-                    "type": "bool"
-                },
-                {
-                    "name": "arcOptIn",
-                    "desc": "Whether this ad client is opted in to ARC.",
-                    "type": "bool"
-                }
-            ]
-        },
-        {
-            "name": "AdClients",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "etag",
-                    "desc": "ETag of this response for caching purposes.",
-                    "type": "string"
-                },
-                {
-                    "name": "items",
-                    "desc": "The ad clients returned in this list response.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "AdClient"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of list this is, in this case adexchangeseller#adClients.",
-                    "type": "string",
-                    "default": "adexchangeseller#adClients"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "Continuation token used to page through ad clients. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
             "name": "CustomChannel",
             "type": "object",
             "fields": [
+                {
+                    "name": "name",
+                    "desc": "Name of this custom channel.",
+                    "type": "string"
+                },
+                {
+                    "name": "targetingInfo",
+                    "desc": "The targeting information of this custom channel, if activated.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "description",
+                            "desc": "The external description of the channel.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "location",
+                            "desc": "The locations in which ads appear. (Only valid for content and mobile content ads). Acceptable values for content ads are: TOP_LEFT, TOP_CENTER, TOP_RIGHT, MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT, MULTIPLE_LOCATIONS. Acceptable values for mobile content ads are: TOP, MIDDLE, BOTTOM, MULTIPLE_LOCATIONS.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "siteLanguage",
+                            "desc": "The language of the sites ads will be displayed on.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "adsAppearOn",
+                            "desc": "The name used to describe this channel externally.",
+                            "type": "string"
+                        }
+                    ]
+                },
                 {
                     "name": "code",
                     "desc": "Code of this custom channel, not necessarily unique across ad clients.",
@@ -309,38 +232,35 @@
                     "desc": "Kind of resource this is, in this case adexchangeseller#customChannel.",
                     "type": "string",
                     "default": "adexchangeseller#customChannel"
+                }
+            ]
+        },
+        {
+            "name": "CustomChannels",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adexchangeseller#customChannels.",
+                    "type": "string",
+                    "default": "adexchangeseller#customChannels"
                 },
                 {
-                    "name": "name",
-                    "desc": "Name of this custom channel.",
+                    "name": "nextPageToken",
+                    "desc": "Continuation token used to page through custom channels. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
                     "type": "string"
                 },
                 {
-                    "name": "targetingInfo",
-                    "desc": "The targeting information of this custom channel, if activated.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "location",
-                            "desc": "The locations in which ads appear. (Only valid for content and mobile content ads). Acceptable values for content ads are: TOP_LEFT, TOP_CENTER, TOP_RIGHT, MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT, MULTIPLE_LOCATIONS. Acceptable values for mobile content ads are: TOP, MIDDLE, BOTTOM, MULTIPLE_LOCATIONS.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "siteLanguage",
-                            "desc": "The language of the sites ads will be displayed on.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "adsAppearOn",
-                            "desc": "The name used to describe this channel externally.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "description",
-                            "desc": "The external description of the channel.",
-                            "type": "string"
-                        }
-                    ]
+                    "name": "etag",
+                    "desc": "ETag of this response for caching purposes.",
+                    "type": "string"
+                },
+                {
+                    "name": "items",
+                    "desc": "The custom channels returned in this list response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "CustomChannel"
                 }
             ]
         },
@@ -439,47 +359,89 @@
                     "type": "string"
                 }
             ]
-        }
-    ],
-    "resources": [
+        },
         {
-            "name": "urlchannels",
-            "methods": [
+            "name": "UrlChannels",
+            "type": "object",
+            "fields": [
                 {
-                    "name": "list",
-                    "desc": "List all URL channels in the specified ad client for this Ad Exchange account.",
-                    "path": "adclients/{adClientId}/urlchannels",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/adexchange.seller",
-                        "https://www.googleapis.com/auth/adexchange.seller.readonly"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "adClientId",
-                            "desc": "Ad client for which to list URL channels.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "maxResults",
-                            "desc": "The maximum number of URL channels to include in the response, used for paging.",
-                            "type": "uint32",
-                            "min": "0",
-                            "max": "10000"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "A continuation token, used to page through URL channels. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "UrlChannels"
+                    "name": "etag",
+                    "desc": "ETag of this response for caching purposes.",
+                    "type": "string"
+                },
+                {
+                    "name": "items",
+                    "desc": "The URL channels returned in this list response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "UrlChannel"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adexchangeseller#urlChannels.",
+                    "type": "string",
+                    "default": "adexchangeseller#urlChannels"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token used to page through URL channels. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
+                    "type": "string"
                 }
             ]
         },
+        {
+            "name": "AdUnits",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "etag",
+                    "desc": "ETag of this response for caching purposes.",
+                    "type": "string"
+                },
+                {
+                    "name": "items",
+                    "desc": "The ad units returned in this list response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "AdUnit"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adexchangeseller#adUnits.",
+                    "type": "string",
+                    "default": "adexchangeseller#adUnits"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token used to page through ad units. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "SavedReport",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "Unique identifier of this saved report.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is, in this case adexchangeseller#savedReport.",
+                    "type": "string",
+                    "default": "adexchangeseller#savedReport"
+                },
+                {
+                    "name": "name",
+                    "desc": "This saved report's name.",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "resources": [
         {
             "name": "adclients",
             "methods": [
@@ -557,11 +519,6 @@
                     ],
                     "optinalQueryParams": [
                         {
-                            "name": "pageToken",
-                            "desc": "A continuation token, used to page through ad units. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
-                            "type": "string"
-                        },
-                        {
                             "name": "includeInactive",
                             "desc": "Whether to include inactive ad units. Default: true.",
                             "type": "bool"
@@ -572,6 +529,11 @@
                             "type": "uint32",
                             "min": "0",
                             "max": "10000"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "A continuation token, used to page through ad units. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
+                            "type": "string"
                         }
                     ],
                     "response": "AdUnits"
@@ -715,11 +677,6 @@
                             ],
                             "optinalQueryParams": [
                                 {
-                                    "name": "pageToken",
-                                    "desc": "A continuation token, used to page through ad units. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
-                                    "type": "string"
-                                },
-                                {
                                     "name": "includeInactive",
                                     "desc": "Whether to include inactive ad units. Default: true.",
                                     "type": "bool"
@@ -730,6 +687,11 @@
                                     "type": "uint32",
                                     "min": "0",
                                     "max": "10000"
+                                },
+                                {
+                                    "name": "pageToken",
+                                    "desc": "A continuation token, used to page through ad units. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
+                                    "type": "string"
                                 }
                             ],
                             "response": "AdUnits"
@@ -774,10 +736,10 @@
                             "pattern": "[a-zA-Z_]+"
                         },
                         {
-                            "name": "locale",
-                            "desc": "Optional locale to use for translating report output to a local language. Defaults to \"en_US\" if not specified.",
+                            "name": "filter",
+                            "desc": "Filters to be run on the report.",
                             "type": "string",
-                            "pattern": "[a-zA-Z_]+"
+                            "pattern": "[a-zA-Z_]+(==|=@).+"
                         },
                         {
                             "name": "metric",
@@ -786,16 +748,17 @@
                             "pattern": "[a-zA-Z_]+"
                         },
                         {
-                            "name": "sort",
-                            "desc": "The name of a dimension or metric to sort the resulting report on, optionally prefixed with \"+\" to sort ascending or \"-\" to sort descending. If no prefix is specified, the column is sorted ascending.",
-                            "type": "string",
-                            "pattern": "(\\+|-)?[a-zA-Z_]+"
+                            "name": "startIndex",
+                            "desc": "Index of the first row of report data to return.",
+                            "type": "uint32",
+                            "min": "0",
+                            "max": "5000"
                         },
                         {
-                            "name": "filter",
-                            "desc": "Filters to be run on the report.",
+                            "name": "locale",
+                            "desc": "Optional locale to use for translating report output to a local language. Defaults to \"en_US\" if not specified.",
                             "type": "string",
-                            "pattern": "[a-zA-Z_]+(==|=@).+"
+                            "pattern": "[a-zA-Z_]+"
                         },
                         {
                             "name": "maxResults",
@@ -805,11 +768,10 @@
                             "max": "50000"
                         },
                         {
-                            "name": "startIndex",
-                            "desc": "Index of the first row of report data to return.",
-                            "type": "uint32",
-                            "min": "0",
-                            "max": "5000"
+                            "name": "sort",
+                            "desc": "The name of a dimension or metric to sort the resulting report on, optionally prefixed with \"+\" to sort ascending or \"-\" to sort descending. If no prefix is specified, the column is sorted ascending.",
+                            "type": "string",
+                            "pattern": "(\\+|-)?[a-zA-Z_]+"
                         }
                     ],
                     "response": "Report"
@@ -838,6 +800,13 @@
                             ],
                             "optinalQueryParams": [
                                 {
+                                    "name": "startIndex",
+                                    "desc": "Index of the first row of report data to return.",
+                                    "type": "int32",
+                                    "min": "0",
+                                    "max": "5000"
+                                },
+                                {
                                     "name": "locale",
                                     "desc": "Optional locale to use for translating report output to a local language. Defaults to \"en_US\" if not specified.",
                                     "type": "string",
@@ -849,13 +818,6 @@
                                     "type": "int32",
                                     "min": "0",
                                     "max": "50000"
-                                },
-                                {
-                                    "name": "startIndex",
-                                    "desc": "Index of the first row of report data to return.",
-                                    "type": "int32",
-                                    "min": "0",
-                                    "max": "5000"
                                 }
                             ],
                             "response": "Report"
@@ -871,21 +833,59 @@
                             ],
                             "optinalQueryParams": [
                                 {
-                                    "name": "pageToken",
-                                    "desc": "A continuation token, used to page through saved reports. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
-                                    "type": "string"
-                                },
-                                {
                                     "name": "maxResults",
                                     "desc": "The maximum number of saved reports to include in the response, used for paging.",
                                     "type": "int32",
                                     "min": "0",
                                     "max": "100"
+                                },
+                                {
+                                    "name": "pageToken",
+                                    "desc": "A continuation token, used to page through saved reports. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
+                                    "type": "string"
                                 }
                             ],
                             "response": "SavedReports"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "name": "urlchannels",
+            "methods": [
+                {
+                    "name": "list",
+                    "desc": "List all URL channels in the specified ad client for this Ad Exchange account.",
+                    "path": "adclients/{adClientId}/urlchannels",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adexchange.seller",
+                        "https://www.googleapis.com/auth/adexchange.seller.readonly"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client for which to list URL channels.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "maxResults",
+                            "desc": "The maximum number of URL channels to include in the response, used for paging.",
+                            "type": "uint32",
+                            "min": "0",
+                            "max": "10000"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "A continuation token, used to page through URL channels. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "UrlChannels"
                 }
             ]
         }

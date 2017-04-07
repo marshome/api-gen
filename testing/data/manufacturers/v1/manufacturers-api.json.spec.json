@@ -17,14 +17,15 @@
     },
     "parameters": [
         {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
             "type": "string"
         },
         {
-            "name": "bearer_token",
-            "desc": "OAuth bearer token.",
-            "type": "string"
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
         },
         {
             "name": "upload_protocol",
@@ -32,13 +33,14 @@
             "type": "string"
         },
         {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
         },
         {
-            "name": "uploadType",
-            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
             "type": "string"
         },
         {
@@ -62,16 +64,19 @@
             "type": "string"
         },
         {
-            "name": "pp",
-            "desc": "Pretty-print response.",
-            "type": "bool",
-            "default": "true"
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
         },
         {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
+            "name": "uploadType",
+            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+            "type": "string"
         },
         {
             "name": "alt",
@@ -99,13 +104,8 @@
             "type": "string"
         },
         {
-            "name": "key",
-            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
-            "type": "string"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
             "type": "string"
         }
     ],
@@ -115,6 +115,16 @@
             "desc": "Product issue.",
             "type": "object",
             "fields": [
+                {
+                    "name": "description",
+                    "desc": "Description of the issue.",
+                    "type": "string"
+                },
+                {
+                    "name": "type",
+                    "desc": "The server-generated type of the issue, for example,\n“INCORRECT_TEXT_FORMATTING”, “IMAGE_NOT_SERVEABLE”, etc.",
+                    "type": "string"
+                },
                 {
                     "name": "attribute",
                     "desc": "If present, the attribute that triggered the issue. For more information\nabout attributes, see\nhttps://support.google.com/manufacturers/answer/6124116.",
@@ -142,16 +152,6 @@
                             "desc": "Info severity. The issue is one that doesn't require immediate attention.\nIt is, for example, used to communicate which attributes are still\npending review."
                         }
                     ]
-                },
-                {
-                    "name": "description",
-                    "desc": "Description of the issue.",
-                    "type": "string"
-                },
-                {
-                    "name": "type",
-                    "desc": "The server-generated type of the issue, for example,\n“INCORRECT_TEXT_FORMATTING”, “IMAGE_NOT_SERVEABLE”, etc.",
-                    "type": "string"
                 }
             ]
         },
@@ -161,26 +161,24 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "issues",
-                    "desc": "A server-generated list of issues associated with the product.\n@OutputOnly",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Issue"
-                },
-                {
                     "name": "uploadedAttributes",
                     "desc": "Attributes of the product uploaded via the Manufacturer Center API or via\nfeeds.",
                     "type": "ref",
                     "refType": "Attributes"
                 },
                 {
-                    "name": "targetCountry",
-                    "desc": "The target country of the product as a CLDR territory code (for example,\nUS).\n@OutputOnly",
+                    "name": "parent",
+                    "desc": "Parent ID in the format `accounts/{account_id}`.\n\n`account_id` - The ID of the Manufacturer Center account.\n@OutputOnly",
                     "type": "string"
                 },
                 {
-                    "name": "name",
-                    "desc": "Name in the format `{target_country}:{content_language}:{product_id}`.\n\n`target_country`   - The target country of the product as a CLDR territory\n                     code (for example, US).\n\n`content_language` - The content language of the product as a two-letter\n                     ISO 639-1 language code (for example, en).\n\n`product_id`     -   The ID of the product. For more information, see\n                     https://support.google.com/manufacturers/answer/6124116#id.\n@OutputOnly",
+                    "name": "contentLanguage",
+                    "desc": "The content language of the product as a two-letter ISO 639-1 language code\n(for example, en).\n@OutputOnly",
+                    "type": "string"
+                },
+                {
+                    "name": "targetCountry",
+                    "desc": "The target country of the product as a CLDR territory code (for example,\nUS).\n@OutputOnly",
                     "type": "string"
                 },
                 {
@@ -190,20 +188,15 @@
                     "type": "string"
                 },
                 {
-                    "name": "finalAttributes",
-                    "desc": "Final attributes of the product. The final attributes are obtained by\noverriding the uploaded attributes with the manually provided and deleted\nattributes. Google systems only process, evaluate, review, and/or use final\nattributes.\n@OutputOnly",
-                    "type": "ref",
-                    "refType": "Attributes"
-                },
-                {
                     "name": "productId",
                     "desc": "The ID of the product. For more information, see\nhttps://support.google.com/manufacturers/answer/6124116#id.\n@OutputOnly",
                     "type": "string"
                 },
                 {
-                    "name": "parent",
-                    "desc": "Parent ID in the format `accounts/{account_id}`.\n\n`account_id` - The ID of the Manufacturer Center account.\n@OutputOnly",
-                    "type": "string"
+                    "name": "finalAttributes",
+                    "desc": "Final attributes of the product. The final attributes are obtained by\noverriding the uploaded attributes with the manually provided and deleted\nattributes. Google systems only process, evaluate, review, and/or use final\nattributes.\n@OutputOnly",
+                    "type": "ref",
+                    "refType": "Attributes"
                 },
                 {
                     "name": "manuallyProvidedAttributes",
@@ -212,9 +205,16 @@
                     "refType": "Attributes"
                 },
                 {
-                    "name": "contentLanguage",
-                    "desc": "The content language of the product as a two-letter ISO 639-1 language code\n(for example, en).\n@OutputOnly",
+                    "name": "name",
+                    "desc": "Name in the format `{target_country}:{content_language}:{product_id}`.\n\n`target_country`   - The target country of the product as a CLDR territory\n                     code (for example, US).\n\n`content_language` - The content language of the product as a two-letter\n                     ISO 639-1 language code (for example, en).\n\n`product_id`     -   The ID of the product. For more information, see\n                     https://support.google.com/manufacturers/answer/6124116#id.\n@OutputOnly",
                     "type": "string"
+                },
+                {
+                    "name": "issues",
+                    "desc": "A server-generated list of issues associated with the product.\n@OutputOnly",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Issue"
                 }
             ]
         },
@@ -223,6 +223,22 @@
             "desc": "Attributes of the product. For more information, see\nhttps://support.google.com/manufacturers/answer/6124116.",
             "type": "object",
             "fields": [
+                {
+                    "name": "productName",
+                    "desc": "The canonical name of the product. For more information, see\nhttps://support.google.com/manufacturers/answer/6124116#productname.",
+                    "type": "string"
+                },
+                {
+                    "name": "productType",
+                    "desc": "The manufacturer's category of the product. For more information, see\nhttps://support.google.com/manufacturers/answer/6124116#producttype.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "productPageUrl",
+                    "desc": "The URL of the manufacturer's detail page of the product. For more\ninformation, see\nhttps://support.google.com/manufacturers/answer/6124116#productpage.",
+                    "type": "string"
+                },
                 {
                     "name": "mpn",
                     "desc": "The Manufacturer Part Number (MPN) of the product. For more information,\nsee https://support.google.com/manufacturers/answer/6124116#mpn.",
@@ -247,22 +263,6 @@
                 {
                     "name": "brand",
                     "desc": "The brand name of the product. For more information, see\nhttps://support.google.com/manufacturers/answer/6124116#brand.",
-                    "type": "string"
-                },
-                {
-                    "name": "productName",
-                    "desc": "The canonical name of the product. For more information, see\nhttps://support.google.com/manufacturers/answer/6124116#productname.",
-                    "type": "string"
-                },
-                {
-                    "name": "productType",
-                    "desc": "The manufacturer's category of the product. For more information, see\nhttps://support.google.com/manufacturers/answer/6124116#producttype.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "productPageUrl",
-                    "desc": "The URL of the manufacturer's detail page of the product. For more\ninformation, see\nhttps://support.google.com/manufacturers/answer/6124116#productpage.",
                     "type": "string"
                 }
             ]
@@ -312,14 +312,14 @@
                             ],
                             "optinalQueryParams": [
                                 {
-                                    "name": "pageSize",
-                                    "desc": "Maximum number of product statuses to return in the response, used for\npaging.",
-                                    "type": "int32"
-                                },
-                                {
                                     "name": "pageToken",
                                     "desc": "The token returned by the previous request.",
                                     "type": "string"
+                                },
+                                {
+                                    "name": "pageSize",
+                                    "desc": "Maximum number of product statuses to return in the response, used for\npaging.",
+                                    "type": "int32"
                                 }
                             ],
                             "response": "ListProductsResponse"

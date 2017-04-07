@@ -13,6 +13,16 @@
     "auth": {},
     "parameters": [
         {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        },
+        {
             "name": "alt",
             "desc": "Data format for the response.",
             "type": "string",
@@ -44,16 +54,6 @@
             "desc": "Returns response with indentations and line breaks.",
             "type": "bool",
             "default": "true"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
-            "type": "string"
-        },
-        {
-            "name": "userIp",
-            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
-            "type": "string"
         }
     ],
     "schemas": [
@@ -61,17 +61,6 @@
             "name": "Webfont",
             "type": "object",
             "fields": [
-                {
-                    "name": "family",
-                    "desc": "The name of the font.",
-                    "type": "string"
-                },
-                {
-                    "name": "files",
-                    "desc": "The font files (with all supported scripts) for each one of the available variants, as a key : value map.",
-                    "collection": "map",
-                    "type": "string"
-                },
                 {
                     "name": "kind",
                     "desc": "This kind represents a webfont object in the webfonts service.",
@@ -104,6 +93,17 @@
                     "name": "category",
                     "desc": "The category of the font.",
                     "type": "string"
+                },
+                {
+                    "name": "family",
+                    "desc": "The name of the font.",
+                    "type": "string"
+                },
+                {
+                    "name": "files",
+                    "desc": "The font files (with all supported scripts) for each one of the available variants, as a key : value map.",
+                    "collection": "map",
+                    "type": "string"
                 }
             ]
         },
@@ -112,17 +112,17 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "kind",
+                    "desc": "This kind represents a list of webfont objects in the webfonts service.",
+                    "type": "string",
+                    "default": "webfonts#webfontList"
+                },
+                {
                     "name": "items",
                     "desc": "The list of fonts currently served by the Google Fonts API.",
                     "collection": "array",
                     "type": "ref",
                     "refType": "Webfont"
-                },
-                {
-                    "name": "kind",
-                    "desc": "This kind represents a list of webfont objects in the webfonts service.",
-                    "type": "string",
-                    "default": "webfonts#webfontList"
                 }
             ]
         }
