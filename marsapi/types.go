@@ -1,9 +1,10 @@
 package marsapi
 
 import (
-	"strconv"
 	"encoding/json"
 	"errors"
+	"strconv"
+	"strings"
 )
 
 // Int64s is a slice of int64s that marshal as quoted strings in JSON.
@@ -181,8 +182,7 @@ func Int32(v int32) *int32 { return &v }
 // to store v and returns a pointer to it.
 func Int64(v int64) *int64 { return &v }
 
-// Float64 is a helper routine that allocates a new float64 value
-// to store v and returns a pointer to it.
+func Float32(v float32) *float32 { return &v }
 func Float64(v float64) *float64 { return &v }
 
 // Uint32 is a helper routine that allocates a new uint32 value
@@ -196,3 +196,49 @@ func Uint64(v uint64) *uint64 { return &v }
 // String is a helper routine that allocates a new string value
 // to store v and returns a pointer to it.
 func String(v string) *string { return &v }
+
+func ParseStringList(s string) (l []string, err error) {
+	return strings.Split(s, ","), nil
+}
+
+func ParseInt64List(s string) (l []int64, err error) {
+	tokens := strings.Split(s, ",")
+	l = make([]int64, 0)
+	for _, v := range tokens {
+		i, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		l = append(l, i)
+	}
+
+	return l, nil
+}
+
+func ParseUint64List(s string) (l []uint64, err error) {
+	tokens := strings.Split(s, ",")
+	l = make([]uint64, 0)
+	for _, token := range tokens {
+		v, err := strconv.ParseUint(token, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		l = append(l, v)
+	}
+
+	return l, nil
+}
+
+func ParseFloat64List(s string) (l []float64, err error) {
+	tokens := strings.Split(s, ",")
+	l = make([]float64, 0)
+	for _, token := range tokens {
+		v, err := strconv.ParseFloat(token, 64)
+		if err != nil {
+			return nil, err
+		}
+		l = append(l, v)
+	}
+
+	return l, nil
+}

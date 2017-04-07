@@ -1,0 +1,322 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "\"tbys6C40o18GZwyMen5GMkdK-3s/OETTXb_C37OrYG6Z2ykB_lpjNQE\"",
+    "discoveryVersion": "v1",
+    "id": "urlshortener:v1",
+    "name": "urlshortener",
+    "version": "v1",
+    "title": "URL Shortener API",
+    "description": "Lets you create, inspect, and manage goo.gl short URLs",
+    "documentationLink": "https://developers.google.com/url-shortener/v1/getting_started",
+    "protocol": "rest",
+    "rootUrl": "https://www.googleapis.com/",
+    "auth": {
+        "oauth2": [
+            "https://www.googleapis.com/auth/urlshortener"
+        ]
+    },
+    "parameters": [
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "AnalyticsSnapshot",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "referrers",
+                    "desc": "Top referring hosts, e.g. \"www.google.com\"; sorted by (descending) click counts. Only present if this data is available.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "StringCount"
+                },
+                {
+                    "name": "shortUrlClicks",
+                    "desc": "Number of clicks on this short URL.",
+                    "type": "int64"
+                },
+                {
+                    "name": "browsers",
+                    "desc": "Top browsers, e.g. \"Chrome\"; sorted by (descending) click counts. Only present if this data is available.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "StringCount"
+                },
+                {
+                    "name": "countries",
+                    "desc": "Top countries (expressed as country codes), e.g. \"US\" or \"DE\"; sorted by (descending) click counts. Only present if this data is available.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "StringCount"
+                },
+                {
+                    "name": "longUrlClicks",
+                    "desc": "Number of clicks on all goo.gl short URLs pointing to this long URL.",
+                    "type": "int64"
+                },
+                {
+                    "name": "platforms",
+                    "desc": "Top platforms or OSes, e.g. \"Windows\"; sorted by (descending) click counts. Only present if this data is available.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "StringCount"
+                }
+            ]
+        },
+        {
+            "name": "AnalyticsSummary",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "allTime",
+                    "desc": "Click analytics over all time.",
+                    "type": "ref",
+                    "refType": "AnalyticsSnapshot"
+                },
+                {
+                    "name": "day",
+                    "desc": "Click analytics over the last day.",
+                    "type": "ref",
+                    "refType": "AnalyticsSnapshot"
+                },
+                {
+                    "name": "month",
+                    "desc": "Click analytics over the last month.",
+                    "type": "ref",
+                    "refType": "AnalyticsSnapshot"
+                },
+                {
+                    "name": "twoHours",
+                    "desc": "Click analytics over the last two hours.",
+                    "type": "ref",
+                    "refType": "AnalyticsSnapshot"
+                },
+                {
+                    "name": "week",
+                    "desc": "Click analytics over the last week.",
+                    "type": "ref",
+                    "refType": "AnalyticsSnapshot"
+                }
+            ]
+        },
+        {
+            "name": "StringCount",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "count",
+                    "desc": "Number of clicks for this top entry, e.g. for this particular country or browser.",
+                    "type": "int64"
+                },
+                {
+                    "name": "id",
+                    "desc": "Label assigned to this top entry, e.g. \"US\" or \"Chrome\".",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Url",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "analytics",
+                    "desc": "A summary of the click analytics for the short and long URL. Might not be present if not requested or currently unavailable.",
+                    "type": "ref",
+                    "refType": "AnalyticsSummary"
+                },
+                {
+                    "name": "created",
+                    "desc": "Time the short URL was created; ISO 8601 representation using the yyyy-MM-dd'T'HH:mm:ss.SSSZZ format, e.g. \"2010-10-14T19:01:24.944+00:00\".",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "Short URL, e.g. \"http://goo.gl/l6MS\".",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"urlshortener#url\".",
+                    "type": "string",
+                    "default": "urlshortener#url"
+                },
+                {
+                    "name": "longUrl",
+                    "desc": "Long URL, e.g. \"http://www.google.com/\". Might not be present if the status is \"REMOVED\".",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "desc": "Status of the target URL. Possible values: \"OK\", \"MALWARE\", \"PHISHING\", or \"REMOVED\". A URL might be marked \"REMOVED\" if it was flagged as spam, for example.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "UrlHistory",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "itemsPerPage",
+                    "desc": "Number of items returned with each full \"page\" of results. Note that the last page could have fewer items than the \"itemsPerPage\" value.",
+                    "type": "int32"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"urlshortener#urlHistory\".",
+                    "type": "string",
+                    "default": "urlshortener#urlHistory"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "A token to provide to get the next page of results.",
+                    "type": "string"
+                },
+                {
+                    "name": "totalItems",
+                    "desc": "Total number of short URLs associated with this user (may be approximate).",
+                    "type": "int32"
+                },
+                {
+                    "name": "items",
+                    "desc": "A list of URL resources.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Url"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "url",
+            "methods": [
+                {
+                    "name": "get",
+                    "desc": "Expands a short URL or gets creation time and analytics.",
+                    "path": "url",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/urlshortener"
+                    ],
+                    "requiredQueryParams": [
+                        {
+                            "name": "shortUrl",
+                            "desc": "The short URL, including the protocol.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projection",
+                            "desc": "Additional information to return.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "ANALYTICS_CLICKS",
+                                    "desc": "Returns only click counts."
+                                },
+                                {
+                                    "name": "ANALYTICS_TOP_STRINGS",
+                                    "desc": "Returns only top string counts."
+                                },
+                                {
+                                    "name": "FULL",
+                                    "desc": "Returns the creation timestamp and all available analytics."
+                                }
+                            ]
+                        }
+                    ],
+                    "response": "Url"
+                },
+                {
+                    "name": "insert",
+                    "desc": "Creates a new short URL.",
+                    "path": "url",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/urlshortener"
+                    ],
+                    "request": "Url",
+                    "response": "Url"
+                },
+                {
+                    "name": "list",
+                    "desc": "Retrieves a list of URLs shortened by a user.",
+                    "path": "url/history",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/urlshortener"
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projection",
+                            "desc": "Additional information to return.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "ANALYTICS_CLICKS",
+                                    "desc": "Returns short URL click counts."
+                                },
+                                {
+                                    "name": "FULL",
+                                    "desc": "Returns short URL click counts."
+                                }
+                            ]
+                        },
+                        {
+                            "name": "start-token",
+                            "desc": "Token for requesting successive pages of results.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "UrlHistory"
+                }
+            ]
+        }
+    ]
+}

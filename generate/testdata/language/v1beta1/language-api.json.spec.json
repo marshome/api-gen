@@ -1,0 +1,1448 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "",
+    "discoveryVersion": "v1",
+    "id": "language:v1beta1",
+    "name": "language",
+    "version": "v1beta1",
+    "title": "Google Cloud Natural Language API",
+    "description": "Google Cloud Natural Language API provides natural language understanding technologies to developers. Examples include sentiment analysis, entity recognition, and text annotations.",
+    "documentationLink": "https://cloud.google.com/natural-language/",
+    "protocol": "rest",
+    "rootUrl": "https://language.googleapis.com/",
+    "auth": {
+        "oauth2": [
+            "https://www.googleapis.com/auth/cloud-platform"
+        ]
+    },
+    "parameters": [
+        {
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        },
+        {
+            "name": "$.xgafv",
+            "desc": "V1 error format.",
+            "type": "string",
+            "enum": [
+                {
+                    "name": "1",
+                    "desc": "v1 error format"
+                },
+                {
+                    "name": "2",
+                    "desc": "v2 error format"
+                }
+            ]
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "uploadType",
+            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                },
+                {
+                    "name": "media",
+                    "desc": "Media download with context-dependent Content-Type"
+                },
+                {
+                    "name": "proto",
+                    "desc": "Responses with Content-Type of application/x-protobuf"
+                }
+            ]
+        }
+    ],
+    "schemas": [
+        {
+            "name": "Sentiment",
+            "desc": "Represents the feeling associated with the entire text or entities in\nthe text.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "polarity",
+                    "desc": "DEPRECATED FIELD - This field is being deprecated in\nfavor of score. Please refer to our documentation at\nhttps://cloud.google.com/natural-language/docs for more information.",
+                    "type": "float32"
+                },
+                {
+                    "name": "score",
+                    "desc": "Sentiment score between -1.0 (negative sentiment) and 1.0\n(positive sentiment).",
+                    "type": "float32"
+                },
+                {
+                    "name": "magnitude",
+                    "desc": "A non-negative number in the [0, +inf) range, which represents\nthe absolute magnitude of sentiment regardless of score (positive or\nnegative).",
+                    "type": "float32"
+                }
+            ]
+        },
+        {
+            "name": "AnalyzeSentimentResponse",
+            "desc": "The sentiment analysis response message.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "documentSentiment",
+                    "desc": "The overall sentiment of the input document.",
+                    "type": "ref",
+                    "refType": "Sentiment"
+                },
+                {
+                    "name": "language",
+                    "desc": "The language of the text, which will be the same as the language specified\nin the request or, if not specified, the automatically-detected language.",
+                    "type": "string"
+                },
+                {
+                    "name": "sentences",
+                    "desc": "The sentiment for all the sentences in the document.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Sentence"
+                }
+            ]
+        },
+        {
+            "name": "Entity",
+            "desc": "Represents a phrase in the text that is a known entity, such as\na person, an organization, or location. The API associates information, such\nas salience and mentions, with entities.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "mentions",
+                    "desc": "The mentions of this entity in the input document. The API currently\nsupports proper noun mentions.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "EntityMention"
+                },
+                {
+                    "name": "name",
+                    "desc": "The representative name for the entity.",
+                    "type": "string"
+                },
+                {
+                    "name": "type",
+                    "desc": "The entity type.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "UNKNOWN",
+                            "desc": "Unknown"
+                        },
+                        {
+                            "name": "PERSON",
+                            "desc": "Person"
+                        },
+                        {
+                            "name": "LOCATION",
+                            "desc": "Location"
+                        },
+                        {
+                            "name": "ORGANIZATION",
+                            "desc": "Organization"
+                        },
+                        {
+                            "name": "EVENT",
+                            "desc": "Event"
+                        },
+                        {
+                            "name": "WORK_OF_ART",
+                            "desc": "Work of art"
+                        },
+                        {
+                            "name": "CONSUMER_GOOD",
+                            "desc": "Consumer goods"
+                        },
+                        {
+                            "name": "OTHER",
+                            "desc": "Other types"
+                        }
+                    ]
+                },
+                {
+                    "name": "metadata",
+                    "desc": "Metadata associated with the entity.\n\nCurrently, Wikipedia URLs and Knowledge Graph MIDs are provided, if\navailable. The associated keys are \"wikipedia_url\" and \"mid\", respectively.",
+                    "collection": "map",
+                    "type": "string"
+                },
+                {
+                    "name": "salience",
+                    "desc": "The salience score associated with the entity in the [0, 1.0] range.\n\nThe salience score for an entity provides information about the\nimportance or centrality of that entity to the entire document text.\nScores closer to 0 are less salient, while scores closer to 1.0 are highly\nsalient.",
+                    "type": "float32"
+                }
+            ]
+        },
+        {
+            "name": "Sentence",
+            "desc": "Represents a sentence in the input document.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "text",
+                    "desc": "The sentence text.",
+                    "type": "ref",
+                    "refType": "TextSpan"
+                },
+                {
+                    "name": "sentiment",
+                    "desc": "For calls to AnalyzeSentiment or if\nAnnotateTextRequest.Features.extract_document_sentiment is set to\ntrue, this field will contain the sentiment for the sentence.",
+                    "type": "ref",
+                    "refType": "Sentiment"
+                }
+            ]
+        },
+        {
+            "name": "AnalyzeSyntaxRequest",
+            "desc": "The syntax analysis request message.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "document",
+                    "desc": "Input document.",
+                    "type": "ref",
+                    "refType": "Document"
+                },
+                {
+                    "name": "encodingType",
+                    "desc": "The encoding type used by the API to calculate offsets.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "NONE",
+                            "desc": "If `EncodingType` is not specified, encoding-dependent information (such as\n`begin_offset`) will be set at `-1`."
+                        },
+                        {
+                            "name": "UTF8",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-8 encoding of the input. C++ and Go are examples of languages\nthat use this encoding natively."
+                        },
+                        {
+                            "name": "UTF16",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-16 encoding of the input. Java and Javascript are examples of\nlanguages that use this encoding natively."
+                        },
+                        {
+                            "name": "UTF32",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-32 encoding of the input. Python is an example of a language\nthat uses this encoding natively."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AnalyzeEntitiesResponse",
+            "desc": "The entity analysis response message.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "language",
+                    "desc": "The language of the text, which will be the same as the language specified\nin the request or, if not specified, the automatically-detected language.\nSee Document.language field for more details.",
+                    "type": "string"
+                },
+                {
+                    "name": "entities",
+                    "desc": "The recognized entities in the input document.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Entity"
+                }
+            ]
+        },
+        {
+            "name": "AnalyzeSentimentRequest",
+            "desc": "The sentiment analysis request message.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "encodingType",
+                    "desc": "The encoding type used by the API to calculate sentence offsets for the\nsentence sentiment.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "NONE",
+                            "desc": "If `EncodingType` is not specified, encoding-dependent information (such as\n`begin_offset`) will be set at `-1`."
+                        },
+                        {
+                            "name": "UTF8",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-8 encoding of the input. C++ and Go are examples of languages\nthat use this encoding natively."
+                        },
+                        {
+                            "name": "UTF16",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-16 encoding of the input. Java and Javascript are examples of\nlanguages that use this encoding natively."
+                        },
+                        {
+                            "name": "UTF32",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-32 encoding of the input. Python is an example of a language\nthat uses this encoding natively."
+                        }
+                    ]
+                },
+                {
+                    "name": "document",
+                    "desc": "Input document. Currently, `analyzeSentiment` only supports English text\n(Document.language=\"EN\").",
+                    "type": "ref",
+                    "refType": "Document"
+                }
+            ]
+        },
+        {
+            "name": "TextSpan",
+            "desc": "Represents an output piece of text.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "beginOffset",
+                    "desc": "The API calculates the beginning offset of the content in the original\ndocument according to the EncodingType specified in the API request.",
+                    "type": "int32"
+                },
+                {
+                    "name": "content",
+                    "desc": "The content of the output text.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "EntityMention",
+            "desc": "Represents a mention for an entity in the text. Currently, proper noun\nmentions are supported.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "text",
+                    "desc": "The mention text.",
+                    "type": "ref",
+                    "refType": "TextSpan"
+                },
+                {
+                    "name": "type",
+                    "desc": "The type of the entity mention.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "TYPE_UNKNOWN",
+                            "desc": "Unknown"
+                        },
+                        {
+                            "name": "PROPER",
+                            "desc": "Proper name"
+                        },
+                        {
+                            "name": "COMMON",
+                            "desc": "Common noun (or noun compound)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AnnotateTextResponse",
+            "desc": "The text annotations response message.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "documentSentiment",
+                    "desc": "The overall sentiment for the document. Populated if the user enables\nAnnotateTextRequest.Features.extract_document_sentiment.",
+                    "type": "ref",
+                    "refType": "Sentiment"
+                },
+                {
+                    "name": "language",
+                    "desc": "The language of the text, which will be the same as the language specified\nin the request or, if not specified, the automatically-detected language.\nSee Document.language field for more details.",
+                    "type": "string"
+                },
+                {
+                    "name": "sentences",
+                    "desc": "Sentences in the input document. Populated if the user enables\nAnnotateTextRequest.Features.extract_syntax.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Sentence"
+                },
+                {
+                    "name": "tokens",
+                    "desc": "Tokens, along with their syntactic information, in the input document.\nPopulated if the user enables\nAnnotateTextRequest.Features.extract_syntax.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Token"
+                },
+                {
+                    "name": "entities",
+                    "desc": "Entities, along with their semantic information, in the input document.\nPopulated if the user enables\nAnnotateTextRequest.Features.extract_entities.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Entity"
+                }
+            ]
+        },
+        {
+            "name": "DependencyEdge",
+            "desc": "Represents dependency parse tree information for a token.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "headTokenIndex",
+                    "desc": "Represents the head of this token in the dependency tree.\nThis is the index of the token which has an arc going to this token.\nThe index is the position of the token in the array of tokens returned\nby the API method. If this token is a root token, then the\n`head_token_index` is its own index.",
+                    "type": "int32"
+                },
+                {
+                    "name": "label",
+                    "desc": "The parse label for the token.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "UNKNOWN",
+                            "desc": "Unknown"
+                        },
+                        {
+                            "name": "ABBREV",
+                            "desc": "Abbreviation modifier"
+                        },
+                        {
+                            "name": "ACOMP",
+                            "desc": "Adjectival complement"
+                        },
+                        {
+                            "name": "ADVCL",
+                            "desc": "Adverbial clause modifier"
+                        },
+                        {
+                            "name": "ADVMOD",
+                            "desc": "Adverbial modifier"
+                        },
+                        {
+                            "name": "AMOD",
+                            "desc": "Adjectival modifier of an NP"
+                        },
+                        {
+                            "name": "APPOS",
+                            "desc": "Appositional modifier of an NP"
+                        },
+                        {
+                            "name": "ATTR",
+                            "desc": "Attribute dependent of a copular verb"
+                        },
+                        {
+                            "name": "AUX",
+                            "desc": "Auxiliary (non-main) verb"
+                        },
+                        {
+                            "name": "AUXPASS",
+                            "desc": "Passive auxiliary"
+                        },
+                        {
+                            "name": "CC",
+                            "desc": "Coordinating conjunction"
+                        },
+                        {
+                            "name": "CCOMP",
+                            "desc": "Clausal complement of a verb or adjective"
+                        },
+                        {
+                            "name": "CONJ",
+                            "desc": "Conjunct"
+                        },
+                        {
+                            "name": "CSUBJ",
+                            "desc": "Clausal subject"
+                        },
+                        {
+                            "name": "CSUBJPASS",
+                            "desc": "Clausal passive subject"
+                        },
+                        {
+                            "name": "DEP",
+                            "desc": "Dependency (unable to determine)"
+                        },
+                        {
+                            "name": "DET",
+                            "desc": "Determiner"
+                        },
+                        {
+                            "name": "DISCOURSE",
+                            "desc": "Discourse"
+                        },
+                        {
+                            "name": "DOBJ",
+                            "desc": "Direct object"
+                        },
+                        {
+                            "name": "EXPL",
+                            "desc": "Expletive"
+                        },
+                        {
+                            "name": "GOESWITH",
+                            "desc": "Goes with (part of a word in a text not well edited)"
+                        },
+                        {
+                            "name": "IOBJ",
+                            "desc": "Indirect object"
+                        },
+                        {
+                            "name": "MARK",
+                            "desc": "Marker (word introducing a subordinate clause)"
+                        },
+                        {
+                            "name": "MWE",
+                            "desc": "Multi-word expression"
+                        },
+                        {
+                            "name": "MWV",
+                            "desc": "Multi-word verbal expression"
+                        },
+                        {
+                            "name": "NEG",
+                            "desc": "Negation modifier"
+                        },
+                        {
+                            "name": "NN",
+                            "desc": "Noun compound modifier"
+                        },
+                        {
+                            "name": "NPADVMOD",
+                            "desc": "Noun phrase used as an adverbial modifier"
+                        },
+                        {
+                            "name": "NSUBJ",
+                            "desc": "Nominal subject"
+                        },
+                        {
+                            "name": "NSUBJPASS",
+                            "desc": "Passive nominal subject"
+                        },
+                        {
+                            "name": "NUM",
+                            "desc": "Numeric modifier of a noun"
+                        },
+                        {
+                            "name": "NUMBER",
+                            "desc": "Element of compound number"
+                        },
+                        {
+                            "name": "P",
+                            "desc": "Punctuation mark"
+                        },
+                        {
+                            "name": "PARATAXIS",
+                            "desc": "Parataxis relation"
+                        },
+                        {
+                            "name": "PARTMOD",
+                            "desc": "Participial modifier"
+                        },
+                        {
+                            "name": "PCOMP",
+                            "desc": "The complement of a preposition is a clause"
+                        },
+                        {
+                            "name": "POBJ",
+                            "desc": "Object of a preposition"
+                        },
+                        {
+                            "name": "POSS",
+                            "desc": "Possession modifier"
+                        },
+                        {
+                            "name": "POSTNEG",
+                            "desc": "Postverbal negative particle"
+                        },
+                        {
+                            "name": "PRECOMP",
+                            "desc": "Predicate complement"
+                        },
+                        {
+                            "name": "PRECONJ",
+                            "desc": "Preconjunt"
+                        },
+                        {
+                            "name": "PREDET",
+                            "desc": "Predeterminer"
+                        },
+                        {
+                            "name": "PREF",
+                            "desc": "Prefix"
+                        },
+                        {
+                            "name": "PREP",
+                            "desc": "Prepositional modifier"
+                        },
+                        {
+                            "name": "PRONL",
+                            "desc": "The relationship between a verb and verbal morpheme"
+                        },
+                        {
+                            "name": "PRT",
+                            "desc": "Particle"
+                        },
+                        {
+                            "name": "PS",
+                            "desc": "Associative or possessive marker"
+                        },
+                        {
+                            "name": "QUANTMOD",
+                            "desc": "Quantifier phrase modifier"
+                        },
+                        {
+                            "name": "RCMOD",
+                            "desc": "Relative clause modifier"
+                        },
+                        {
+                            "name": "RCMODREL",
+                            "desc": "Complementizer in relative clause"
+                        },
+                        {
+                            "name": "RDROP",
+                            "desc": "Ellipsis without a preceding predicate"
+                        },
+                        {
+                            "name": "REF",
+                            "desc": "Referent"
+                        },
+                        {
+                            "name": "REMNANT",
+                            "desc": "Remnant"
+                        },
+                        {
+                            "name": "REPARANDUM",
+                            "desc": "Reparandum"
+                        },
+                        {
+                            "name": "ROOT",
+                            "desc": "Root"
+                        },
+                        {
+                            "name": "SNUM",
+                            "desc": "Suffix specifying a unit of number"
+                        },
+                        {
+                            "name": "SUFF",
+                            "desc": "Suffix"
+                        },
+                        {
+                            "name": "TMOD",
+                            "desc": "Temporal modifier"
+                        },
+                        {
+                            "name": "TOPIC",
+                            "desc": "Topic marker"
+                        },
+                        {
+                            "name": "VMOD",
+                            "desc": "Clause headed by an infinite form of the verb that modifies a noun"
+                        },
+                        {
+                            "name": "VOCATIVE",
+                            "desc": "Vocative"
+                        },
+                        {
+                            "name": "XCOMP",
+                            "desc": "Open clausal complement"
+                        },
+                        {
+                            "name": "SUFFIX",
+                            "desc": "Name suffix"
+                        },
+                        {
+                            "name": "TITLE",
+                            "desc": "Name title"
+                        },
+                        {
+                            "name": "ADVPHMOD",
+                            "desc": "Adverbial phrase modifier"
+                        },
+                        {
+                            "name": "AUXCAUS",
+                            "desc": "Causative auxiliary"
+                        },
+                        {
+                            "name": "AUXVV",
+                            "desc": "Helper auxiliary"
+                        },
+                        {
+                            "name": "DTMOD",
+                            "desc": "Rentaishi (Prenominal modifier)"
+                        },
+                        {
+                            "name": "FOREIGN",
+                            "desc": "Foreign words"
+                        },
+                        {
+                            "name": "KW",
+                            "desc": "Keyword"
+                        },
+                        {
+                            "name": "LIST",
+                            "desc": "List for chains of comparable items"
+                        },
+                        {
+                            "name": "NOMC",
+                            "desc": "Nominalized clause"
+                        },
+                        {
+                            "name": "NOMCSUBJ",
+                            "desc": "Nominalized clausal subject"
+                        },
+                        {
+                            "name": "NOMCSUBJPASS",
+                            "desc": "Nominalized clausal passive"
+                        },
+                        {
+                            "name": "NUMC",
+                            "desc": "Compound of numeric modifier"
+                        },
+                        {
+                            "name": "COP",
+                            "desc": "Copula"
+                        },
+                        {
+                            "name": "DISLOCATED",
+                            "desc": "Dislocated relation (for fronted/topicalized elements)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Token",
+            "desc": "Represents the smallest syntactic building block of the text.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "partOfSpeech",
+                    "desc": "Parts of speech tag for this token.",
+                    "type": "ref",
+                    "refType": "PartOfSpeech"
+                },
+                {
+                    "name": "text",
+                    "desc": "The token text.",
+                    "type": "ref",
+                    "refType": "TextSpan"
+                },
+                {
+                    "name": "dependencyEdge",
+                    "desc": "Dependency tree parse for this token.",
+                    "type": "ref",
+                    "refType": "DependencyEdge"
+                },
+                {
+                    "name": "lemma",
+                    "desc": "[Lemma](https://en.wikipedia.org/wiki/Lemma_%28morphology%29) of the token.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Status",
+            "desc": "The `Status` type defines a logical error model that is suitable for different\nprogramming environments, including REST APIs and RPC APIs. It is used by\n[gRPC](https://github.com/grpc). The error model is designed to be:\n\n- Simple to use and understand for most users\n- Flexible enough to meet unexpected needs\n\n# Overview\n\nThe `Status` message contains three pieces of data: error code, error message,\nand error details. The error code should be an enum value of\ngoogle.rpc.Code, but it may accept additional error codes if needed.  The\nerror message should be a developer-facing English message that helps\ndevelopers *understand* and *resolve* the error. If a localized user-facing\nerror message is needed, put the localized message in the error details or\nlocalize it in the client. The optional error details may contain arbitrary\ninformation about the error. There is a predefined set of error detail types\nin the package `google.rpc` which can be used for common error conditions.\n\n# Language mapping\n\nThe `Status` message is the logical representation of the error model, but it\nis not necessarily the actual wire format. When the `Status` message is\nexposed in different client libraries and different wire protocols, it can be\nmapped differently. For example, it will likely be mapped to some exceptions\nin Java, but more likely mapped to some error codes in C.\n\n# Other uses\n\nThe error model and the `Status` message can be used in a variety of\nenvironments, either with or without APIs, to provide a\nconsistent developer experience across different environments.\n\nExample uses of this error model include:\n\n- Partial errors. If a service needs to return partial errors to the client,\n    it may embed the `Status` in the normal response to indicate the partial\n    errors.\n\n- Workflow errors. A typical workflow has multiple steps. Each step may\n    have a `Status` message for error reporting purpose.\n\n- Batch operations. If a client uses batch request and batch response, the\n    `Status` message should be used directly inside batch response, one for\n    each error sub-response.\n\n- Asynchronous operations. If an API call embeds asynchronous operation\n    results in its response, the status of those operations should be\n    represented directly using the `Status` message.\n\n- Logging. If some API errors are stored in logs, the message `Status` could\n    be used directly after any stripping needed for security/privacy reasons.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "code",
+                    "desc": "The status code, which should be an enum value of google.rpc.Code.",
+                    "type": "int32"
+                },
+                {
+                    "name": "message",
+                    "desc": "A developer-facing error message, which should be in English. Any\nuser-facing error message should be localized and sent in the\ngoogle.rpc.Status.details field, or localized by the client.",
+                    "type": "string"
+                },
+                {
+                    "name": "details",
+                    "desc": "A list of messages that carry the error details.  There will be a\ncommon set of message types for APIs to use.",
+                    "collection": "array",
+                    "collectionItem": {
+                        "collection": "map",
+                        "type": "any"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "AnalyzeEntitiesRequest",
+            "desc": "The entity analysis request message.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "encodingType",
+                    "desc": "The encoding type used by the API to calculate offsets.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "NONE",
+                            "desc": "If `EncodingType` is not specified, encoding-dependent information (such as\n`begin_offset`) will be set at `-1`."
+                        },
+                        {
+                            "name": "UTF8",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-8 encoding of the input. C++ and Go are examples of languages\nthat use this encoding natively."
+                        },
+                        {
+                            "name": "UTF16",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-16 encoding of the input. Java and Javascript are examples of\nlanguages that use this encoding natively."
+                        },
+                        {
+                            "name": "UTF32",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-32 encoding of the input. Python is an example of a language\nthat uses this encoding natively."
+                        }
+                    ]
+                },
+                {
+                    "name": "document",
+                    "desc": "Input document.",
+                    "type": "ref",
+                    "refType": "Document"
+                }
+            ]
+        },
+        {
+            "name": "PartOfSpeech",
+            "desc": "Represents part of speech information for a token.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "number",
+                    "desc": "The grammatical number.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "NUMBER_UNKNOWN",
+                            "desc": "Number is not applicable in the analyzed language or is not predicted."
+                        },
+                        {
+                            "name": "SINGULAR",
+                            "desc": "Singular"
+                        },
+                        {
+                            "name": "PLURAL",
+                            "desc": "Plural"
+                        },
+                        {
+                            "name": "DUAL",
+                            "desc": "Dual"
+                        }
+                    ]
+                },
+                {
+                    "name": "voice",
+                    "desc": "The grammatical voice.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "VOICE_UNKNOWN",
+                            "desc": "Voice is not applicable in the analyzed language or is not predicted."
+                        },
+                        {
+                            "name": "ACTIVE",
+                            "desc": "Active"
+                        },
+                        {
+                            "name": "CAUSATIVE",
+                            "desc": "Causative"
+                        },
+                        {
+                            "name": "PASSIVE",
+                            "desc": "Passive"
+                        }
+                    ]
+                },
+                {
+                    "name": "tag",
+                    "desc": "The part of speech tag.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "UNKNOWN",
+                            "desc": "Unknown"
+                        },
+                        {
+                            "name": "ADJ",
+                            "desc": "Adjective"
+                        },
+                        {
+                            "name": "ADP",
+                            "desc": "Adposition (preposition and postposition)"
+                        },
+                        {
+                            "name": "ADV",
+                            "desc": "Adverb"
+                        },
+                        {
+                            "name": "CONJ",
+                            "desc": "Conjunction"
+                        },
+                        {
+                            "name": "DET",
+                            "desc": "Determiner"
+                        },
+                        {
+                            "name": "NOUN",
+                            "desc": "Noun (common and proper)"
+                        },
+                        {
+                            "name": "NUM",
+                            "desc": "Cardinal number"
+                        },
+                        {
+                            "name": "PRON",
+                            "desc": "Pronoun"
+                        },
+                        {
+                            "name": "PRT",
+                            "desc": "Particle or other function word"
+                        },
+                        {
+                            "name": "PUNCT",
+                            "desc": "Punctuation"
+                        },
+                        {
+                            "name": "VERB",
+                            "desc": "Verb (all tenses and modes)"
+                        },
+                        {
+                            "name": "X",
+                            "desc": "Other: foreign words, typos, abbreviations"
+                        },
+                        {
+                            "name": "AFFIX",
+                            "desc": "Affix"
+                        }
+                    ]
+                },
+                {
+                    "name": "proper",
+                    "desc": "The grammatical properness.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "PROPER_UNKNOWN",
+                            "desc": "Proper is not applicable in the analyzed language or is not predicted."
+                        },
+                        {
+                            "name": "PROPER",
+                            "desc": "Proper"
+                        },
+                        {
+                            "name": "NOT_PROPER",
+                            "desc": "Not proper"
+                        }
+                    ]
+                },
+                {
+                    "name": "case",
+                    "desc": "The grammatical case.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "CASE_UNKNOWN",
+                            "desc": "Case is not applicable in the analyzed language or is not predicted."
+                        },
+                        {
+                            "name": "ACCUSATIVE",
+                            "desc": "Accusative"
+                        },
+                        {
+                            "name": "ADVERBIAL",
+                            "desc": "Adverbial"
+                        },
+                        {
+                            "name": "COMPLEMENTIVE",
+                            "desc": "Complementive"
+                        },
+                        {
+                            "name": "DATIVE",
+                            "desc": "Dative"
+                        },
+                        {
+                            "name": "GENITIVE",
+                            "desc": "Genitive"
+                        },
+                        {
+                            "name": "INSTRUMENTAL",
+                            "desc": "Instrumental"
+                        },
+                        {
+                            "name": "LOCATIVE",
+                            "desc": "Locative"
+                        },
+                        {
+                            "name": "NOMINATIVE",
+                            "desc": "Nominative"
+                        },
+                        {
+                            "name": "OBLIQUE",
+                            "desc": "Oblique"
+                        },
+                        {
+                            "name": "PARTITIVE",
+                            "desc": "Partitive"
+                        },
+                        {
+                            "name": "PREPOSITIONAL",
+                            "desc": "Prepositional"
+                        },
+                        {
+                            "name": "REFLEXIVE_CASE",
+                            "desc": "Reflexive"
+                        },
+                        {
+                            "name": "RELATIVE_CASE",
+                            "desc": "Relative"
+                        },
+                        {
+                            "name": "VOCATIVE",
+                            "desc": "Vocative"
+                        }
+                    ]
+                },
+                {
+                    "name": "tense",
+                    "desc": "The grammatical tense.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "TENSE_UNKNOWN",
+                            "desc": "Tense is not applicable in the analyzed language or is not predicted."
+                        },
+                        {
+                            "name": "CONDITIONAL_TENSE",
+                            "desc": "Conditional"
+                        },
+                        {
+                            "name": "FUTURE",
+                            "desc": "Future"
+                        },
+                        {
+                            "name": "PAST",
+                            "desc": "Past"
+                        },
+                        {
+                            "name": "PRESENT",
+                            "desc": "Present"
+                        },
+                        {
+                            "name": "IMPERFECT",
+                            "desc": "Imperfect"
+                        },
+                        {
+                            "name": "PLUPERFECT",
+                            "desc": "Pluperfect"
+                        }
+                    ]
+                },
+                {
+                    "name": "reciprocity",
+                    "desc": "The grammatical reciprocity.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "RECIPROCITY_UNKNOWN",
+                            "desc": "Reciprocity is not applicable in the analyzed language or is not\npredicted."
+                        },
+                        {
+                            "name": "RECIPROCAL",
+                            "desc": "Reciprocal"
+                        },
+                        {
+                            "name": "NON_RECIPROCAL",
+                            "desc": "Non-reciprocal"
+                        }
+                    ]
+                },
+                {
+                    "name": "form",
+                    "desc": "The grammatical form.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "FORM_UNKNOWN",
+                            "desc": "Form is not applicable in the analyzed language or is not predicted."
+                        },
+                        {
+                            "name": "ADNOMIAL",
+                            "desc": "Adnomial"
+                        },
+                        {
+                            "name": "AUXILIARY",
+                            "desc": "Auxiliary"
+                        },
+                        {
+                            "name": "COMPLEMENTIZER",
+                            "desc": "Complementizer"
+                        },
+                        {
+                            "name": "FINAL_ENDING",
+                            "desc": "Final ending"
+                        },
+                        {
+                            "name": "GERUND",
+                            "desc": "Gerund"
+                        },
+                        {
+                            "name": "REALIS",
+                            "desc": "Realis"
+                        },
+                        {
+                            "name": "IRREALIS",
+                            "desc": "Irrealis"
+                        },
+                        {
+                            "name": "SHORT",
+                            "desc": "Short form"
+                        },
+                        {
+                            "name": "LONG",
+                            "desc": "Long form"
+                        },
+                        {
+                            "name": "ORDER",
+                            "desc": "Order form"
+                        },
+                        {
+                            "name": "SPECIFIC",
+                            "desc": "Specific form"
+                        }
+                    ]
+                },
+                {
+                    "name": "aspect",
+                    "desc": "The grammatical aspect.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "ASPECT_UNKNOWN",
+                            "desc": "Aspect is not applicable in the analyzed language or is not predicted."
+                        },
+                        {
+                            "name": "PERFECTIVE",
+                            "desc": "Perfective"
+                        },
+                        {
+                            "name": "IMPERFECTIVE",
+                            "desc": "Imperfective"
+                        },
+                        {
+                            "name": "PROGRESSIVE",
+                            "desc": "Progressive"
+                        }
+                    ]
+                },
+                {
+                    "name": "mood",
+                    "desc": "The grammatical mood.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "MOOD_UNKNOWN",
+                            "desc": "Mood is not applicable in the analyzed language or is not predicted."
+                        },
+                        {
+                            "name": "CONDITIONAL_MOOD",
+                            "desc": "Conditional"
+                        },
+                        {
+                            "name": "IMPERATIVE",
+                            "desc": "Imperative"
+                        },
+                        {
+                            "name": "INDICATIVE",
+                            "desc": "Indicative"
+                        },
+                        {
+                            "name": "INTERROGATIVE",
+                            "desc": "Interrogative"
+                        },
+                        {
+                            "name": "JUSSIVE",
+                            "desc": "Jussive"
+                        },
+                        {
+                            "name": "SUBJUNCTIVE",
+                            "desc": "Subjunctive"
+                        }
+                    ]
+                },
+                {
+                    "name": "gender",
+                    "desc": "The grammatical gender.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "GENDER_UNKNOWN",
+                            "desc": "Gender is not applicable in the analyzed language or is not predicted."
+                        },
+                        {
+                            "name": "FEMININE",
+                            "desc": "Feminine"
+                        },
+                        {
+                            "name": "MASCULINE",
+                            "desc": "Masculine"
+                        },
+                        {
+                            "name": "NEUTER",
+                            "desc": "Neuter"
+                        }
+                    ]
+                },
+                {
+                    "name": "person",
+                    "desc": "The grammatical person.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "PERSON_UNKNOWN",
+                            "desc": "Person is not applicable in the analyzed language or is not predicted."
+                        },
+                        {
+                            "name": "FIRST",
+                            "desc": "First"
+                        },
+                        {
+                            "name": "SECOND",
+                            "desc": "Second"
+                        },
+                        {
+                            "name": "THIRD",
+                            "desc": "Third"
+                        },
+                        {
+                            "name": "REFLEXIVE_PERSON",
+                            "desc": "Reflexive"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AnalyzeSyntaxResponse",
+            "desc": "The syntax analysis response message.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "sentences",
+                    "desc": "Sentences in the input document.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Sentence"
+                },
+                {
+                    "name": "tokens",
+                    "desc": "Tokens, along with their syntactic information, in the input document.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Token"
+                },
+                {
+                    "name": "language",
+                    "desc": "The language of the text, which will be the same as the language specified\nin the request or, if not specified, the automatically-detected language.\nSee Document.language field for more details.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "AnnotateTextRequest",
+            "desc": "The request message for the text annotation API, which can perform multiple\nanalysis types (sentiment, entities, and syntax) in one call.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "encodingType",
+                    "desc": "The encoding type used by the API to calculate offsets.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "NONE",
+                            "desc": "If `EncodingType` is not specified, encoding-dependent information (such as\n`begin_offset`) will be set at `-1`."
+                        },
+                        {
+                            "name": "UTF8",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-8 encoding of the input. C++ and Go are examples of languages\nthat use this encoding natively."
+                        },
+                        {
+                            "name": "UTF16",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-16 encoding of the input. Java and Javascript are examples of\nlanguages that use this encoding natively."
+                        },
+                        {
+                            "name": "UTF32",
+                            "desc": "Encoding-dependent information (such as `begin_offset`) is calculated based\non the UTF-32 encoding of the input. Python is an example of a language\nthat uses this encoding natively."
+                        }
+                    ]
+                },
+                {
+                    "name": "document",
+                    "desc": "Input document.",
+                    "type": "ref",
+                    "refType": "Document"
+                },
+                {
+                    "name": "features",
+                    "desc": "The enabled features.",
+                    "type": "ref",
+                    "refType": "Features"
+                }
+            ]
+        },
+        {
+            "name": "Features",
+            "desc": "All available features for sentiment, syntax, and semantic analysis.\nSetting each one to true will enable that specific analysis for the input.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "extractDocumentSentiment",
+                    "desc": "Extract document-level sentiment.",
+                    "type": "bool"
+                },
+                {
+                    "name": "extractEntities",
+                    "desc": "Extract entities.",
+                    "type": "bool"
+                },
+                {
+                    "name": "extractSyntax",
+                    "desc": "Extract syntax information.",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "Document",
+            "desc": "################################################################ #\n\nRepresents the input to API methods.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "gcsContentUri",
+                    "desc": "The Google Cloud Storage URI where the file content is located.\nThis URI must be of the form: gs://bucket_name/object_name. For more\ndetails, see https://cloud.google.com/storage/docs/reference-uris.\nNOTE: Cloud Storage object versioning is not supported.",
+                    "type": "string"
+                },
+                {
+                    "name": "language",
+                    "desc": "The language of the document (if not specified, the language is\nautomatically detected). Both ISO and BCP-47 language codes are\naccepted.\u003cbr\u003e\n**Current Language Restrictions:**\n\n * Only English, Spanish, and Japanese textual content are supported.\nIf the language (either specified by the caller or automatically detected)\nis not supported by the called API method, an `INVALID_ARGUMENT` error\nis returned.",
+                    "type": "string"
+                },
+                {
+                    "name": "type",
+                    "desc": "Required. If the type is not set or is `TYPE_UNSPECIFIED`,\nreturns an `INVALID_ARGUMENT` error.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "TYPE_UNSPECIFIED",
+                            "desc": "The content type is not specified."
+                        },
+                        {
+                            "name": "PLAIN_TEXT",
+                            "desc": "Plain text"
+                        },
+                        {
+                            "name": "HTML",
+                            "desc": "HTML"
+                        }
+                    ]
+                },
+                {
+                    "name": "content",
+                    "desc": "The content of the input in string format.",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "documents",
+            "methods": [
+                {
+                    "name": "analyzeEntities",
+                    "desc": "Finds named entities (currently finds proper names) in the text,\nentity types, salience, mentions for each entity, and other properties.",
+                    "path": "v1beta1/documents:analyzeEntities",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "AnalyzeEntitiesRequest",
+                    "response": "AnalyzeEntitiesResponse"
+                },
+                {
+                    "name": "analyzeSyntax",
+                    "desc": "Analyzes the syntax of the text and provides sentence boundaries and\ntokenization along with part of speech tags, dependency trees, and other\nproperties.",
+                    "path": "v1beta1/documents:analyzeSyntax",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "AnalyzeSyntaxRequest",
+                    "response": "AnalyzeSyntaxResponse"
+                },
+                {
+                    "name": "analyzeSentiment",
+                    "desc": "Analyzes the sentiment of the provided text.",
+                    "path": "v1beta1/documents:analyzeSentiment",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "AnalyzeSentimentRequest",
+                    "response": "AnalyzeSentimentResponse"
+                },
+                {
+                    "name": "annotateText",
+                    "desc": "A convenience method that provides all the features that analyzeSentiment,\nanalyzeEntities, and analyzeSyntax provide in one call.",
+                    "path": "v1beta1/documents:annotateText",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "AnnotateTextRequest",
+                    "response": "AnnotateTextResponse"
+                }
+            ]
+        }
+    ]
+}

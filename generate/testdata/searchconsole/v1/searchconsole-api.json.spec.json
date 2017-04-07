@@ -1,0 +1,318 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "",
+    "discoveryVersion": "v1",
+    "id": "searchconsole:v1",
+    "name": "searchconsole",
+    "version": "v1",
+    "title": "Google Search Console URL Testing Tools API",
+    "description": "Provides tools for running validation tests against single URLs",
+    "documentationLink": "https://developers.google.com/webmaster-tools/search-console-api/",
+    "protocol": "rest",
+    "rootUrl": "https://searchconsole.googleapis.com/",
+    "auth": {},
+    "parameters": [
+        {
+            "name": "uploadType",
+            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "$.xgafv",
+            "desc": "V1 error format.",
+            "type": "string",
+            "enum": [
+                {
+                    "name": "1",
+                    "desc": "v1 error format"
+                },
+                {
+                    "name": "2",
+                    "desc": "v2 error format"
+                }
+            ]
+        },
+        {
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                },
+                {
+                    "name": "media",
+                    "desc": "Media download with context-dependent Content-Type"
+                },
+                {
+                    "name": "proto",
+                    "desc": "Responses with Content-Type of application/x-protobuf"
+                }
+            ]
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "RunMobileFriendlyTestRequest",
+            "desc": "Mobile-friendly test request.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "url",
+                    "desc": "URL for inspection.",
+                    "type": "string"
+                },
+                {
+                    "name": "requestScreenshot",
+                    "desc": "Whether or not screenshot is requested. Default is false.",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "MobileFriendlyIssue",
+            "desc": "Mobile-friendly issue.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "rule",
+                    "desc": "Rule violated.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "MOBILE_FRIENDLY_RULE_UNSPECIFIED",
+                            "desc": "Unknown rule. Sorry, we don't have any description for the rule that was\nbroken."
+                        },
+                        {
+                            "name": "USES_INCOMPATIBLE_PLUGINS",
+                            "desc": "Plugins incompatible with mobile devices are being used. [Learn more]\n(https://support.google.com/webmasters/answer/6352293#flash_usage)."
+                        },
+                        {
+                            "name": "CONFIGURE_VIEWPORT",
+                            "desc": "Viewsport is not specified using the meta viewport tag. [Learn more]\n(https://support.google.com/webmasters/answer/6352293#viewport_not_configured)."
+                        },
+                        {
+                            "name": "FIXED_WIDTH_VIEWPORT",
+                            "desc": "Viewport defined to a fixed width. [Learn more]\n(https://support.google.com/webmasters/answer/6352293#fixed-width_viewport)."
+                        },
+                        {
+                            "name": "SIZE_CONTENT_TO_VIEWPORT",
+                            "desc": "Content not sized to viewport. [Learn more]\n(https://support.google.com/webmasters/answer/6352293#content_not_sized_to_viewport)."
+                        },
+                        {
+                            "name": "USE_LEGIBLE_FONT_SIZES",
+                            "desc": "Font size is too small for easy reading on a small screen. [Learn More]\n(https://support.google.com/webmasters/answer/6352293#small_font_size)."
+                        },
+                        {
+                            "name": "TAP_TARGETS_TOO_CLOSE",
+                            "desc": "Touch elements are too close to each other. [Learn more]\n(https://support.google.com/webmasters/answer/6352293#touch_elements_too_close)."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "RunMobileFriendlyTestResponse",
+            "desc": "Mobile-friendly test response, including mobile-friendly issues and resource\nissues.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "testStatus",
+                    "desc": "Final state of the test, can be either complete or an error.",
+                    "type": "ref",
+                    "refType": "TestStatus"
+                },
+                {
+                    "name": "resourceIssues",
+                    "desc": "Information about embedded resources issues.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ResourceIssue"
+                },
+                {
+                    "name": "mobileFriendliness",
+                    "desc": "Test verdict, whether the page is mobile friendly or not.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "MOBILE_FRIENDLY_TEST_RESULT_UNSPECIFIED",
+                            "desc": "Internal error when running this test. Please try running the test again."
+                        },
+                        {
+                            "name": "MOBILE_FRIENDLY",
+                            "desc": "The page is mobile friendly."
+                        },
+                        {
+                            "name": "NOT_MOBILE_FRIENDLY",
+                            "desc": "The page is not mobile friendly."
+                        }
+                    ]
+                },
+                {
+                    "name": "mobileFriendlyIssues",
+                    "desc": "List of mobile-usability issues.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "MobileFriendlyIssue"
+                },
+                {
+                    "name": "screenshot",
+                    "desc": "Screenshot of the requested URL.",
+                    "type": "ref",
+                    "refType": "Image"
+                }
+            ]
+        },
+        {
+            "name": "ResourceIssue",
+            "desc": "Information about a resource with issue.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "blockedResource",
+                    "desc": "Describes a blocked resource issue.",
+                    "type": "ref",
+                    "refType": "BlockedResource"
+                }
+            ]
+        },
+        {
+            "name": "BlockedResource",
+            "desc": "Blocked resource.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "url",
+                    "desc": "URL of the blocked resource.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "TestStatus",
+            "desc": "Final state of the test, including error details if necessary.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "details",
+                    "desc": "Error details if applicable.",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "desc": "Status of the test.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "TEST_STATUS_UNSPECIFIED",
+                            "desc": "Internal error when running this test. Please try running the test again."
+                        },
+                        {
+                            "name": "COMPLETE",
+                            "desc": "Inspection has completed without errors."
+                        },
+                        {
+                            "name": "INTERNAL_ERROR",
+                            "desc": "Inspection terminated in an error state. This indicates a problem in\nGoogle's infrastructure, not a user error. Please try again later."
+                        },
+                        {
+                            "name": "PAGE_UNREACHABLE",
+                            "desc": "Google can not access the URL because of a user error such as a robots.txt\nblockage, a 403 or 500 code etc. Please make sure that the URL provided is\naccessible by Googlebot and is not password protected."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Image",
+            "desc": "Describe image data.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "mimeType",
+                    "desc": "The mime-type of the image data.",
+                    "type": "string"
+                },
+                {
+                    "name": "data",
+                    "desc": "Image data in format determined by the mime type. Currently, the format\nwill always be \"image/png\", but this might change in the future.",
+                    "type": "byte"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "urlTestingTools",
+            "resources": [
+                {
+                    "name": "mobileFriendlyTest",
+                    "methods": [
+                        {
+                            "name": "run",
+                            "desc": "Runs Mobile-Friendly Test for a given URL.",
+                            "path": "v1/urlTestingTools/mobileFriendlyTest:run",
+                            "httpMethod": "POST",
+                            "request": "RunMobileFriendlyTestRequest",
+                            "response": "RunMobileFriendlyTestResponse"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,1007 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "\"tbys6C40o18GZwyMen5GMkdK-3s/exiNwA5EYULji4urf-Hcdv-K2mE\"",
+    "discoveryVersion": "v1",
+    "id": "datastore:v1beta1",
+    "name": "datastore",
+    "version": "v1beta1",
+    "title": "Google Cloud Datastore API",
+    "description": "Stores and queries data in Google Cloud Datastore.",
+    "documentationLink": "https://developers.google.com/datastore/",
+    "protocol": "rest",
+    "rootUrl": "https://www.googleapis.com/",
+    "auth": {
+        "oauth2": [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/datastore",
+            "https://www.googleapis.com/auth/userinfo.email"
+        ]
+    },
+    "parameters": [
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "proto",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                },
+                {
+                    "name": "proto",
+                    "desc": "Responses with Content-Type of application/x-protobuf"
+                }
+            ]
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "BlindWriteRequest",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "mutation",
+                    "desc": "The mutation to perform.",
+                    "type": "ref",
+                    "refType": "Mutation"
+                }
+            ]
+        },
+        {
+            "name": "PartitionId",
+            "desc": "An identifier for a particular subset of entities.\n\nEntities are partitioned into various subsets, each used by different datasets and different namespaces within a dataset and so forth.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "datasetId",
+                    "desc": "The dataset ID.",
+                    "type": "string"
+                },
+                {
+                    "name": "namespace",
+                    "desc": "The namespace.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "ReadOptions",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "readConsistency",
+                    "desc": "The read consistency to use. One of default, strong, or eventual. Cannot be set when transaction is set. Lookup and ancestor queries default to strong, global queries default to eventual and cannot be set to strong. Optional. Default is default.",
+                    "type": "string"
+                },
+                {
+                    "name": "transaction",
+                    "desc": "The transaction to use. Optional.",
+                    "type": "byte"
+                }
+            ]
+        },
+        {
+            "name": "RollbackRequest",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "transaction",
+                    "desc": "The transaction identifier, returned by a call to beginTransaction.",
+                    "type": "byte"
+                }
+            ]
+        },
+        {
+            "name": "RunQueryRequest",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "gqlQuery",
+                    "desc": "The GQL query to run. Either this field or field query must be set, but not both.",
+                    "type": "ref",
+                    "refType": "GqlQuery"
+                },
+                {
+                    "name": "partitionId",
+                    "desc": "Entities are partitioned into subsets, identified by a dataset (usually implicitly specified by the project) and namespace ID. Queries are scoped to a single partition. This partition ID is normalized with the standard default context partition ID, but all other partition IDs in RunQueryRequest are normalized with this partition ID as the context partition ID.",
+                    "type": "ref",
+                    "refType": "PartitionId"
+                },
+                {
+                    "name": "query",
+                    "desc": "The query to run. Either this field or field gql_query must be set, but not both.",
+                    "type": "ref",
+                    "refType": "Query"
+                },
+                {
+                    "name": "readOptions",
+                    "desc": "The options for this query.",
+                    "type": "ref",
+                    "refType": "ReadOptions"
+                }
+            ]
+        },
+        {
+            "name": "AllocateIdsRequest",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "keys",
+                    "desc": "A list of keys with incomplete key paths to allocate IDs for. No key may be reserved/read-only.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Key"
+                }
+            ]
+        },
+        {
+            "name": "Filter",
+            "desc": "A holder for any type of filter. Exactly one field should be specified.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "compositeFilter",
+                    "desc": "A composite filter.",
+                    "type": "ref",
+                    "refType": "CompositeFilter"
+                },
+                {
+                    "name": "propertyFilter",
+                    "desc": "A filter on a property.",
+                    "type": "ref",
+                    "refType": "PropertyFilter"
+                }
+            ]
+        },
+        {
+            "name": "GqlQuery",
+            "desc": "A GQL query.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "allowLiteral",
+                    "desc": "When false, the query string must not contain a literal.",
+                    "type": "bool"
+                },
+                {
+                    "name": "nameArgs",
+                    "desc": "A named argument must set field GqlQueryArg.name. No two named arguments may have the same name. For each non-reserved named binding site in the query string, there must be a named argument with that name, but not necessarily the inverse.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "GqlQueryArg"
+                },
+                {
+                    "name": "numberArgs",
+                    "desc": "Numbered binding site @1 references the first numbered argument, effectively using 1-based indexing, rather than the usual 0. A numbered argument must NOT set field GqlQueryArg.name. For each binding site numbered i in query_string, there must be an ith numbered argument. The inverse must also be true.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "GqlQueryArg"
+                },
+                {
+                    "name": "queryString",
+                    "desc": "The query string.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Query",
+            "desc": "A query.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "filter",
+                    "desc": "The filter to apply (optional).",
+                    "type": "ref",
+                    "refType": "Filter"
+                },
+                {
+                    "name": "limit",
+                    "desc": "The maximum number of results to return. Applies after all other constraints. Optional.",
+                    "type": "int32"
+                },
+                {
+                    "name": "offset",
+                    "desc": "The number of results to skip. Applies before limit, but after all other constraints (optional, defaults to 0).",
+                    "type": "int32"
+                },
+                {
+                    "name": "projection",
+                    "desc": "The projection to return. If not set the entire entity is returned.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "PropertyExpression"
+                },
+                {
+                    "name": "endCursor",
+                    "desc": "An ending point for the query results. Optional. Query cursors are returned in query result batches.",
+                    "type": "byte"
+                },
+                {
+                    "name": "groupBy",
+                    "desc": "The properties to group by (if empty, no grouping is applied to the result set).",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "PropertyReference"
+                },
+                {
+                    "name": "kinds",
+                    "desc": "The kinds to query (if empty, returns entities from all kinds).",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "KindExpression"
+                },
+                {
+                    "name": "order",
+                    "desc": "The order to apply to the query results (if empty, order is unspecified).",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "PropertyOrder"
+                },
+                {
+                    "name": "startCursor",
+                    "desc": "A starting point for the query results. Optional. Query cursors are returned in query result batches.",
+                    "type": "byte"
+                }
+            ]
+        },
+        {
+            "name": "ResponseHeader",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"datastore#responseHeader\".",
+                    "type": "string",
+                    "default": "datastore#responseHeader"
+                }
+            ]
+        },
+        {
+            "name": "Entity",
+            "desc": "An entity.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "key",
+                    "desc": "The entity's key.\n\nAn entity must have a key, unless otherwise documented (for example, an entity in Value.entityValue may have no key). An entity's kind is its key's path's last element's kind, or null if it has no key.",
+                    "type": "ref",
+                    "refType": "Key"
+                },
+                {
+                    "name": "properties",
+                    "desc": "The entity's properties.",
+                    "collection": "map",
+                    "type": "ref",
+                    "refType": "Property"
+                }
+            ]
+        },
+        {
+            "name": "KeyPathElement",
+            "desc": "A (kind, ID/name) pair used to construct a key path.\n\nAt most one of name or ID may be set. If either is set, the element is complete. If neither is set, the element is incomplete.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "The ID of the entity. Never equal to zero. Values less than zero are discouraged and will not be supported in the future.",
+                    "type": "int64"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of the entity. A kind matching regex \"__.*__\" is reserved/read-only. A kind must not contain more than 500 characters. Cannot be \"\".",
+                    "type": "string"
+                },
+                {
+                    "name": "name",
+                    "desc": "The name of the entity. A name matching regex \"__.*__\" is reserved/read-only. A name must not be more than 500 characters. Cannot be \"\".",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "MutationResult",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "indexUpdates",
+                    "desc": "Number of index writes.",
+                    "type": "int32"
+                },
+                {
+                    "name": "insertAutoIdKeys",
+                    "desc": "Keys for insertAutoId entities. One per entity from the request, in the same order.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Key"
+                }
+            ]
+        },
+        {
+            "name": "PropertyOrder",
+            "desc": "The desired order for a specific property.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "direction",
+                    "desc": "The direction to order by. One of ascending or descending. Optional, defaults to ascending.",
+                    "type": "string"
+                },
+                {
+                    "name": "property",
+                    "desc": "The property to order by.",
+                    "type": "ref",
+                    "refType": "PropertyReference"
+                }
+            ]
+        },
+        {
+            "name": "RollbackResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "header",
+                    "type": "ref",
+                    "refType": "ResponseHeader"
+                }
+            ]
+        },
+        {
+            "name": "RunQueryResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "batch",
+                    "desc": "A batch of query results (always present).",
+                    "type": "ref",
+                    "refType": "QueryResultBatch"
+                },
+                {
+                    "name": "header",
+                    "type": "ref",
+                    "refType": "ResponseHeader"
+                }
+            ]
+        },
+        {
+            "name": "BeginTransactionRequest",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "isolationLevel",
+                    "desc": "The transaction isolation level. Either snapshot or serializable. The default isolation level is snapshot isolation, which means that another transaction may not concurrently modify the data that is modified by this transaction. Optionally, a transaction can request to be made serializable which means that another transaction cannot concurrently modify the data that is read or modified by this transaction.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "GqlQueryArg",
+            "desc": "A binding argument for a GQL query.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "cursor",
+                    "type": "byte"
+                },
+                {
+                    "name": "name",
+                    "desc": "Must match regex \"[A-Za-z_$][A-Za-z_$0-9]*\". Must not match regex \"__.*__\". Must not be \"\".",
+                    "type": "string"
+                },
+                {
+                    "name": "value",
+                    "type": "ref",
+                    "refType": "Value"
+                }
+            ]
+        },
+        {
+            "name": "Key",
+            "desc": "A unique identifier for an entity.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "partitionId",
+                    "desc": "Entities are partitioned into subsets, currently identified by a dataset (usually implicitly specified by the project) and namespace ID. Queries are scoped to a single partition.",
+                    "type": "ref",
+                    "refType": "PartitionId"
+                },
+                {
+                    "name": "path",
+                    "desc": "The entity path. An entity path consists of one or more elements composed of a kind and a string or numerical identifier, which identify entities. The first element identifies a root entity, the second element identifies a child of the root entity, the third element a child of the second entity, and so forth. The entities identified by all prefixes of the path are called the element's ancestors. An entity path is always fully complete: ALL of the entity's ancestors are required to be in the path along with the entity identifier itself. The only exception is that in some documented cases, the identifier in the last path element (for the entity) itself may be omitted. A path can never be empty. The path can have at most 100 elements.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "KeyPathElement"
+                }
+            ]
+        },
+        {
+            "name": "PropertyFilter",
+            "desc": "A filter on a specific property.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "property",
+                    "desc": "The property to filter by.",
+                    "type": "ref",
+                    "refType": "PropertyReference"
+                },
+                {
+                    "name": "value",
+                    "desc": "The value to compare the property to.",
+                    "type": "ref",
+                    "refType": "Value"
+                },
+                {
+                    "name": "operator",
+                    "desc": "The operator to filter by. One of lessThan, lessThanOrEqual, greaterThan, greaterThanOrEqual, equal, or hasAncestor.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "KindExpression",
+            "desc": "A representation of a kind.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "name",
+                    "desc": "The name of the kind.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "LookupRequest",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "keys",
+                    "desc": "Keys of entities to look up from the datastore.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Key"
+                },
+                {
+                    "name": "readOptions",
+                    "desc": "Options for this lookup request. Optional.",
+                    "type": "ref",
+                    "refType": "ReadOptions"
+                }
+            ]
+        },
+        {
+            "name": "Mutation",
+            "desc": "A set of changes to apply.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "delete",
+                    "desc": "Keys of entities to delete. Each key must have a complete key path and must not be reserved/read-only.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Key"
+                },
+                {
+                    "name": "force",
+                    "desc": "Ignore a user specified read-only period. Optional.",
+                    "type": "bool"
+                },
+                {
+                    "name": "insert",
+                    "desc": "Entities to insert. Each inserted entity's key must have a complete path and must not be reserved/read-only.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Entity"
+                },
+                {
+                    "name": "insertAutoId",
+                    "desc": "Insert entities with a newly allocated ID. Each inserted entity's key must omit the final identifier in its path and must not be reserved/read-only.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Entity"
+                },
+                {
+                    "name": "update",
+                    "desc": "Entities to update. Each updated entity's key must have a complete path and must not be reserved/read-only.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Entity"
+                },
+                {
+                    "name": "upsert",
+                    "desc": "Entities to upsert. Each upserted entity's key must have a complete path and must not be reserved/read-only.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Entity"
+                }
+            ]
+        },
+        {
+            "name": "PropertyReference",
+            "desc": "A reference to a property relative to the kind expressions.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "name",
+                    "desc": "The name of the property.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "QueryResultBatch",
+            "desc": "A batch of results produced by a query.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "endCursor",
+                    "desc": "A cursor that points to the position after the last result in the batch. May be absent. TODO(arfuller): Once all plans produce cursors update documentation here.",
+                    "type": "byte"
+                },
+                {
+                    "name": "entityResultType",
+                    "desc": "The result type for every entity in entityResults. full for full entities, projection for entities with only projected properties, keyOnly for entities with only a key.",
+                    "type": "string"
+                },
+                {
+                    "name": "entityResults",
+                    "desc": "The results for this batch.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "EntityResult"
+                },
+                {
+                    "name": "moreResults",
+                    "desc": "The state of the query after the current batch. One of notFinished, moreResultsAfterLimit, noMoreResults.",
+                    "type": "string"
+                },
+                {
+                    "name": "skippedResults",
+                    "desc": "The number of results skipped because of Query.offset.",
+                    "type": "int32"
+                }
+            ]
+        },
+        {
+            "name": "BeginTransactionResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "header",
+                    "type": "ref",
+                    "refType": "ResponseHeader"
+                },
+                {
+                    "name": "transaction",
+                    "desc": "The transaction identifier (always present).",
+                    "type": "byte"
+                }
+            ]
+        },
+        {
+            "name": "BlindWriteResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "header",
+                    "type": "ref",
+                    "refType": "ResponseHeader"
+                },
+                {
+                    "name": "mutationResult",
+                    "desc": "The result of performing the mutation (always present).",
+                    "type": "ref",
+                    "refType": "MutationResult"
+                }
+            ]
+        },
+        {
+            "name": "Property",
+            "desc": "An entity property.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "multi",
+                    "desc": "If this property contains a list of values. Input values may explicitly set multi to false, but otherwise false is always represented by omitting multi.",
+                    "type": "bool"
+                },
+                {
+                    "name": "values",
+                    "desc": "The value(s) of the property. When multi is false there is always exactly one value. When multi is true there are always one or more values. Each value can have only one value property populated. For example, you cannot have a values list of { values: [ { integerValue: 22, stringValue: \"a\" } ] }, but you can have { multi: true, values: [ { integerValue: 22 }, { stringValue: \"a\" } ] }.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Value"
+                }
+            ]
+        },
+        {
+            "name": "CommitRequest",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "mutation",
+                    "desc": "The mutation to perform. Optional.",
+                    "type": "ref",
+                    "refType": "Mutation"
+                },
+                {
+                    "name": "transaction",
+                    "desc": "The transaction identifier, returned by a call to beginTransaction. Must be set when mode is TRANSACTIONAL.",
+                    "type": "byte"
+                },
+                {
+                    "name": "ignoreReadOnly",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "CommitResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "header",
+                    "type": "ref",
+                    "refType": "ResponseHeader"
+                },
+                {
+                    "name": "mutationResult",
+                    "desc": "The result of performing the mutation (if any).",
+                    "type": "ref",
+                    "refType": "MutationResult"
+                }
+            ]
+        },
+        {
+            "name": "EntityResult",
+            "desc": "The result of fetching an entity from the datastore.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "entity",
+                    "desc": "The resulting entity.",
+                    "type": "ref",
+                    "refType": "Entity"
+                }
+            ]
+        },
+        {
+            "name": "PropertyExpression",
+            "desc": "A representation of a property in a projection.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "aggregationFunction",
+                    "desc": "The aggregation function to apply to the property. Optional. Can only be used when grouping by at least one property. Must then be set on all properties in the projection that are not being grouped by. Aggregation functions: first selects the first result as determined by the query's order.",
+                    "type": "string"
+                },
+                {
+                    "name": "property",
+                    "desc": "The property to project.",
+                    "type": "ref",
+                    "refType": "PropertyReference"
+                }
+            ]
+        },
+        {
+            "name": "Value",
+            "desc": "A message that can hold any of the supported value types and associated metadata.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "entityValue",
+                    "desc": "An entity value. May have no key. May have a key with an incomplete key path. May have a reserved/read-only key.",
+                    "type": "ref",
+                    "refType": "Entity"
+                },
+                {
+                    "name": "integerValue",
+                    "desc": "An integer value.",
+                    "type": "int64"
+                },
+                {
+                    "name": "meaning",
+                    "desc": "The meaning field is reserved and should not be used.",
+                    "type": "int32"
+                },
+                {
+                    "name": "stringValue",
+                    "desc": "A UTF-8 encoded string value. When indexed is true, may have at most 500 characters.",
+                    "type": "string"
+                },
+                {
+                    "name": "blobValue",
+                    "desc": "A blob value. May be a maximum of 1,000,000 bytes. When indexed is true, may have at most 500 bytes.",
+                    "type": "byte"
+                },
+                {
+                    "name": "booleanValue",
+                    "desc": "A boolean value.",
+                    "type": "bool"
+                },
+                {
+                    "name": "dateTimeValue",
+                    "desc": "A timestamp value.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "doubleValue",
+                    "desc": "A double value.",
+                    "type": "float64"
+                },
+                {
+                    "name": "blobKeyValue",
+                    "desc": "A blob key value.",
+                    "type": "string"
+                },
+                {
+                    "name": "indexed",
+                    "desc": "If the value should be indexed.\n\nThe indexed property may be set for a null value. When indexed is true, stringValue is limited to 500 characters and the blob value is limited to 500 bytes. Input values by default have indexed set to true; however, you can explicitly set indexed to true if you want. (An output value never has indexed explicitly set to true.) If a value is itself an entity, it cannot have indexed set to true.",
+                    "type": "bool"
+                },
+                {
+                    "name": "keyValue",
+                    "desc": "A key value.",
+                    "type": "ref",
+                    "refType": "Key"
+                }
+            ]
+        },
+        {
+            "name": "AllocateIdsResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "header",
+                    "type": "ref",
+                    "refType": "ResponseHeader"
+                },
+                {
+                    "name": "keys",
+                    "desc": "The keys specified in the request (in the same order), each with its key path completed with a newly allocated ID.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Key"
+                }
+            ]
+        },
+        {
+            "name": "CompositeFilter",
+            "desc": "A filter that merges the multiple other filters using the given operation.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "filters",
+                    "desc": "The list of filters to combine. Must contain at least one filter.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Filter"
+                },
+                {
+                    "name": "operator",
+                    "desc": "The operator for combining multiple filters. Only \"and\" is currently supported.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "LookupResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "deferred",
+                    "desc": "A list of keys that were not looked up due to resource constraints.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Key"
+                },
+                {
+                    "name": "found",
+                    "desc": "Entities found.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "EntityResult"
+                },
+                {
+                    "name": "header",
+                    "type": "ref",
+                    "refType": "ResponseHeader"
+                },
+                {
+                    "name": "missing",
+                    "desc": "Entities not found, with only the key populated.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "EntityResult"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "datasets",
+            "methods": [
+                {
+                    "name": "allocateIds",
+                    "desc": "Allocate IDs for incomplete keys (useful for referencing an entity before it is inserted).",
+                    "path": "{datasetId}/allocateIds",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/datastore",
+                        "https://www.googleapis.com/auth/userinfo.email"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "datasetId",
+                            "desc": "Identifies the dataset.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "AllocateIdsRequest",
+                    "response": "AllocateIdsResponse"
+                },
+                {
+                    "name": "beginTransaction",
+                    "desc": "Begin a new transaction.",
+                    "path": "{datasetId}/beginTransaction",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/datastore",
+                        "https://www.googleapis.com/auth/userinfo.email"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "datasetId",
+                            "desc": "Identifies the dataset.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "BeginTransactionRequest",
+                    "response": "BeginTransactionResponse"
+                },
+                {
+                    "name": "blindWrite",
+                    "desc": "Create, delete or modify some entities outside a transaction.",
+                    "path": "{datasetId}/blindWrite",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/datastore",
+                        "https://www.googleapis.com/auth/userinfo.email"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "datasetId",
+                            "desc": "Identifies the dataset.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "BlindWriteRequest",
+                    "response": "BlindWriteResponse"
+                },
+                {
+                    "name": "commit",
+                    "desc": "Commit a transaction, optionally creating, deleting or modifying some entities.",
+                    "path": "{datasetId}/commit",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/datastore",
+                        "https://www.googleapis.com/auth/userinfo.email"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "datasetId",
+                            "desc": "Identifies the dataset.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "CommitRequest",
+                    "response": "CommitResponse"
+                },
+                {
+                    "name": "lookup",
+                    "desc": "Look up some entities by key.",
+                    "path": "{datasetId}/lookup",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/datastore",
+                        "https://www.googleapis.com/auth/userinfo.email"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "datasetId",
+                            "desc": "Identifies the dataset.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "LookupRequest",
+                    "response": "LookupResponse"
+                },
+                {
+                    "name": "rollback",
+                    "desc": "Roll back a transaction.",
+                    "path": "{datasetId}/rollback",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/datastore",
+                        "https://www.googleapis.com/auth/userinfo.email"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "datasetId",
+                            "desc": "Identifies the dataset.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "RollbackRequest",
+                    "response": "RollbackResponse"
+                },
+                {
+                    "name": "runQuery",
+                    "desc": "Query for entities.",
+                    "path": "{datasetId}/runQuery",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/datastore",
+                        "https://www.googleapis.com/auth/userinfo.email"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "datasetId",
+                            "desc": "Identifies the dataset.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "RunQueryRequest",
+                    "response": "RunQueryResponse"
+                }
+            ]
+        }
+    ]
+}

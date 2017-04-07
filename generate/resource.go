@@ -3,74 +3,61 @@ package generate
 import (
 	"fmt"
 
-	"github.com/marshome/apis/spec"
+	"github.com/marshome/apis/googlespec"
 )
 
 type Resource struct {
 	c         *Context
 	name      string
 	parent    string
-	m         *spec.APIResource
+	m         *googlespec.APIResource
 	resources []*Resource
 
-	Methods []*Method
+	GoName    string
+	GoType string
+
+	Methods   []*Method
 }
 
-func (r *Resource) CacheRequestTypes() {
-	for _, meth := range r.Methods {
-		meth.CacheRequestTypes()
-	}
-	for _, res := range r.resources {
-		res.CacheRequestTypes()
-	}
-}
-
-func (r *Resource) CacheResponseTypes() {
-	for _, meth := range r.Methods {
-		meth.CacheResponseTypes()
+func NewResource(c *Context,name string,parentName string,spec *googlespec.APIResource,subResources []*Resource)*Resource {
+	r := &Resource{
+		c:c,
+		name:name,
+		parent:parentName,
+		m:spec,
+		resources:subResources,
 	}
 
-	if r.resources != nil {
-		for _, res := range r.resources {
-			res.CacheResponseTypes()
-		}
-	}
+	r.GoName = r.c.InitialCap(fmt.Sprintf("%s.%s", r.parent, r.name))
+	r.GoType = r.GoName + "Service"
+
+	r.parseMethods()
+
+	return r
 }
 
-func (r *Resource) GoField() string {
-	return r.c.InitialCap(r.name)
-}
-
-func (r *Resource) GoName() string {
-	return r.c.InitialCap(fmt.Sprintf("%s.%s", r.parent, r.name))
-}
-
-func (r *Resource) GoType() string {
-	return r.GoName() + "Service"
-}
-
-func (r *Resource) ParseMethods() {
+func (r *Resource) parseMethods() {
 	r.Methods = []*Method{}
 	if r.m.Methods == nil {
 		return
 	}
 
-	methMap := make(map[string]interface{})
+	methodMap := make(map[string]interface{})
 	for k, v := range r.m.Methods {
-		methMap[k] = v
+		methodMap[k] = v
 	}
 
-	for _, mname := range r.c.SortedKeys(methMap) {
-		mi := r.m.Methods[mname]
-		r.Methods = append(r.Methods, &Method{
-			c:    r.c,
-			r:    r,
-			name: mname,
-			doc:  mi,
-		})
+	for _, name := range r.c.SortedKeys(methodMap) {
+		spec := r.m.Methods[name]
+		r.Methods = append(r.Methods, NewMethod(
+			r.c,
+			r,
+			name,
+			spec,
+		))
 	}
 
 	for _, v := range r.resources {
-		v.ParseMethods()
+		v.parseMethods()
 	}
 }

@@ -2,54 +2,55 @@ package generate
 
 import (
 	"fmt"
-	"strings"
 
-	"github.com/marshome/apis/spec"
+	"github.com/marshome/apis/googlespec"
 )
 
 type Param struct {
+	c             *Context
 	method        *Method
 	name          string
-	m             *spec.APIObject
-	callFieldName string // empty means to use the default
+	m             *googlespec.APIObject
+
+	GoName string
+	GoType string
 }
 
-func (p *Param) Default() string {
-	return p.m.Default
-}
-
-func (p *Param) Enum() []string {
-	return p.m.Enum
-}
-
-func (p *Param) EnumDescriptions() []string {
-	return p.m.EnumDescriptions
-}
-
-func (p *Param) UnfortunateDefault() bool {
-	return false
-}
-
-func (p *Param) IsRequired() bool {
-	return p.m.Required
-}
-
-func (p *Param) IsRepeated() bool {
-	return p.m.Repeated
-}
-
-func (p *Param) Location() string {
-	return p.m.Location
-}
-
-func (p *Param) GoType() string {
-	typ, format := p.m.Type, p.m.Format
-	if typ == "string" && strings.Contains(format, "int") && p.Location() != "query" {
-		panic("unexpected int parameter encoded as string, not in query: " + p.name)
+func NewParam(c *Context,m *Method,name string,spec *googlespec.APIObject) *Param {
+	p := &Param{
+		c:c,
+		method:m,
+		name:name,
+		m:spec,
 	}
-	t, ok := p.method.c.SimpleTypeConvert(typ, format)
+
+	p.GoName=p.buildGoName()
+	p.GoType = p.buildGoType()
+
+	return p
+}
+
+func (p* Param)buildGoName()string {
+	s := Depunct(p.name, true)
+	for _, v := range go_tokens {
+		if s == v {
+			s = v + "_"
+			break
+		}
+	}
+
+	return s
+}
+
+func (p *Param) buildGoType() string {
+	t, ok := p.c.SimpleTypeConvert(p.m.Type, p.m.Format)
 	if !ok {
-		panic("failed to convert parameter type " + fmt.Sprintf("type=%q, format=%q", typ, format))
+		panic("failed to convert parameter type " + fmt.Sprintf("type=%q, format=%q", p.m.Type, p.m.Format))
 	}
+
+	if p.m.Location == "query" &&p.m.Repeated {
+		t = "[]" + t
+	}
+
 	return t
 }

@@ -1,18 +1,18 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"regexp"
 	"strings"
-
-	"github.com/marshome/apis/spec"
 	"os"
-	"github.com/marshome/apis/generate"
 	"path/filepath"
+	"github.com/marshome/apis/googlespec"
+	"github.com/marshome/apis/codegen"
+	"bytes"
+	"go/format"
+	"github.com/marshome/apis/spec"
 )
 
 var oddVersionRE = regexp.MustCompile(`^(.+)_(v[\d\.]+)$`)
@@ -27,90 +27,14 @@ func renameVersion(version string) string {
 	return version
 }
 
-func build_commets(c string, buffer *bytes.Buffer, tab int) {
-	if strings.Contains(c, "\n\n") {
-		commet_lines := strings.Split(c, "\n\n")
-		for commet_index, commet := range commet_lines {
-			for i := 0; i < tab; i++ {
-				buffer.WriteString("    ")
-			}
-			buffer.WriteString("//" + commet + "\n")
-			if commet_index < len(commet_lines)-1 {
-				for i := 0; i < tab; i++ {
-					buffer.WriteString("    ")
-				}
-				buffer.WriteString("//\n")
-			}
-		}
-	} else {
-		for i := 0; i < tab; i++ {
-			buffer.WriteString("    ")
-		}
-		buffer.WriteString("//" + c + "\n")
-	}
+var testingCode =bytes.NewBufferString("")
+
+func P(format string, args ...interface{}) {
+	testingCode.WriteString(fmt.Sprintf(format, args...))
 }
 
-func object_to_struct(obj *spec.APIObject, buffer *bytes.Buffer) (err error) {
-	if obj.Type != "object" {
-		return errors.New("obj is not a struct " + obj.Id)
-	}
-
-	build_commets(obj.Description, buffer, 0)
-	buffer.WriteString("type " + obj.Id + " struct{\n")
-	for property_name, property := range obj.Properties {
-		build_commets(property.Description, buffer, 1)
-		property_name_go := strings.ToUpper(string(property_name[0]))
-		property_name_go += property_name[1:]
-		if property.Ref != "" {
-			buffer.WriteString("    " + property_name_go + " ")
-			buffer.WriteString("*" + property.Ref + "`json:\"" + property_name + "\"`\n")
-		} else {
-			if property.Type == "object" {
-				if property.AdditionalProperties != nil {
-					buffer.WriteString("    " + property_name_go + " ")
-					buffer.WriteString("map[string]*")
-					if property.AdditionalProperties.Ref != "" {
-						buffer.WriteString(property.AdditionalProperties.Ref)
-					}
-				} else {
-					buffer.WriteString("    " + property_name_go + " ")
-					buffer.WriteString("struct{\n")
-					buffer.WriteString("    } `json:\"" + property_name + "\"`")
-				}
-			} else {
-				buffer.WriteString("    " + property_name_go + " ")
-				buffer.WriteString("string `json:\"" + property_name + "\"`\n")
-			}
-		}
-	}
-	buffer.WriteString("}\n")
-	buffer.WriteString("\n")
-
-	return nil
-}
-
-func schemas_to_go(schemas map[string]*spec.APIObject) (src string, err error) {
-	var buffer bytes.Buffer
-	buffer.WriteString("package schemas\n")
-	buffer.WriteString("\n")
-
-	for _, schema := range schemas {
-		err = object_to_struct(schema, &buffer)
-		if err != nil {
-			return "", err
-		}
-	}
-
-	return buffer.String(), nil
-}
-
-func resource_recursive(m map[string]*spec.APIResource) {
-	for _, v := range m {
-		//for _, meth := range v.Methods {
-		//fmt.Println(meth.Id + " " + " " + meth.Path)
-		//}
-		resource_recursive(v.Resources)
-	}
+func Pn(format string, args ...interface{}) {
+	testingCode.WriteString(fmt.Sprintf(format + "\n", args...))
 }
 
 func output_file(filePath string,data []byte)(err error) {
@@ -131,6 +55,25 @@ func output_file(filePath string,data []byte)(err error) {
 	return nil
 }
 
+type ServiceInfo struct {
+	Namespace   string
+	ServiceName string
+}
+
+func parseServiceInfo(r *spec.Resource,name string,namespace string)[] *ServiceInfo {
+	l := make([]*ServiceInfo, 0)
+	l = append(l, &ServiceInfo{
+		Namespace:namespace,
+		ServiceName:codegen.GoName(name, true),
+	})
+
+	for _, sub := range r.Resources {
+		l = append(l, parseServiceInfo(sub, name + "." + sub.Name, namespace)...)
+	}
+
+	return l
+}
+
 func main() {
 	dir_data, err := ioutil.ReadFile("../testdata/api-list.json")
 	if err != nil {
@@ -138,12 +81,15 @@ func main() {
 		return
 	}
 
-	dir := spec.APIDirectory{}
+	dir := googlespec.APIDirectory{}
 	err = json.Unmarshal(dir_data, &dir)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+
+	imports := make([]string, 0)
+	services := make([]*ServiceInfo, 0)
 
 	for _, v := range dir.Items {
 		tokens := strings.Split(v.Id, ":")
@@ -161,24 +107,93 @@ func main() {
 		docData, err := ioutil.ReadFile(json_path)
 		if err != nil {
 			fmt.Println(err)
-			os.Exit(1)
+			continue
 		}
 
 		fmt.Println("<ApiSpec>", json_path)
 
-		genParam := &generate.ServerGenerateParams{}
-		genParam.Namespace = strings.Replace(name + "_" + version, ".", "_", -1)
-		code, codeErr := generate.GenerateServer(string(docData), genParam)
-		if codeErr != nil {
-			fmt.Println(codeErr)
+		googleSpec := googlespec.APIDocument{}
+		err = json.Unmarshal(docData, &googleSpec)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			continue
 		}
 
-		serverFile := filepath.Dir(json_path) + "/gen/server/api/api.go"
+		//spec
+		spec := googlespec.Convert(&googleSpec)
+		jsonData, err := json.MarshalIndent(spec, "", "    ")
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			continue
+		}
 
-		output_file(serverFile, []byte(code))
+		output_file(json_path + ".spec.json", jsonData)
 
-		if codeErr != nil {
+		namespace := strings.Replace(name + "_" + version, ".", "_", -1)
+
+		//server
+		//serverCode, serverCodeErr := codegen.GenerateServer(jsonData, namespace)
+		//if serverCodeErr != nil {
+		//	fmt.Fprintln(os.Stderr, serverCodeErr)
+		//}
+
+		//serverFile := filepath.Dir(json_path) + "/gen/server/marsapi/marsapi.go"
+
+		//output_file(serverFile, []byte(serverCode))
+
+		//if serverCodeErr != nil {
+		//	return
+		//}
+
+		//client
+		clientCode,clientCodeErr:=codegen.GenerateClient(jsonData,namespace+"_client")
+		if clientCodeErr!=nil{
+			fmt.Fprintln(os.Stderr, clientCodeErr)
+		}
+
+		clientFile := filepath.Dir(json_path) + "/gen/client/marsapi/marsapi.go"
+
+		output_file(clientFile, []byte(clientCode))
+
+		if clientCodeErr != nil {
 			return
 		}
+
+		if spec.Resources!=nil&&len(spec.Resources)>0{
+			imports = append(imports, strings.Replace(filepath.Dir(json_path) + "/gen/server/marsapi", "\\", "/", -1))
+			imports = append(imports, strings.Replace(filepath.Dir(json_path) + "/gen/client/marsapi", "\\", "/", -1))
+		}
+
+		if spec.Resources != nil {
+			for _, r := range spec.Resources {
+				services = append(services, parseServiceInfo(r, r.Name, namespace)...)
+			}
+		}
+	}
+
+	Pn("package main")
+	Pn("")
+	Pn("import(")
+	Pn("\"net/http\"")
+	Pn("\"github.com/marshome/apis/marsapi\"")
+	for _, v := range imports {
+		Pn("\"%s\"", strings.Replace(v, "..", "github.com/marshome/apis/generate", -1))
+	}
+	Pn(")")
+	Pn("")
+
+	Pn("func main(){")
+	for _, v := range services {
+		Pn("%s_client.New(http.DefaultClient)",v.Namespace)
+		Pn("%s.Handle%sService(marsapi.NewRouter(),&%s.Default%sService_{})", v.Namespace, v.ServiceName, v.Namespace, v.ServiceName)
+	}
+	Pn("}")
+
+	clean, err := format.Source(testingCode.Bytes())
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		output_file("../../codegen/testing/main.go", testingCode.Bytes())
+	} else {
+		output_file("../../codegen/testing/main.go", clean)
 	}
 }

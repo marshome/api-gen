@@ -7,18 +7,45 @@ import (
 	"fmt"
 	"go/format"
 	"log"
-	"net/url"
 	"regexp"
 	"sort"
 	"strings"
-	"errors"
+	"unicode"
 
-	"github.com/marshome/apis/spec"
+	"github.com/marshome/apis/googlespec"
 )
 
 var (
 	BaseURL = flag.String("base_url", "", "(optional) Override the default service API URL. If empty, the service's root URL will be used.")
 )
+
+var go_tokens=[]string{
+	"break",
+	"case",
+	"chan",
+	"const",
+	"continue",
+	"default",
+	"defer",
+	"else",
+	"fallthrough",
+	"for",
+	"func",
+	"go",
+	"goto",
+	"if",
+	"import",
+	"interface",
+	"map",
+	"package",
+	"range",
+	"return",
+	"select",
+	"struct",
+	"switch",
+	"type",
+	"var",
+}
 
 type ServerGenerateParams struct {
 	Namespace string
@@ -28,26 +55,13 @@ type Context struct {
 	ApiPackageBase string
 	Namespace string
 
-	Doc            *spec.APIDocument
+	Doc            *googlespec.APIDocument
 	Code           *bytes.Buffer
 
 	usedNames     namePool
-	ResponseTypes map[string]bool
-	RequestTypes  map[string]bool
 
 	Schemas    map[string]*Schema
 	Resources  []*Resource
-	APIMethods []*Method
-}
-
-// convertMultiParams builds a []string temp variable from a slice
-// of non-strings and returns the name of the temp variable.
-func (c *Context) ConvertMultiParams(param string) string {
-	c.Pn(" var %v_ []string", param)
-	c.Pn(" for _, v := range %v {", param)
-	c.Pn("  %v_ = append(%v_, fmt.Sprint(v))", param, param)
-	c.Pn(" }")
-	return param + "_"
 }
 
 // namePool keeps track of used names and assigns free ones based on a
@@ -71,72 +85,11 @@ func (p *namePool) Get(preferred string) string {
 }
 
 func (c *Context) P(format string, args ...interface{}) {
-	s := fmt.Sprintf(format, args...)
-	c.Code.WriteString(s)
+	c.Code.WriteString(fmt.Sprintf(format, args...))
 }
 
 func (c *Context) Pn(format string, args ...interface{}) {
-	s := fmt.Sprintf(format, args...)
-	c.Code.WriteString(s)
-	c.Code.WriteString("\n")
-}
-
-func (c *Context) Panicf(format string, args ...interface{}) {
-	panic(fmt.Sprintf(format, args...))
-}
-
-func (c *Context) Package() (pkg string) {
-	return strings.ToLower(c.Doc.Name)
-}
-
-func (c *Context) Target() (target string) {
-	return fmt.Sprintf("%s/%s/%s", c.ApiPackageBase, c.Package(), c.RenameVersion(c.Doc.Version))
-}
-
-// oddVersionRE matches unusual API names like directory_v1.
-var oddVersionRE = regexp.MustCompile(`^(.+)_(v[\d\.]+)$`)
-
-// renameVersion conditionally rewrites the provided version such
-// that the final path component of the import path doesn't look
-// like a Go identifier. This keeps the consistency that import paths
-// for the generated Go packages look like:
-//     google.golang.org/api/NAME/v<version>
-// and have package NAME.
-// See https://github.com/google/google-api-go-client/issues/78
-func (c *Context) RenameVersion(version string) string {
-	if version == "alpha" || version == "beta" {
-		return "v0." + version
-	}
-	if m := oddVersionRE.FindStringSubmatch(version); m != nil {
-		return m[1] + "/" + m[2]
-	}
-	return version
-}
-
-func (c *Context) ResolveRelative(basestr, relstr string) string {
-	u, err := url.Parse(basestr)
-	if err != nil {
-		c.Panicf("Error parsing base URL %q: %v", basestr, err)
-	}
-	rel, err := url.Parse(relstr)
-	if err != nil {
-		c.Panicf("Error parsing relative URL %q: %v", relstr, err)
-	}
-	u = u.ResolveReference(rel)
-	return u.String()
-}
-
-func (c *Context) ApiBaseURL() string {
-	var base, rel string
-	switch {
-	case *BaseURL != "":
-		//base, rel = *baseURL, jstr(a.m, "basePath")//todo
-	case c.Doc.RootUrl != "":
-		base, rel = c.Doc.RootUrl, c.Doc.ServicePath
-	default:
-		//base, rel = *apisURL, jstr(a.m, "basePath")
-	}
-	return c.ResolveRelative(base, rel)
+	c.Code.WriteString(fmt.Sprintf(format + "\n", args...))
 }
 
 func (c *Context) SortedKeys(m map[string]interface{}) (keys []string) {
@@ -147,31 +100,32 @@ func (c *Context) SortedKeys(m map[string]interface{}) (keys []string) {
 	return
 }
 
-func (c *Context) ValidGoIdentifer(ident string) string {
-	id := Depunct(ident, false)
-	switch id {
-	case "break", "default", "func", "interface", "select",
-		"case", "defer", "go", "map", "struct",
-		"chan", "else", "goto", "package", "switch",
-		"const", "fallthrough", "if", "range", "type",
-		"continue", "for", "import", "return", "var":
-		return id + "_"
-	}
-	return id
-}
-
-func (c *Context) ScopeIdentifierFromURL(urlStr string) string {
-	const prefix = "https://www.googleapis.com/auth/"
-	if !strings.HasPrefix(urlStr, prefix) {
-		const https = "https://"
-		if !strings.HasPrefix(urlStr, https) {
-			log.Fatalf("Unexpected oauth2 scope %q doesn't start with %q", urlStr, https)
+func Depunct(ident string, needCap bool) string {
+	var buf bytes.Buffer
+	preserve_ := false
+	for i, c := range ident {
+		if c == '_' {
+			if preserve_ || strings.HasPrefix(ident[i:], "__") {
+				preserve_ = true
+			} else {
+				needCap = true
+				continue
+			}
+		} else {
+			preserve_ = false
 		}
-		ident := c.ValidGoIdentifer(Depunct(urlStr[len(https):], true)) + "Scope"
-		return ident
+		if c == '-' || c == '.' || c == '$' || c == '/' {
+			needCap = true
+			continue
+		}
+		if needCap {
+			c = unicode.ToUpper(c)
+			needCap = false
+		}
+		buf.WriteByte(byte(c))
 	}
-	ident := c.ValidGoIdentifer(c.InitialCap(urlStr[len(prefix):])) + "Scope"
-	return ident
+	return buf.String()
+
 }
 
 // initialCap returns the identifier with a leading capital letter.
@@ -225,51 +179,14 @@ func (c *Context) GetName(preferred string) string {
 	return c.usedNames.Get(preferred)
 }
 
-func (c *Context) GenerateScopeConstants() {
-	if c.Doc.Auth == nil {
-		return
-	}
-
-	if c.Doc.Auth.OAuth2 == nil {
-		return
-	}
-
-	scopes := c.Doc.Auth.OAuth2.Scopes
-	if scopes == nil || len(scopes) == 0 {
-		return
-	}
-
-	scopes_interfaces := make(map[string]interface{})
-	for k, v := range scopes {
-		scopes_interfaces[k] = v
-	}
-
-	c.Pn("// OAuth2 scopes used by this API.")
-	c.Pn("const (")
-	n := 0
-	for _, scopeName := range c.SortedKeys(scopes_interfaces) {
-		mi := scopes[scopeName]
-		if n > 0 {
-			c.P("\n")
-		}
-		n++
-		ident := c.ScopeIdentifierFromURL(scopeName)
-		if des := mi.Description; des != "" {
-			c.P("%s", c.AsComment("\t", des))
-		}
-		c.Pn("\t%s = %q", ident, scopeName)
-	}
-	c.P(")\n\n")
-}
-
-func (c *Context) AddFieldValueComments(p func(format string, args ...interface{}), field Field, indent string, blankLine bool) {
+func (c *Context) AddFieldValueComments(p func(format string, args ...interface{}), field *Property, indent string, blankLine bool) {
 	var lines []string
 
-	if field.Enum() != nil {
-		desc := field.EnumDescriptions()
+	if field.Enum != nil {
+		desc := field.EnumDescriptions
 		lines = append(lines, c.AsComment(indent, "Possible values:"))
-		defval := field.Default()
-		for i, v := range field.Enum() {
+		defval := field.spec.Default
+		for i, v := range field.Enum {
 			more := ""
 			if v == defval {
 				more = " (default)"
@@ -279,8 +196,6 @@ func (c *Context) AddFieldValueComments(p func(format string, args ...interface{
 			}
 			lines = append(lines, c.AsComment(indent, `  "`+v+`"`+more))
 		}
-	} else if field.UnfortunateDefault() {
-		lines = append(lines, c.AsComment("\t", fmt.Sprintf("Default: %s", field.Default())))
 	}
 	if blankLine && len(lines) > 0 {
 		p(indent + "//\n")
@@ -288,19 +203,6 @@ func (c *Context) AddFieldValueComments(p func(format string, args ...interface{
 	for _, l := range lines {
 		p("%s", l)
 	}
-}
-
-func (c *Context) NeedsDataWrapper() bool {
-	if c.Doc.Features == nil {
-		return false
-	}
-
-	for _, feature := range c.Doc.Features {
-		if feature == "dataWrapper" {
-			return true
-		}
-	}
-	return false
 }
 
 func (c *Context) SimpleTypeConvert(apiType, format string) (gotype string, ok bool) {
@@ -322,13 +224,6 @@ func (c *Context) SimpleTypeConvert(apiType, format string) (gotype string, ok b
 		gotype = "interface{}"
 	}
 	return gotype, gotype != ""
-}
-
-func (c *Context) MustSimpleTypeConvert(apiType, format string) string {
-	if gotype, ok := c.SimpleTypeConvert(apiType, format); ok {
-		return gotype
-	}
-	panic(fmt.Sprintf("failed to simpleTypeConvert(%q, %q)", apiType, format))
 }
 
 func (c *Context) PrettyJSON(m interface{}) string {
@@ -356,57 +251,6 @@ func (c *Context) EmptyEnum(enum []string) bool {
 	return false
 }
 
-func (c *Context) ParseSchemas() {
-	if c.Schemas != nil {
-		panic("")
-	}
-	c.Schemas = make(map[string]*Schema)
-	for name, mi := range c.Doc.Schemas {
-		s := NewSchema(c, mi, name, nil)
-		c.Schemas[name] = s
-		err := s.populateSubSchemas()
-		if err != nil {
-			c.Panicf("Error populating schema with API name %q: %v", name, err)
-		}
-	}
-}
-
-func (c *Context) ParseResources(rm map[string]*spec.APIResource, p string) []*Resource {
-	res := []*Resource{}
-
-	if rm == nil || len(rm) == 0 {
-		return res
-	}
-
-	resMap := make(map[string]interface{})
-	for k, v := range rm {
-		resMap[k] = v
-	}
-	for _, rname := range c.SortedKeys(resMap) {
-		r := rm[rname]
-		res = append(res, &Resource{c, rname, p, r, c.ParseResources(r.Resources, fmt.Sprintf("%s.%s", p, rname)), nil})
-	}
-	return res
-}
-
-func (c *Context) ParseAPIMethods() []*Method {
-	meths := []*Method{}
-	methMap := make(map[string]interface{})
-	for k, v := range c.Doc.Methods {
-		methMap[k] = v
-	}
-	for _, name := range c.SortedKeys(methMap) {
-		mi := c.Doc.Methods[name]
-		meths = append(meths, &Method{
-			c:    c,
-			r:    nil, // to be explicit
-			name: name,
-			doc:  mi,
-		})
-	}
-	return meths
-}
-
 func (c *Context) SortedSchemaNames() (names []string) {
 	for name := range c.Schemas {
 		names = append(names, name)
@@ -415,83 +259,274 @@ func (c *Context) SortedSchemaNames() (names []string) {
 	return
 }
 
-func (c *Context) Parse() {
-	c.ParseSchemas()
-
-	c.APIMethods = c.ParseAPIMethods()
-
-	c.Resources = c.ParseResources(c.Doc.Resources, "")
-
-	for _, r := range c.Resources {
-		r.ParseMethods()
-	}
-
-	c.ResponseTypes = make(map[string]bool)
-	c.RequestTypes = make(map[string]bool)
-	for _, meth := range c.APIMethods {
-		meth.CacheRequestTypes()
-		meth.CacheResponseTypes()
-	}
-	for _, res := range c.Resources {
-		res.CacheRequestTypes()
-		res.CacheResponseTypes()
+func (c *Context) ParseSchemas() {
+	c.Schemas = make(map[string]*Schema)
+	for name, mi := range c.Doc.Schemas {
+		s := NewSchema(c, mi, name, nil)
+		c.Schemas[name] = s
+		s.ParseSubSchemas(c.Schemas)
 	}
 }
 
-func (c *Context) GenerateService(r *Resource, methods []*Method) {
-	if (len(methods)) == 0 {
+func (c *Context) ParseResources(specs map[string]*googlespec.APIResource, parentName string) []*Resource {
+	l := []*Resource{}
+
+	if specs == nil || len(specs) == 0 {
+		return l
+	}
+
+	resMap := make(map[string]interface{})
+	for k, v := range specs {
+		resMap[k] = v
+	}
+	for _, name := range c.SortedKeys(resMap) {
+		spec := specs[name]
+		r := NewResource(c, name, parentName, spec,
+			c.ParseResources(spec.Resources, fmt.Sprintf("%s.%s", parentName, name)))
+		l = append(l, r)
+	}
+
+	return l
+}
+
+func (c *Context) Parse() {
+	c.ParseSchemas()
+
+	c.Resources = c.ParseResources(c.Doc.Resources, "")
+}
+
+func (c *Context) GenerateService(r *Resource) {
+	if (len(r.Methods)) == 0 {
 		return
 	}
 
 	serviceName := "Service"
 	if r != nil {
-		serviceName = r.GoType()
-	}
-
-	//options
-	for _, meth := range methods {
-		if len(meth.OptParams()) > 0 {
-			c.Pn("type %s struct{", meth.OptionsType())
-			c.Pn("}")
-			c.Pn("")
-		}
+		serviceName = r.GoType
 	}
 
 	//def
 	c.Pn("type %s interface{", serviceName)
-	for _, meth := range methods {
-		c.Pn(meth.Signature())
+	for _, m := range r.Methods {
+		c.Pn(m.Signature)
 	}
 	c.Pn("}")
 	c.P("\n")
 
 	//default impl
-	//c.Pn("type Default%s struct{", serviceName)
-	//c.Pn("}")
-	//c.Pn("")
-	//for _, m := range methods {
-	//	c.Pn("func (s *Default%s) %s{", serviceName, m.Signature())
-	//	c.Pn("    return nil,nil")
-	//	c.Pn("}")
-	//	c.Pn("")
-	//}
+	c.Pn("type Default%s struct{", serviceName)
+	c.Pn("}")
+	c.Pn("")
+	for _, m := range r.Methods {
+		c.Pn("func (s *Default%s) %s{", serviceName, m.Signature)
+		c.Pn("    return nil,nil")
+		c.Pn("}")
+		c.Pn("")
+	}
+
+	//options
+	for _, m := range r.Methods {
+		if len(m.OptionalQueryParams) == 0 {
+			continue
+		}
+
+		c.Pn("type %s struct{", m.OptionParamStructType)
+		for _, p := range m.OptionalQueryParams {
+			c.Pn("    %s *%s", c.InitialCap(p.GoName), p.GoType)
+		}
+		c.Pn("}")
+		c.Pn("")
+
+		c.Pn("func Parse%s(values url.Values)(_opts *%s,_err error){", m.OptionParamStructType, m.OptionParamStructType)
+		c.Pn("    _opts = &%s{}", m.OptionParamStructType)
+		c.Pn("")
+		c.Pn("    var _str string")
+		for _, p := range m.OptionalQueryParams {
+			onOptionQueryParamParseError := func() {
+				c.Pn("    if _err!=nil{")
+				c.Pn("        return nil,_err")
+				c.Pn("    }")
+				c.Pn("")
+				c.Pn("    _opts.%s=&_q", c.InitialCap(p.GoName))
+				c.Pn("")
+			}
+
+			c.Pn("    _str=values.Get(\"%s\")", p.name)
+			c.Pn("    if _str!=\"\"{")
+			if p.GoType == "string" {
+				c.Pn("    _opts.%s=&_str", c.InitialCap(p.GoName))
+				c.Pn("")
+			} else if p.GoType == "[]string" {
+				c.Pn("    _q,_err:=marsapi.ParseStringList(_str)")
+				onOptionQueryParamParseError()
+			} else if p.GoType == "bool" {
+				c.Pn("    _q,_err:=strconv.ParseBool(_str)")
+				onOptionQueryParamParseError()
+			} else if p.GoType == "int64" {
+				c.Pn("    _q,_err:=strconv.ParseInt(_str,10,64)")
+				onOptionQueryParamParseError()
+			} else if p.GoType == "[]int64" {
+				c.Pn("    _q,_err:=marsapi.ParseInt64List(_str)")
+				onOptionQueryParamParseError()
+			} else if p.GoType == "uint64" {
+				c.Pn("    _q,_err:=strconv.ParseUint(_str,10,64)")
+				onOptionQueryParamParseError()
+			} else if p.GoType == "[]uint64" {
+				c.Pn("    _q,_err:=marsapi.ParseUint64List(_str)")
+				onOptionQueryParamParseError()
+			} else if p.GoType == "float64" {
+				c.Pn("    _q,_err:=strconv.ParseFloat(_str,64)")
+				onOptionQueryParamParseError()
+			} else if p.GoType == "[]float64" {
+				c.Pn("    _q,_err:=marsapi.ParseFloat64List(_str)")
+				onOptionQueryParamParseError()
+			} else {
+				panic("unkown option query param type,meth=" + m.GoName + ",param=" + p.GoName + " " + p.GoType)
+			}
+
+			c.Pn("    }")
+			c.Pn("")
+		}
+		c.Pn("    return _opts")
+		c.Pn("}")
+		c.Pn("")
+	}
 
 	//handle
-	c.Pn("func Handle%s(r marsapi.Router,s %s)(err error){", serviceName, serviceName)
-	for _, m := range methods {
-		c.Pn("    r.Handle(\"%s\",\"%s\", func(ctx *marsapi.Context) {", m.doc.HttpMethod, m.doc.Path)
-		for _, param := range m.NewArguments().l {
-			if param.location == "path" {
-			} else if param.location == "query" {
+	onHandleError := func() {
+		c.Pn("    if _err!=nil{")
+		c.Pn("        _ctx.ServiceError=_err")
+		c.Pn("        return")
+		c.Pn("    }")
+		c.Pn("")
+	}
+	c.Pn("func Handle%s(_r marsapi.Router,_s %s)(err error){", serviceName, serviceName)
+	for _, m := range r.Methods {
+		//method options
+		c.Pn("    %sMethodOptions:=&marsapi.MethodOptions{}", m.GoName)
+		if len(m.spec.Scopes) > 0 {
+			c.Pn("    %sMethodOptions.Scopes=[]string{\"%s\"}", m.GoName, strings.Join(m.spec.Scopes, "\",\""))
+		} else {
+			c.Pn("    %sMethodOptions.Scopes=[]string{}", m.GoName)
+		}
+		if m.spec.SupportsMediaDownload {
+			c.Pn("   %sMethodOptions.SupportsMediaDownload=true", m.GoName)
+		} else {
+			c.Pn("   %sMethodOptions.SupportsMediaDownload=false", m.GoName)
+		}
+		if m.spec.SupportsMediaUpload {
+			c.Pn("   %sMethodOptions.SupportsMediaUpload=true", m.GoName)
+		} else {
+			c.Pn("   %sMethodOptions.SupportsMediaUpload=false", m.GoName)
+		}
+		if m.spec.SupportsSubscription {
+			c.Pn("   %sMethodOptions.SupportsSubscription=true", m.GoName)
+		} else {
+			c.Pn("   %sMethodOptions.SupportsSubscription=false", m.GoName)
+		}
 
-			} else if param.location == "body" {
+		//handle func
+		c.Pn("    _r.Handle(\"%s\",\"%s\", func(_ctx *marsapi.Context) {", m.spec.HttpMethod, m.spec.Path)
+		c.Pn("    var _err error")
+		c.Pn("")
+
+		//path params
+		for _, p := range m.PathParams {
+			valueString := fmt.Sprintf("_ctx.PathParamMap[\"%s\"]", p.name)
+			if p.GoType == "string" {
+				c.Pn("    _p_%s:=%s", p.GoName, valueString)
+				c.Pn("")
+			} else if p.GoType == "int64" {
+				c.Pn("    _p_%s,_err:=strconv.ParseInt(%s,10,64)", p.GoName, valueString)
+				onHandleError()
+			} else if p.GoType == "uint64" {
+				c.Pn("    _p_%s,_err:=strconv.ParseUint(%s,10,64)", p.GoName, valueString)
+				onHandleError()
 			} else {
-				panic(errors.New("unkown location"))
+				panic("unknown path param type,meth=" + m.GoName + ",param=" + p.GoName + " " + p.GoType)
 			}
 		}
 
-		//c.Pn("        s.%s(ctx)", m.GoName())
-		c.Pn("    })")
+		//query params
+		for _, p := range m.RequiredQueryParams {
+			valueString := fmt.Sprintf("_ctx.HttpRequest.URL.Query().Get(\"%s\")", p.GoName)
+			if p.GoType == "string" {
+				c.Pn("    _q_%s:=%s", p.GoName, valueString)
+				c.Pn("")
+			} else if p.GoType == "[]string" {
+				c.Pn("    _q_%s,_err:=marsapi.ParseStringList(%s)", p.GoName, valueString)
+				onHandleError()
+			} else if p.GoType == "bool" {
+				c.Pn("    _q_%s,_err:=strconv.ParseBool(%s)", p.GoName, valueString)
+				onHandleError()
+			} else if p.GoType == "int64" {
+				c.Pn("    _q_%s,_err:=strconv.ParseInt(%s,10,64)", p.GoName, valueString)
+				onHandleError()
+			} else if p.GoType == "[]int64" {
+				c.Pn("    _q_%s,_err:=marsapi.ParseInt64List(%s)", p.GoName, valueString)
+				onHandleError()
+			} else if p.GoType == "uint64" {
+				c.Pn("    _q_%s,_err:=strconv.ParseUint(%s,10,64)", p.GoName, valueString)
+				onHandleError()
+			} else if p.GoType == "[]uint64" {
+				c.Pn("    _q_%s,_err:=marsapi.ParseUint64List(%s)", p.GoName, valueString)
+				onHandleError()
+			} else if p.GoType == "float64" {
+				c.Pn("    _q_%s,_err:=strconv.ParseFloat(%s,64)", p.GoName, valueString)
+				onHandleError()
+			} else if p.GoType == "[]float64" {
+				c.Pn("    _q_%s,_err:=marsapi.ParseFloat64List(%s)", p.GoName, valueString)
+				onHandleError()
+			} else {
+				panic("unkown query param type,meth=" + m.GoName + ",param=" + p.GoName + " " + p.GoType)
+			}
+		}
+
+		//request body
+		if m.RequestType != "" {
+			c.Pn("    body,_err:= ioutil.ReadAll(_ctx.HttpRequest.Body)")
+			onHandleError()
+			c.Pn("    _req:=%s{}", strings.TrimLeft(m.RequestType, "*"))
+			c.Pn("    _err=json.Unmarshal(body,&_req)")
+			onHandleError()
+		}
+
+		//option query params
+		if len(m.OptionalQueryParams) > 0 {
+			c.Pn("    _opts,_err:=Parse%s(_ctx.HttpRequest.URL.Query())", m.OptionParamStructType)
+			c.Pn("    if _err!=nil{")
+			c.Pn("        _ctx.ServiceError=_err")
+			c.Pn("        return")
+			c.Pn("    }")
+			c.Pn("")
+		}
+
+		//call
+		if m.ResponseType != "" {
+			c.P("        _resp,_err:=")
+		} else {
+			c.P("        _err=")
+		}
+		c.P("_s.%s(_ctx", m.GoName)
+		for _, p := range m.PathParams {
+			c.P(",_p_%s", p.GoName)
+		}
+		for _, p := range m.RequiredQueryParams {
+			c.P(",_q_%s", p.GoName)
+		}
+		if m.RequestType != "" {
+			c.P(",_req")
+		}
+		if len(m.OptionalQueryParams) > 0 {
+			c.P(",_opts")
+		}
+		c.Pn(")")
+		c.Pn("")
+		if m.ResponseType != "" {
+			c.Pn("    _ctx.ServiceResponse=_resp")
+		}
+		c.Pn("    _ctx.ServiceError=_err")
+		c.Pn("    },%sMethodOptions)", m.GoName)
 		c.Pn("")
 	}
 	c.Pn("    return nil")
@@ -499,13 +534,15 @@ func (c *Context) GenerateService(r *Resource, methods []*Method) {
 
 	if r != nil {
 		for _, subResource := range r.resources {
-			c.GenerateService(subResource, methods)
+			c.GenerateService(subResource)
 		}
 	}
 }
 
 func GenerateServer(doc_json string, params *ServerGenerateParams) (code string, err error) {
-	doc := &spec.APIDocument{}
+	panic("111")
+
+	doc := &googlespec.APIDocument{}
 	err = json.Unmarshal([]byte(doc_json), doc)
 	if err != nil {
 		return "", err
@@ -522,22 +559,28 @@ func GenerateServer(doc_json string, params *ServerGenerateParams) (code string,
 	c.Pn("package %s", c.Namespace)
 	c.P("\n")
 
+	c.Pn("import \"io/ioutil\"")
+	c.Pn("import \"encoding/json\"")
 	c.Pn("import \"errors\"")
 	c.Pn("import \"net/http\"")
+	c.Pn("import \"net/url\"")
+	c.Pn("import \"strconv\"")
 	c.Pn("import \"github.com/marshome/apis/marsapi\"")
 	c.P("\n")
 
 	c.Pn("var _=errors.New(\"\")")
 	c.Pn("var _=http.DefaultClient")
+	c.Pn("var _=&url.URL{}")
+	c.Pn("var _=strconv.ErrRange")
+	c.Pn("var _=ioutil.Discard")
+	c.Pn("var _=json.InvalidUTF8Error{}")
 
 	for _, name := range c.SortedSchemaNames() {
-		c.Schemas[name].WriteSchemaCode()
+		c.Schemas[name].GenerateSchema()
 	}
 
-	c.GenerateService(nil, c.APIMethods)
-
 	for _, r := range c.Resources {
-		c.GenerateService(r, r.Methods)
+		c.GenerateService(r)
 	}
 
 	clean, err := format.Source(c.Code.Bytes())
