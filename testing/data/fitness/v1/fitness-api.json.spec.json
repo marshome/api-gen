@@ -1,0 +1,1277 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "\"tbys6C40o18GZwyMen5GMkdK-3s/ijeguRXyVpN9uEUSOI4kjLGOD9E\"",
+    "discoveryVersion": "v1",
+    "id": "fitness:v1",
+    "name": "fitness",
+    "version": "v1",
+    "title": "Fitness",
+    "description": "Stores and accesses user data in the fitness store from apps on any platform.",
+    "documentationLink": "https://developers.google.com/fit/rest/",
+    "protocol": "rest",
+    "rootUrl": "https://www.googleapis.com/",
+    "auth": {
+        "oauth2": [
+            "https://www.googleapis.com/auth/fitness.blood_pressure.read",
+            "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+            "https://www.googleapis.com/auth/fitness.body.write",
+            "https://www.googleapis.com/auth/fitness.location.read",
+            "https://www.googleapis.com/auth/fitness.location.write",
+            "https://www.googleapis.com/auth/fitness.activity.write",
+            "https://www.googleapis.com/auth/fitness.blood_glucose.read",
+            "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+            "https://www.googleapis.com/auth/fitness.reproductive_health.write",
+            "https://www.googleapis.com/auth/fitness.body.read",
+            "https://www.googleapis.com/auth/fitness.oxygen_saturation.read",
+            "https://www.googleapis.com/auth/fitness.nutrition.read",
+            "https://www.googleapis.com/auth/fitness.body_temperature.read",
+            "https://www.googleapis.com/auth/fitness.body_temperature.write",
+            "https://www.googleapis.com/auth/fitness.nutrition.write",
+            "https://www.googleapis.com/auth/fitness.reproductive_health.read",
+            "https://www.googleapis.com/auth/fitness.activity.read",
+            "https://www.googleapis.com/auth/fitness.blood_glucose.write"
+        ]
+    },
+    "parameters": [
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "Application",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "detailsUrl",
+                    "desc": "An optional URI that can be used to link back to the application.",
+                    "type": "string"
+                },
+                {
+                    "name": "name",
+                    "desc": "The name of this application. This is required for REST clients, but we do not enforce uniqueness of this name. It is provided as a matter of convenience for other developers who would like to identify which REST created an Application or Data Source.",
+                    "type": "string"
+                },
+                {
+                    "name": "packageName",
+                    "desc": "Package name for this application. This is used as a unique identifier when created by Android applications, but cannot be specified by REST clients. REST clients will have their developer project number reflected into the Data Source data stream IDs, instead of the packageName.",
+                    "type": "string"
+                },
+                {
+                    "name": "version",
+                    "desc": "Version of the application. You should update this field whenever the application changes in a way that affects the computation of the data.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "BucketBySession",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "minDurationMillis",
+                    "desc": "Specifies that only sessions of duration longer than minDurationMillis are considered and used as a container for aggregated data.",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "BucketByTime",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "durationMillis",
+                    "desc": "Specifies that result buckets aggregate data by exactly durationMillis time frames. Time frames that contain no data will be included in the response with an empty dataset.",
+                    "type": "int64"
+                },
+                {
+                    "name": "period",
+                    "type": "ref",
+                    "refType": "BucketByTimePeriod"
+                }
+            ]
+        },
+        {
+            "name": "Dataset",
+            "desc": "A dataset represents a projection container for data points. They do not carry any info of their own. Datasets represent a set of data points from a particular data source. A data point can be found in more than one dataset.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "minStartTimeNs",
+                    "desc": "The smallest start time of all data points in this possibly partial representation of the dataset. Time is in nanoseconds from epoch. This should also match the first part of the dataset identifier.",
+                    "type": "int64"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "This token will be set when a dataset is received in response to a GET request and the dataset is too large to be included in a single response. Provide this value in a subsequent GET request to return the next page of data points within this dataset.",
+                    "type": "string"
+                },
+                {
+                    "name": "point",
+                    "desc": "A partial list of data points contained in the dataset, ordered by largest endTimeNanos first. This list is considered complete when retrieving a small dataset and partial when patching a dataset or retrieving a dataset that is too large to include in a single response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "DataPoint"
+                },
+                {
+                    "name": "dataSourceId",
+                    "desc": "The data stream ID of the data source that created the points in this dataset.",
+                    "type": "string"
+                },
+                {
+                    "name": "maxEndTimeNs",
+                    "desc": "The largest end time of all data points in this possibly partial representation of the dataset. Time is in nanoseconds from epoch. This should also match the first part of the dataset identifier.",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "ListSessionsResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "session",
+                    "desc": "Sessions with an end time that is between startTime and endTime of the request.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Session"
+                },
+                {
+                    "name": "deletedSession",
+                    "desc": "If includeDeleted is set to true in the request, this list will contain sessions deleted with original end times that are within the startTime and endTime frame.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Session"
+                },
+                {
+                    "name": "hasMoreData",
+                    "desc": "Flag to indicate server has more data to transfer",
+                    "type": "bool"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "The continuation token, which is used to page through large result sets. Provide this value in a subsequent request to return the next page of results.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "AggregateRequest",
+            "desc": "Next id: 10",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "filteredDataQualityStandard",
+                    "desc": "A list of acceptable data quality standards. Only data points which conform to at least one of the specified data quality standards will be returned. If the list is empty, all data points are returned.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "startTimeMillis",
+                    "desc": "The start of a window of time. Data that intersects with this time window will be aggregated. The time is in milliseconds since epoch, inclusive.",
+                    "type": "int64"
+                },
+                {
+                    "name": "aggregateBy",
+                    "desc": "The specification of data to be aggregated. At least one aggregateBy spec must be provided. All data that is specified will be aggregated using the same bucketing criteria. There will be one dataset in the response for every aggregateBy spec.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "AggregateBy"
+                },
+                {
+                    "name": "bucketByActivitySegment",
+                    "desc": "Specifies that data be aggregated each activity segment recored for a user. Similar to bucketByActivitySegment, but bucketing is done for each activity segment rather than all segments of the same type. Mutually exclusive of other bucketing specifications.",
+                    "type": "ref",
+                    "refType": "BucketByActivity"
+                },
+                {
+                    "name": "bucketByActivityType",
+                    "desc": "Specifies that data be aggregated by the type of activity being performed when the data was recorded. All data that was recorded during a certain activity type (for the given time range) will be aggregated into the same bucket. Data that was recorded while the user was not active will not be included in the response. Mutually exclusive of other bucketing specifications.",
+                    "type": "ref",
+                    "refType": "BucketByActivity"
+                },
+                {
+                    "name": "bucketBySession",
+                    "desc": "Specifies that data be aggregated by user sessions. Data that does not fall within the time range of a session will not be included in the response. Mutually exclusive of other bucketing specifications.",
+                    "type": "ref",
+                    "refType": "BucketBySession"
+                },
+                {
+                    "name": "bucketByTime",
+                    "desc": "Specifies that data be aggregated by a single time interval. Mutually exclusive of other bucketing specifications.",
+                    "type": "ref",
+                    "refType": "BucketByTime"
+                },
+                {
+                    "name": "endTimeMillis",
+                    "desc": "The end of a window of time. Data that intersects with this time window will be aggregated. The time is in milliseconds since epoch, inclusive.",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "AggregateBy",
+            "desc": "The specification of which data to aggregate.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "dataSourceId",
+                    "desc": "A data source ID to aggregate. Mutually exclusive of dataTypeName. Only data from the specified data source ID will be included in the aggregation. The dataset in the response will have the same data source ID.",
+                    "type": "string"
+                },
+                {
+                    "name": "dataTypeName",
+                    "desc": "The data type to aggregate. All data sources providing this data type will contribute data to the aggregation. The response will contain a single dataset for this data type name. The dataset will have a data source ID of derived:com.google.:com.google.android.gms:aggregated",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "BucketByActivity",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "activityDataSourceId",
+                    "desc": "The default activity stream will be used if a specific activityDataSourceId is not specified.",
+                    "type": "string"
+                },
+                {
+                    "name": "minDurationMillis",
+                    "desc": "Specifies that only activity segments of duration longer than minDurationMillis are considered and used as a container for aggregated data.",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "BucketByTimePeriod",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "type",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "day"
+                        },
+                        {
+                            "name": "month"
+                        },
+                        {
+                            "name": "week"
+                        }
+                    ]
+                },
+                {
+                    "name": "value",
+                    "type": "int32"
+                },
+                {
+                    "name": "timeZoneId",
+                    "desc": "org.joda.timezone.DateTimeZone",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "DataPoint",
+            "desc": "Represents a single data point, generated by a particular data source. A data point holds a value for each field, an end timestamp and an optional start time. The exact semantics of each of these attributes are specified in the documentation for the particular data type.\n\nA data point can represent an instantaneous measurement, reading or input observation, as well as averages or aggregates over a time interval. Check the data type documentation to determine which is the case for a particular data type.\n\nData points always contain one value for each field of the data type.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "endTimeNanos",
+                    "desc": "The end time of the interval represented by this data point, in nanoseconds since epoch.",
+                    "type": "int64"
+                },
+                {
+                    "name": "modifiedTimeMillis",
+                    "desc": "Indicates the last time this data point was modified. Useful only in contexts where we are listing the data changes, rather than representing the current state of the data.",
+                    "type": "int64"
+                },
+                {
+                    "name": "originDataSourceId",
+                    "desc": "If the data point is contained in a dataset for a derived data source, this field will be populated with the data source stream ID that created the data point originally.",
+                    "type": "string"
+                },
+                {
+                    "name": "rawTimestampNanos",
+                    "desc": "The raw timestamp from the original SensorEvent.",
+                    "type": "int64"
+                },
+                {
+                    "name": "startTimeNanos",
+                    "desc": "The start time of the interval represented by this data point, in nanoseconds since epoch.",
+                    "type": "int64"
+                },
+                {
+                    "name": "value",
+                    "desc": "Values of each data type field for the data point. It is expected that each value corresponding to a data type field will occur in the same order that the field is listed with in the data type specified in a data source.\n\nOnly one of integer and floating point fields will be populated, depending on the format enum value within data source's type field.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Value"
+                },
+                {
+                    "name": "computationTimeMillis",
+                    "desc": "Used for version checking during transformation; that is, a datapoint can only replace another datapoint that has an older computation time stamp.",
+                    "type": "int64"
+                },
+                {
+                    "name": "dataTypeName",
+                    "desc": "The data type defining the format of the values in this data point.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "DataTypeField",
+            "desc": "In case of multi-dimensional data (such as an accelerometer with x, y, and z axes) each field represents one dimension. Each data type field has a unique name which identifies it. The field also defines the format of the data (int, float, etc.).\n\nThis message is only instantiated in code and not used for wire comms or stored in any way.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "format",
+                    "desc": "The different supported formats for each field in a data type.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "blob"
+                        },
+                        {
+                            "name": "floatList"
+                        },
+                        {
+                            "name": "floatPoint"
+                        },
+                        {
+                            "name": "integer"
+                        },
+                        {
+                            "name": "integerList"
+                        },
+                        {
+                            "name": "map"
+                        },
+                        {
+                            "name": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "name",
+                    "desc": "Defines the name and format of data. Unlike data type names, field names are not namespaced, and only need to be unique within the data type.",
+                    "type": "string"
+                },
+                {
+                    "name": "optional",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "ListDataSourcesResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "dataSource",
+                    "desc": "A previously created data source.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "DataSource"
+                }
+            ]
+        },
+        {
+            "name": "MapValue",
+            "desc": "Holder object for the value of an entry in a map field of a data point.\n\nA map value supports a subset of the formats that the regular Value supports.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "fpVal",
+                    "desc": "Floating point value.",
+                    "type": "float64"
+                }
+            ]
+        },
+        {
+            "name": "Value",
+            "desc": "Holder object for the value of a single field in a data point.\n\nA field value has a particular format and is only ever set to one of an integer or a floating point value. LINT.IfChange",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "fpVal",
+                    "desc": "Floating point value. When this is set, other values must not be set.",
+                    "type": "float64"
+                },
+                {
+                    "name": "intVal",
+                    "desc": "Integer value. When this is set, other values must not be set.",
+                    "type": "int32"
+                },
+                {
+                    "name": "mapVal",
+                    "desc": "Map value. The valid key space and units for the corresponding value of each entry should be documented as part of the data type definition. Keys should be kept small whenever possible. Data streams with large keys and high data frequency may be down sampled.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ValueMapValEntry"
+                },
+                {
+                    "name": "stringVal",
+                    "desc": "String value. When this is set, other values must not be set. Strings should be kept small whenever possible. Data streams with large string values and high data frequency may be down sampled.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "AggregateResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "bucket",
+                    "desc": "A list of buckets containing the aggregated data.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "AggregateBucket"
+                }
+            ]
+        },
+        {
+            "name": "ValueMapValEntry",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "string"
+                },
+                {
+                    "name": "value",
+                    "type": "ref",
+                    "refType": "MapValue"
+                }
+            ]
+        },
+        {
+            "name": "DataSource",
+            "desc": "Definition of a unique source of sensor data. Data sources can expose raw data coming from hardware sensors on local or companion devices. They can also expose derived data, created by transforming or merging other data sources. Multiple data sources can exist for the same data type. Every data point inserted into or read from this service has an associated data source.\n\nThe data source contains enough information to uniquely identify its data, including the hardware device and the application that collected and/or transformed the data. It also holds useful metadata, such as the hardware and application versions, and the device type.\n\nEach data source produces a unique stream of data, with a unique identifier. Not all changes to data source affect the stream identifier, so that data collected by updated versions of the same application/device can still be considered to belong to the same data stream.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "dataQualityStandard",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "dataStreamId",
+                    "desc": "A unique identifier for the data stream produced by this data source. The identifier includes:\n\n \n- The physical device's manufacturer, model, and serial number (UID). \n- The application's package name or name. Package name is used when the data source was created by an Android application. The developer project number is used when the data source was created by a REST client. \n- The data source's type. \n- The data source's stream name.  Note that not all attributes of the data source are used as part of the stream identifier. In particular, the version of the hardware/the application isn't used. This allows us to preserve the same stream through version updates. This also means that two DataSource objects may represent the same data stream even if they're not equal.\n\nThe exact format of the data stream ID created by an Android application is: type:dataType.name:application.packageName:device.manufacturer:device.model:device.uid:dataStreamName \n\nThe exact format of the data stream ID created by a REST client is: type:dataType.name:developer project number:device.manufacturer:device.model:device.uid:dataStreamName \n\nWhen any of the optional fields that comprise of the data stream ID are blank, they will be omitted from the data stream ID. The minnimum viable data stream ID would be: type:dataType.name:developer project number\n\nFinally, the developer project number is obfuscated when read by any REST or Android client that did not create the data source. Only the data source creator will see the developer project number in clear and normal form.",
+                    "type": "string"
+                },
+                {
+                    "name": "dataStreamName",
+                    "desc": "The stream name uniquely identifies this particular data source among other data sources of the same type from the same underlying producer. Setting the stream name is optional, but should be done whenever an application exposes two streams for the same data type, or when a device has two equivalent sensors.",
+                    "type": "string"
+                },
+                {
+                    "name": "dataType",
+                    "desc": "The data type defines the schema for a stream of data being collected by, inserted into, or queried from the Fitness API.",
+                    "type": "ref",
+                    "refType": "DataType"
+                },
+                {
+                    "name": "device",
+                    "desc": "Representation of an integrated device (such as a phone or a wearable) that can hold sensors.",
+                    "type": "ref",
+                    "refType": "Device"
+                },
+                {
+                    "name": "name",
+                    "desc": "An end-user visible name for this data source.",
+                    "type": "string"
+                },
+                {
+                    "name": "type",
+                    "desc": "A constant describing the type of this data source. Indicates whether this data source produces raw or derived data.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "derived"
+                        },
+                        {
+                            "name": "raw"
+                        }
+                    ]
+                },
+                {
+                    "name": "application",
+                    "desc": "Information about an application which feeds sensor data into the platform.",
+                    "type": "ref",
+                    "refType": "Application"
+                }
+            ]
+        },
+        {
+            "name": "DataType",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "field",
+                    "desc": "A field represents one dimension of a data type.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "DataTypeField"
+                },
+                {
+                    "name": "name",
+                    "desc": "Each data type has a unique, namespaced, name. All data types in the com.google namespace are shared as part of the platform.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Device",
+            "desc": "Representation of an integrated device (such as a phone or a wearable) that can hold sensors. Each sensor is exposed as a data source.\n\nThe main purpose of the device information contained in this class is to identify the hardware of a particular data source. This can be useful in different ways, including:  \n- Distinguishing two similar sensors on different devices (the step counter on two nexus 5 phones, for instance)\n- Display the source of data to the user (by using the device make / model)\n- Treat data differently depending on sensor type (accelerometers on a watch may give different patterns than those on a phone)\n- Build different analysis models for each device/version.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "model",
+                    "desc": "End-user visible model name for the device.",
+                    "type": "string"
+                },
+                {
+                    "name": "type",
+                    "desc": "A constant representing the type of the device.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "chestStrap"
+                        },
+                        {
+                            "name": "headMounted"
+                        },
+                        {
+                            "name": "phone"
+                        },
+                        {
+                            "name": "scale"
+                        },
+                        {
+                            "name": "tablet"
+                        },
+                        {
+                            "name": "unknown"
+                        },
+                        {
+                            "name": "watch"
+                        }
+                    ]
+                },
+                {
+                    "name": "uid",
+                    "desc": "The serial number or other unique ID for the hardware. This field is obfuscated when read by any REST or Android client that did not create the data source. Only the data source creator will see the uid field in clear and normal form.",
+                    "type": "string"
+                },
+                {
+                    "name": "version",
+                    "desc": "Version string for the device hardware/software.",
+                    "type": "string"
+                },
+                {
+                    "name": "manufacturer",
+                    "desc": "Manufacturer of the product/hardware.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Session",
+            "desc": "Sessions contain metadata, such as a user-friendly name and time interval information.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "description",
+                    "desc": "A description for this session.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "A client-generated identifier that is unique across all sessions owned by this particular user.",
+                    "type": "string"
+                },
+                {
+                    "name": "modifiedTimeMillis",
+                    "desc": "A timestamp that indicates when the session was last modified.",
+                    "type": "int64"
+                },
+                {
+                    "name": "activityType",
+                    "desc": "The type of activity this session represents.",
+                    "type": "int32"
+                },
+                {
+                    "name": "application",
+                    "desc": "The application that created the session.",
+                    "type": "ref",
+                    "refType": "Application"
+                },
+                {
+                    "name": "endTimeMillis",
+                    "desc": "An end time, in milliseconds since epoch, inclusive.",
+                    "type": "int64"
+                },
+                {
+                    "name": "name",
+                    "desc": "A human readable name of the session.",
+                    "type": "string"
+                },
+                {
+                    "name": "startTimeMillis",
+                    "desc": "A start time, in milliseconds since epoch, inclusive.",
+                    "type": "int64"
+                },
+                {
+                    "name": "activeTimeMillis",
+                    "desc": "Session active time. While start_time_millis and end_time_millis define the full session time, the active time can be shorter and specified by active_time_millis. If the inactive time during the session is known, it should also be inserted via a com.google.activity.segment data point with a STILL activity value",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "AggregateBucket",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "session",
+                    "desc": "Available for Bucket.Type.SESSION",
+                    "type": "ref",
+                    "refType": "Session"
+                },
+                {
+                    "name": "startTimeMillis",
+                    "desc": "The start time for the aggregated data, in milliseconds since epoch, inclusive.",
+                    "type": "int64"
+                },
+                {
+                    "name": "type",
+                    "desc": "The type of a bucket signifies how the data aggregation is performed in the bucket.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "activitySegment"
+                        },
+                        {
+                            "name": "activityType"
+                        },
+                        {
+                            "name": "session"
+                        },
+                        {
+                            "name": "time"
+                        },
+                        {
+                            "name": "unknown"
+                        }
+                    ]
+                },
+                {
+                    "name": "activity",
+                    "desc": "Available for Bucket.Type.ACTIVITY_TYPE, Bucket.Type.ACTIVITY_SEGMENT",
+                    "type": "int32"
+                },
+                {
+                    "name": "dataset",
+                    "desc": "There will be one dataset per AggregateBy in the request.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Dataset"
+                },
+                {
+                    "name": "endTimeMillis",
+                    "desc": "The end time for the aggregated data, in milliseconds since epoch, inclusive.",
+                    "type": "int64"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "users",
+            "resources": [
+                {
+                    "name": "dataSources",
+                    "methods": [
+                        {
+                            "name": "get",
+                            "desc": "Returns the specified data source.",
+                            "path": "{userId}/dataSources/{dataSourceId}",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/fitness.activity.read",
+                                "https://www.googleapis.com/auth/fitness.activity.write",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.read",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.write",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.read",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+                                "https://www.googleapis.com/auth/fitness.body.read",
+                                "https://www.googleapis.com/auth/fitness.body.write",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.read",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.write",
+                                "https://www.googleapis.com/auth/fitness.location.read",
+                                "https://www.googleapis.com/auth/fitness.location.write",
+                                "https://www.googleapis.com/auth/fitness.nutrition.read",
+                                "https://www.googleapis.com/auth/fitness.nutrition.write",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.read",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.read",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "userId",
+                                    "desc": "Retrieve a data source for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "dataSourceId",
+                                    "desc": "The data stream ID of the data source to retrieve.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "DataSource"
+                        },
+                        {
+                            "name": "list",
+                            "desc": "Lists all data sources that are visible to the developer, using the OAuth scopes provided. The list is not exhaustive; the user may have private data sources that are only visible to other developers, or calls using other scopes.",
+                            "path": "{userId}/dataSources",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/fitness.activity.read",
+                                "https://www.googleapis.com/auth/fitness.activity.write",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.read",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.write",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.read",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+                                "https://www.googleapis.com/auth/fitness.body.read",
+                                "https://www.googleapis.com/auth/fitness.body.write",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.read",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.write",
+                                "https://www.googleapis.com/auth/fitness.location.read",
+                                "https://www.googleapis.com/auth/fitness.location.write",
+                                "https://www.googleapis.com/auth/fitness.nutrition.read",
+                                "https://www.googleapis.com/auth/fitness.nutrition.write",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.read",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.read",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "userId",
+                                    "desc": "List data sources for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "dataTypeName",
+                                    "desc": "The names of data types to include in the list. If not specified, all data sources will be returned.",
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "ListDataSourcesResponse"
+                        },
+                        {
+                            "name": "patch",
+                            "desc": "Updates the specified data source. The dataStreamId, dataType, type, dataStreamName, and device properties with the exception of version, cannot be modified.\n\nData sources are identified by their dataStreamId. This method supports patch semantics.",
+                            "path": "{userId}/dataSources/{dataSourceId}",
+                            "httpMethod": "PATCH",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/fitness.activity.write",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.write",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+                                "https://www.googleapis.com/auth/fitness.body.write",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.write",
+                                "https://www.googleapis.com/auth/fitness.location.write",
+                                "https://www.googleapis.com/auth/fitness.nutrition.write",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "userId",
+                                    "desc": "Update the data source for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "dataSourceId",
+                                    "desc": "The data stream ID of the data source to update.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "request": "DataSource",
+                            "response": "DataSource"
+                        },
+                        {
+                            "name": "update",
+                            "desc": "Updates the specified data source. The dataStreamId, dataType, type, dataStreamName, and device properties with the exception of version, cannot be modified.\n\nData sources are identified by their dataStreamId.",
+                            "path": "{userId}/dataSources/{dataSourceId}",
+                            "httpMethod": "PUT",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/fitness.activity.write",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.write",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+                                "https://www.googleapis.com/auth/fitness.body.write",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.write",
+                                "https://www.googleapis.com/auth/fitness.location.write",
+                                "https://www.googleapis.com/auth/fitness.nutrition.write",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "userId",
+                                    "desc": "Update the data source for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "dataSourceId",
+                                    "desc": "The data stream ID of the data source to update.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "request": "DataSource",
+                            "response": "DataSource"
+                        },
+                        {
+                            "name": "create",
+                            "desc": "Creates a new data source that is unique across all data sources belonging to this user. The data stream ID field can be omitted and will be generated by the server with the correct format. The data stream ID is an ordered combination of some fields from the data source. In addition to the data source fields reflected into the data source ID, the developer project number that is authenticated when creating the data source is included. This developer project number is obfuscated when read by any other developer reading public data types.",
+                            "path": "{userId}/dataSources",
+                            "httpMethod": "POST",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/fitness.activity.write",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.write",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+                                "https://www.googleapis.com/auth/fitness.body.write",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.write",
+                                "https://www.googleapis.com/auth/fitness.location.write",
+                                "https://www.googleapis.com/auth/fitness.nutrition.write",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "userId",
+                                    "desc": "Create the data source for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "request": "DataSource",
+                            "response": "DataSource"
+                        },
+                        {
+                            "name": "delete",
+                            "desc": "Deletes the specified data source. The request will fail if the data source contains any data points.",
+                            "path": "{userId}/dataSources/{dataSourceId}",
+                            "httpMethod": "DELETE",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/fitness.activity.write",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.write",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+                                "https://www.googleapis.com/auth/fitness.body.write",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.write",
+                                "https://www.googleapis.com/auth/fitness.location.write",
+                                "https://www.googleapis.com/auth/fitness.nutrition.write",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "userId",
+                                    "desc": "Retrieve a data source for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "dataSourceId",
+                                    "desc": "The data stream ID of the data source to delete.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "DataSource"
+                        }
+                    ],
+                    "resources": [
+                        {
+                            "name": "datasets",
+                            "methods": [
+                                {
+                                    "name": "delete",
+                                    "desc": "Performs an inclusive delete of all data points whose start and end times have any overlap with the time range specified by the dataset ID. For most data types, the entire data point will be deleted. For data types where the time span represents a consistent value (such as com.google.activity.segment), and a data point straddles either end point of the dataset, only the overlapping portion of the data point will be deleted.",
+                                    "path": "{userId}/dataSources/{dataSourceId}/datasets/{datasetId}",
+                                    "httpMethod": "DELETE",
+                                    "scopes": [
+                                        "https://www.googleapis.com/auth/fitness.activity.write",
+                                        "https://www.googleapis.com/auth/fitness.blood_glucose.write",
+                                        "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+                                        "https://www.googleapis.com/auth/fitness.body.write",
+                                        "https://www.googleapis.com/auth/fitness.body_temperature.write",
+                                        "https://www.googleapis.com/auth/fitness.location.write",
+                                        "https://www.googleapis.com/auth/fitness.nutrition.write",
+                                        "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+                                        "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+                                    ],
+                                    "pathParams": [
+                                        {
+                                            "name": "userId",
+                                            "desc": "Delete a dataset for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                            "required": true,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "dataSourceId",
+                                            "desc": "The data stream ID of the data source that created the dataset.",
+                                            "required": true,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "datasetId",
+                                            "desc": "Dataset identifier that is a composite of the minimum data point start time and maximum data point end time represented as nanoseconds from the epoch. The ID is formatted like: \"startTime-endTime\" where startTime and endTime are 64 bit integers.",
+                                            "required": true,
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "optinalQueryParams": [
+                                        {
+                                            "name": "currentTimeMillis",
+                                            "desc": "The client's current time in milliseconds since epoch.",
+                                            "type": "int64"
+                                        },
+                                        {
+                                            "name": "modifiedTimeMillis",
+                                            "desc": "When the operation was performed on the client.",
+                                            "type": "int64"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "get",
+                                    "desc": "Returns a dataset containing all data points whose start and end times overlap with the specified range of the dataset minimum start time and maximum end time. Specifically, any data point whose start time is less than or equal to the dataset end time and whose end time is greater than or equal to the dataset start time.",
+                                    "path": "{userId}/dataSources/{dataSourceId}/datasets/{datasetId}",
+                                    "httpMethod": "GET",
+                                    "scopes": [
+                                        "https://www.googleapis.com/auth/fitness.activity.read",
+                                        "https://www.googleapis.com/auth/fitness.activity.write",
+                                        "https://www.googleapis.com/auth/fitness.blood_glucose.read",
+                                        "https://www.googleapis.com/auth/fitness.blood_glucose.write",
+                                        "https://www.googleapis.com/auth/fitness.blood_pressure.read",
+                                        "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+                                        "https://www.googleapis.com/auth/fitness.body.read",
+                                        "https://www.googleapis.com/auth/fitness.body.write",
+                                        "https://www.googleapis.com/auth/fitness.body_temperature.read",
+                                        "https://www.googleapis.com/auth/fitness.body_temperature.write",
+                                        "https://www.googleapis.com/auth/fitness.location.read",
+                                        "https://www.googleapis.com/auth/fitness.location.write",
+                                        "https://www.googleapis.com/auth/fitness.nutrition.read",
+                                        "https://www.googleapis.com/auth/fitness.nutrition.write",
+                                        "https://www.googleapis.com/auth/fitness.oxygen_saturation.read",
+                                        "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+                                        "https://www.googleapis.com/auth/fitness.reproductive_health.read",
+                                        "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+                                    ],
+                                    "pathParams": [
+                                        {
+                                            "name": "userId",
+                                            "desc": "Retrieve a dataset for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                            "required": true,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "dataSourceId",
+                                            "desc": "The data stream ID of the data source that created the dataset.",
+                                            "required": true,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "datasetId",
+                                            "desc": "Dataset identifier that is a composite of the minimum data point start time and maximum data point end time represented as nanoseconds from the epoch. The ID is formatted like: \"startTime-endTime\" where startTime and endTime are 64 bit integers.",
+                                            "required": true,
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "optinalQueryParams": [
+                                        {
+                                            "name": "limit",
+                                            "desc": "If specified, no more than this many data points will be included in the dataset. If there are more data points in the dataset, nextPageToken will be set in the dataset response.",
+                                            "type": "int32"
+                                        },
+                                        {
+                                            "name": "pageToken",
+                                            "desc": "The continuation token, which is used to page through large datasets. To get the next page of a dataset, set this parameter to the value of nextPageToken from the previous response. Each subsequent call will yield a partial dataset with data point end timestamps that are strictly smaller than those in the previous partial response.",
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "response": "Dataset"
+                                },
+                                {
+                                    "name": "patch",
+                                    "desc": "Adds data points to a dataset. The dataset need not be previously created. All points within the given dataset will be returned with subsquent calls to retrieve this dataset. Data points can belong to more than one dataset. This method does not use patch semantics.",
+                                    "path": "{userId}/dataSources/{dataSourceId}/datasets/{datasetId}",
+                                    "httpMethod": "PATCH",
+                                    "scopes": [
+                                        "https://www.googleapis.com/auth/fitness.activity.write",
+                                        "https://www.googleapis.com/auth/fitness.blood_glucose.write",
+                                        "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+                                        "https://www.googleapis.com/auth/fitness.body.write",
+                                        "https://www.googleapis.com/auth/fitness.body_temperature.write",
+                                        "https://www.googleapis.com/auth/fitness.location.write",
+                                        "https://www.googleapis.com/auth/fitness.nutrition.write",
+                                        "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+                                        "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+                                    ],
+                                    "pathParams": [
+                                        {
+                                            "name": "userId",
+                                            "desc": "Patch a dataset for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                            "required": true,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "dataSourceId",
+                                            "desc": "The data stream ID of the data source that created the dataset.",
+                                            "required": true,
+                                            "type": "string"
+                                        },
+                                        {
+                                            "name": "datasetId",
+                                            "desc": "Dataset identifier that is a composite of the minimum data point start time and maximum data point end time represented as nanoseconds from the epoch. The ID is formatted like: \"startTime-endTime\" where startTime and endTime are 64 bit integers.",
+                                            "required": true,
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "optinalQueryParams": [
+                                        {
+                                            "name": "currentTimeMillis",
+                                            "desc": "The client's current time in milliseconds since epoch. Note that the minStartTimeNs and maxEndTimeNs properties in the request body are in nanoseconds instead of milliseconds.",
+                                            "type": "int64"
+                                        }
+                                    ],
+                                    "request": "Dataset",
+                                    "response": "Dataset"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "dataset",
+                    "methods": [
+                        {
+                            "name": "aggregate",
+                            "desc": "Aggregates data of a certain type or stream into buckets divided by a given type of boundary. Multiple data sets of multiple types and from multiple sources can be aggreated into exactly one bucket type per request.",
+                            "path": "{userId}/dataset:aggregate",
+                            "httpMethod": "POST",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/fitness.activity.read",
+                                "https://www.googleapis.com/auth/fitness.activity.write",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.read",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.write",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.read",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+                                "https://www.googleapis.com/auth/fitness.body.read",
+                                "https://www.googleapis.com/auth/fitness.body.write",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.read",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.write",
+                                "https://www.googleapis.com/auth/fitness.location.read",
+                                "https://www.googleapis.com/auth/fitness.location.write",
+                                "https://www.googleapis.com/auth/fitness.nutrition.read",
+                                "https://www.googleapis.com/auth/fitness.nutrition.write",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.read",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.read",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "userId",
+                                    "desc": "Aggregate data for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "request": "AggregateRequest",
+                            "response": "AggregateResponse"
+                        }
+                    ]
+                },
+                {
+                    "name": "sessions",
+                    "methods": [
+                        {
+                            "name": "delete",
+                            "desc": "Deletes a session specified by the given session ID.",
+                            "path": "{userId}/sessions/{sessionId}",
+                            "httpMethod": "DELETE",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/fitness.activity.write"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "userId",
+                                    "desc": "Delete a session for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "sessionId",
+                                    "desc": "The ID of the session to be deleted.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "currentTimeMillis",
+                                    "desc": "The client's current time in milliseconds since epoch.",
+                                    "type": "int64"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "list",
+                            "desc": "Lists sessions previously created.",
+                            "path": "{userId}/sessions",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/fitness.activity.read",
+                                "https://www.googleapis.com/auth/fitness.activity.write",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.read",
+                                "https://www.googleapis.com/auth/fitness.blood_glucose.write",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.read",
+                                "https://www.googleapis.com/auth/fitness.blood_pressure.write",
+                                "https://www.googleapis.com/auth/fitness.body.read",
+                                "https://www.googleapis.com/auth/fitness.body.write",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.read",
+                                "https://www.googleapis.com/auth/fitness.body_temperature.write",
+                                "https://www.googleapis.com/auth/fitness.location.read",
+                                "https://www.googleapis.com/auth/fitness.location.write",
+                                "https://www.googleapis.com/auth/fitness.nutrition.read",
+                                "https://www.googleapis.com/auth/fitness.nutrition.write",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.read",
+                                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.read",
+                                "https://www.googleapis.com/auth/fitness.reproductive_health.write"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "userId",
+                                    "desc": "List sessions for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "includeDeleted",
+                                    "desc": "If true, deleted sessions will be returned. When set to true, sessions returned in this response will only have an ID and will not have any other fields.",
+                                    "type": "bool"
+                                },
+                                {
+                                    "name": "pageToken",
+                                    "desc": "The continuation token, which is used to page through large result sets. To get the next page of results, set this parameter to the value of nextPageToken from the previous response.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "startTime",
+                                    "desc": "An RFC3339 timestamp. Only sessions ending between the start and end times will be included in the response.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "endTime",
+                                    "desc": "An RFC3339 timestamp. Only sessions ending between the start and end times will be included in the response.",
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "ListSessionsResponse"
+                        },
+                        {
+                            "name": "update",
+                            "desc": "Updates or insert a given session.",
+                            "path": "{userId}/sessions/{sessionId}",
+                            "httpMethod": "PUT",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/fitness.activity.write"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "userId",
+                                    "desc": "Create sessions for the person identified. Use me to indicate the authenticated user. Only me is supported at this time.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "sessionId",
+                                    "desc": "The ID of the session to be created.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "currentTimeMillis",
+                                    "desc": "The client's current time in milliseconds since epoch.",
+                                    "type": "int64"
+                                }
+                            ],
+                            "request": "Session",
+                            "response": "Session"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

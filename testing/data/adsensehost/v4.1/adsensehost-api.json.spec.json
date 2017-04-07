@@ -1,0 +1,1481 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "\"tbys6C40o18GZwyMen5GMkdK-3s/NP6WK-DFDvF718ccPqr_ad97jkE\"",
+    "discoveryVersion": "v1",
+    "id": "adsensehost:v4.1",
+    "name": "adsensehost",
+    "version": "v4.1",
+    "title": "AdSense Host API",
+    "description": "Generates performance reports, generates ad codes, and provides publisher management capabilities for AdSense Hosts.",
+    "documentationLink": "https://developers.google.com/adsense/host/",
+    "labels": [
+        "limited_availability"
+    ],
+    "protocol": "rest",
+    "rootUrl": "https://www.googleapis.com/",
+    "auth": {
+        "oauth2": [
+            "https://www.googleapis.com/auth/adsensehost"
+        ]
+    },
+    "parameters": [
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "csv",
+                    "desc": "Responses with Content-Type of text/csv"
+                },
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "Account",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "Unique identifier of this account.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is, in this case adsensehost#account.",
+                    "type": "string",
+                    "default": "adsensehost#account"
+                },
+                {
+                    "name": "name",
+                    "desc": "Name of this account.",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "desc": "Approval status of this account. One of: PENDING, APPROVED, DISABLED.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "AdClient",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "Unique identifier of this ad client.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is, in this case adsensehost#adClient.",
+                    "type": "string",
+                    "default": "adsensehost#adClient"
+                },
+                {
+                    "name": "productCode",
+                    "desc": "This ad client's product code, which corresponds to the PRODUCT_CODE report dimension.",
+                    "type": "string"
+                },
+                {
+                    "name": "supportsReporting",
+                    "desc": "Whether this ad client supports being reported on.",
+                    "type": "bool"
+                },
+                {
+                    "name": "arcOptIn",
+                    "desc": "Whether this ad client is opted in to ARC.",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "CustomChannels",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adsensehost#customChannels.",
+                    "type": "string",
+                    "default": "adsensehost#customChannels"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token used to page through custom channels. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
+                    "type": "string"
+                },
+                {
+                    "name": "etag",
+                    "desc": "ETag of this response for caching purposes.",
+                    "type": "string"
+                },
+                {
+                    "name": "items",
+                    "desc": "The custom channels returned in this list response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "CustomChannel"
+                }
+            ]
+        },
+        {
+            "name": "UrlChannels",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token used to page through URL channels. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
+                    "type": "string"
+                },
+                {
+                    "name": "etag",
+                    "desc": "ETag of this response for caching purposes.",
+                    "type": "string"
+                },
+                {
+                    "name": "items",
+                    "desc": "The URL channels returned in this list response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "UrlChannel"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adsensehost#urlChannels.",
+                    "type": "string",
+                    "default": "adsensehost#urlChannels"
+                }
+            ]
+        },
+        {
+            "name": "AdStyle",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "corners",
+                    "desc": "The style of the corners in the ad (deprecated: never populated, ignored).",
+                    "type": "string"
+                },
+                {
+                    "name": "font",
+                    "desc": "The font which is included in the style.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "family",
+                            "desc": "The family of the font. Possible values are: ACCOUNT_DEFAULT_FAMILY, ADSENSE_DEFAULT_FAMILY, ARIAL, TIMES and VERDANA.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "size",
+                            "desc": "The size of the font. Possible values are: ACCOUNT_DEFAULT_SIZE, ADSENSE_DEFAULT_SIZE, SMALL, MEDIUM and LARGE.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind this is, in this case adsensehost#adStyle.",
+                    "type": "string",
+                    "default": "adsensehost#adStyle"
+                },
+                {
+                    "name": "colors",
+                    "desc": "The colors included in the style. These are represented as six hexadecimal characters, similar to HTML color codes, but without the leading hash.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "text",
+                            "desc": "The color of the ad text.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "title",
+                            "desc": "The color of the ad title.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "url",
+                            "desc": "The color of the ad url.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "background",
+                            "desc": "The color of the ad background.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "border",
+                            "desc": "The color of the ad border.",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AdUnits",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "etag",
+                    "desc": "ETag of this response for caching purposes.",
+                    "type": "string"
+                },
+                {
+                    "name": "items",
+                    "desc": "The ad units returned in this list response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "AdUnit"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adsensehost#adUnits.",
+                    "type": "string",
+                    "default": "adsensehost#adUnits"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token used to page through ad units. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "CustomChannel",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "code",
+                    "desc": "Code of this custom channel, not necessarily unique across ad clients.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "Unique identifier of this custom channel. This should be considered an opaque identifier; it is not safe to rely on it being in any particular format.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is, in this case adsensehost#customChannel.",
+                    "type": "string",
+                    "default": "adsensehost#customChannel"
+                },
+                {
+                    "name": "name",
+                    "desc": "Name of this custom channel.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Accounts",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "etag",
+                    "desc": "ETag of this response for caching purposes.",
+                    "type": "string"
+                },
+                {
+                    "name": "items",
+                    "desc": "The accounts returned in this list response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Account"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adsensehost#accounts.",
+                    "type": "string",
+                    "default": "adsensehost#accounts"
+                }
+            ]
+        },
+        {
+            "name": "AdClients",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "etag",
+                    "desc": "ETag of this response for caching purposes.",
+                    "type": "string"
+                },
+                {
+                    "name": "items",
+                    "desc": "The ad clients returned in this list response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "AdClient"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adsensehost#adClients.",
+                    "type": "string",
+                    "default": "adsensehost#adClients"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token used to page through ad clients. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "AdCode",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "adCode",
+                    "desc": "The ad code snippet.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind this is, in this case adsensehost#adCode.",
+                    "type": "string",
+                    "default": "adsensehost#adCode"
+                }
+            ]
+        },
+        {
+            "name": "AdUnit",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "contentAdsSettings",
+                    "desc": "Settings specific to content ads (AFC) and highend mobile content ads (AFMC - deprecated).",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "type",
+                            "desc": "Type of this ad unit. Possible values are TEXT, TEXT_IMAGE, IMAGE and LINK.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "backupOption",
+                            "desc": "The backup option to be used in instances where no ad is available.",
+                            "type": "object",
+                            "fields": [
+                                {
+                                    "name": "color",
+                                    "desc": "Color to use when type is set to COLOR. These are represented as six hexadecimal characters, similar to HTML color codes, but without the leading hash.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "type",
+                                    "desc": "Type of the backup option. Possible values are BLANK, COLOR and URL.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "url",
+                                    "desc": "URL to use when type is set to URL.",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "size",
+                            "desc": "Size of this ad unit. Size values are in the form SIZE_{width}_{height}.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "customStyle",
+                    "desc": "Custom style information specific to this ad unit.",
+                    "type": "ref",
+                    "refType": "AdStyle"
+                },
+                {
+                    "name": "id",
+                    "desc": "Unique identifier of this ad unit. This should be considered an opaque identifier; it is not safe to rely on it being in any particular format.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is, in this case adsensehost#adUnit.",
+                    "type": "string",
+                    "default": "adsensehost#adUnit"
+                },
+                {
+                    "name": "mobileContentAdsSettings",
+                    "desc": "Settings specific to WAP mobile content ads (AFMC - deprecated).",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "markupLanguage",
+                            "desc": "The markup language to use for this ad unit.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "scriptingLanguage",
+                            "desc": "The scripting language to use for this ad unit.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "size",
+                            "desc": "Size of this ad unit.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "type",
+                            "desc": "Type of this ad unit.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "name",
+                    "desc": "Name of this ad unit.",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "desc": "Status of this ad unit. Possible values are:\nNEW: Indicates that the ad unit was created within the last seven days and does not yet have any activity associated with it.\n\nACTIVE: Indicates that there has been activity on this ad unit in the last seven days.\n\nINACTIVE: Indicates that there has been no activity on this ad unit in the last seven days.",
+                    "type": "string"
+                },
+                {
+                    "name": "code",
+                    "desc": "Identity code of this ad unit, not necessarily unique across ad clients.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "AssociationSession",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "Unique identifier of this association session.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is, in this case adsensehost#associationSession.",
+                    "type": "string",
+                    "default": "adsensehost#associationSession"
+                },
+                {
+                    "name": "productCodes",
+                    "desc": "The products to associate with the user. Options: AFC, AFG, AFV, AFS (deprecated), AFMC (deprecated)",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "desc": "Status of the completed association, available once the association callback token has been verified. One of ACCEPTED, REJECTED, or ERROR.",
+                    "type": "string"
+                },
+                {
+                    "name": "websiteUrl",
+                    "desc": "The URL of the user's hosted website.",
+                    "type": "string"
+                },
+                {
+                    "name": "accountId",
+                    "desc": "Hosted account id of the associated publisher after association. Present if status is ACCEPTED.",
+                    "type": "string"
+                },
+                {
+                    "name": "redirectUrl",
+                    "desc": "Redirect URL of this association session. Used to redirect users into the AdSense association flow.",
+                    "type": "string"
+                },
+                {
+                    "name": "userLocale",
+                    "desc": "The preferred locale of the user themselves when going through the AdSense association flow.",
+                    "type": "string"
+                },
+                {
+                    "name": "websiteLocale",
+                    "desc": "The locale of the user's hosted website.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Report",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "totals",
+                    "desc": "The totals of the report. This is the same length as any other row in the report; cells corresponding to dimension columns are empty.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "warnings",
+                    "desc": "Any warnings associated with generation of the report.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "averages",
+                    "desc": "The averages of the report. This is the same length as any other row in the report; cells corresponding to dimension columns are empty.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "headers",
+                    "desc": "The header information of the columns requested in the report. This is a list of headers; one for each dimension in the request, followed by one for each metric in the request.",
+                    "collection": "array",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "currency",
+                            "desc": "The currency of this column. Only present if the header type is METRIC_CURRENCY.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "name",
+                            "desc": "The name of the header.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "type",
+                            "desc": "The type of the header; one of DIMENSION, METRIC_TALLY, METRIC_RATIO, or METRIC_CURRENCY.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind this is, in this case adsensehost#report.",
+                    "type": "string",
+                    "default": "adsensehost#report"
+                },
+                {
+                    "name": "rows",
+                    "desc": "The output rows of the report. Each row is a list of cells; one for each dimension in the request, followed by one for each metric in the request. The dimension cells contain strings, and the metric cells contain numbers.",
+                    "collection": "array",
+                    "collectionItem": {
+                        "collection": "array",
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "totalMatchedRows",
+                    "desc": "The total number of rows matched by the report request. Fewer rows may be returned in the response due to being limited by the row count requested or the report row limit.",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "UrlChannel",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "Unique identifier of this URL channel. This should be considered an opaque identifier; it is not safe to rely on it being in any particular format.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is, in this case adsensehost#urlChannel.",
+                    "type": "string",
+                    "default": "adsensehost#urlChannel"
+                },
+                {
+                    "name": "urlPattern",
+                    "desc": "URL Pattern of this URL channel. Does not include \"http://\" or \"https://\". Example: www.example.com/home",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "urlchannels",
+            "methods": [
+                {
+                    "name": "list",
+                    "desc": "List all host URL channels in the host AdSense account.",
+                    "path": "adclients/{adClientId}/urlchannels",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client for which to list URL channels.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "maxResults",
+                            "desc": "The maximum number of URL channels to include in the response, used for paging.",
+                            "type": "uint32",
+                            "min": "0",
+                            "max": "10000"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "A continuation token, used to page through URL channels. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "UrlChannels"
+                },
+                {
+                    "name": "delete",
+                    "desc": "Delete a URL channel from the host AdSense account.",
+                    "path": "adclients/{adClientId}/urlchannels/{urlChannelId}",
+                    "httpMethod": "DELETE",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client from which to delete the URL channel.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "urlChannelId",
+                            "desc": "URL channel to delete.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "UrlChannel"
+                },
+                {
+                    "name": "insert",
+                    "desc": "Add a new URL channel to the host AdSense account.",
+                    "path": "adclients/{adClientId}/urlchannels",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client to which the new URL channel will be added.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "UrlChannel",
+                    "response": "UrlChannel"
+                }
+            ]
+        },
+        {
+            "name": "accounts",
+            "methods": [
+                {
+                    "name": "get",
+                    "desc": "Get information about the selected associated AdSense account.",
+                    "path": "accounts/{accountId}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "accountId",
+                            "desc": "Account to get information about.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "Account"
+                },
+                {
+                    "name": "list",
+                    "desc": "List hosted accounts associated with this AdSense account by ad client id.",
+                    "path": "accounts",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "requiredQueryParams": [
+                        {
+                            "name": "filterAdClientId",
+                            "desc": "Ad clients to list accounts for.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "Accounts"
+                }
+            ],
+            "resources": [
+                {
+                    "name": "reports",
+                    "methods": [
+                        {
+                            "name": "generate",
+                            "desc": "Generate an AdSense report based on the report request sent in the query parameters. Returns the result as JSON; to retrieve output in CSV format specify \"alt=csv\" as a query parameter.",
+                            "path": "accounts/{accountId}/reports",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adsensehost"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Hosted account upon which to report.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "requiredQueryParams": [
+                                {
+                                    "name": "startDate",
+                                    "desc": "Start of the date range to report on in \"YYYY-MM-DD\" format, inclusive.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "\\d{4}-\\d{2}-\\d{2}|(today|startOfMonth|startOfYear)(([\\-\\+]\\d+[dwmy]){0,3}?)"
+                                },
+                                {
+                                    "name": "endDate",
+                                    "desc": "End of the date range to report on in \"YYYY-MM-DD\" format, inclusive.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "\\d{4}-\\d{2}-\\d{2}|(today|startOfMonth|startOfYear)(([\\-\\+]\\d+[dwmy]){0,3}?)"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "metric",
+                                    "desc": "Numeric columns to include in the report.",
+                                    "type": "string",
+                                    "pattern": "[a-zA-Z_]+"
+                                },
+                                {
+                                    "name": "sort",
+                                    "desc": "The name of a dimension or metric to sort the resulting report on, optionally prefixed with \"+\" to sort ascending or \"-\" to sort descending. If no prefix is specified, the column is sorted ascending.",
+                                    "type": "string",
+                                    "pattern": "(\\+|-)?[a-zA-Z_]+"
+                                },
+                                {
+                                    "name": "startIndex",
+                                    "desc": "Index of the first row of report data to return.",
+                                    "type": "uint32",
+                                    "min": "0",
+                                    "max": "5000"
+                                },
+                                {
+                                    "name": "filter",
+                                    "desc": "Filters to be run on the report.",
+                                    "type": "string",
+                                    "pattern": "[a-zA-Z_]+(==|=@).+"
+                                },
+                                {
+                                    "name": "locale",
+                                    "desc": "Optional locale to use for translating report output to a local language. Defaults to \"en_US\" if not specified.",
+                                    "type": "string",
+                                    "pattern": "[a-zA-Z_]+"
+                                },
+                                {
+                                    "name": "maxResults",
+                                    "desc": "The maximum number of rows of report data to return.",
+                                    "type": "uint32",
+                                    "min": "0",
+                                    "max": "50000"
+                                },
+                                {
+                                    "name": "dimension",
+                                    "desc": "Dimensions to base the report on.",
+                                    "type": "string",
+                                    "pattern": "[a-zA-Z_]+"
+                                }
+                            ],
+                            "response": "Report"
+                        }
+                    ]
+                },
+                {
+                    "name": "adclients",
+                    "methods": [
+                        {
+                            "name": "get",
+                            "desc": "Get information about one of the ad clients in the specified publisher's AdSense account.",
+                            "path": "accounts/{accountId}/adclients/{adClientId}",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adsensehost"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account which contains the ad client.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "adClientId",
+                                    "desc": "Ad client to get.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "AdClient"
+                        },
+                        {
+                            "name": "list",
+                            "desc": "List all hosted ad clients in the specified hosted account.",
+                            "path": "accounts/{accountId}/adclients",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adsensehost"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account for which to list ad clients.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "pageToken",
+                                    "desc": "A continuation token, used to page through ad clients. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "maxResults",
+                                    "desc": "The maximum number of ad clients to include in the response, used for paging.",
+                                    "type": "uint32",
+                                    "min": "0",
+                                    "max": "10000"
+                                }
+                            ],
+                            "response": "AdClients"
+                        }
+                    ]
+                },
+                {
+                    "name": "adunits",
+                    "methods": [
+                        {
+                            "name": "list",
+                            "desc": "List all ad units in the specified publisher's AdSense account.",
+                            "path": "accounts/{accountId}/adclients/{adClientId}/adunits",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adsensehost"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account which contains the ad client.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "adClientId",
+                                    "desc": "Ad client for which to list ad units.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "includeInactive",
+                                    "desc": "Whether to include inactive ad units. Default: true.",
+                                    "type": "bool"
+                                },
+                                {
+                                    "name": "maxResults",
+                                    "desc": "The maximum number of ad units to include in the response, used for paging.",
+                                    "type": "uint32",
+                                    "min": "0",
+                                    "max": "10000"
+                                },
+                                {
+                                    "name": "pageToken",
+                                    "desc": "A continuation token, used to page through ad units. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "AdUnits"
+                        },
+                        {
+                            "name": "patch",
+                            "desc": "Update the supplied ad unit in the specified publisher AdSense account. This method supports patch semantics.",
+                            "path": "accounts/{accountId}/adclients/{adClientId}/adunits",
+                            "httpMethod": "PATCH",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adsensehost"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account which contains the ad client.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "adClientId",
+                                    "desc": "Ad client which contains the ad unit.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "requiredQueryParams": [
+                                {
+                                    "name": "adUnitId",
+                                    "desc": "Ad unit to get.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "request": "AdUnit",
+                            "response": "AdUnit"
+                        },
+                        {
+                            "name": "update",
+                            "desc": "Update the supplied ad unit in the specified publisher AdSense account.",
+                            "path": "accounts/{accountId}/adclients/{adClientId}/adunits",
+                            "httpMethod": "PUT",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adsensehost"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account which contains the ad client.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "adClientId",
+                                    "desc": "Ad client which contains the ad unit.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "request": "AdUnit",
+                            "response": "AdUnit"
+                        },
+                        {
+                            "name": "delete",
+                            "desc": "Delete the specified ad unit from the specified publisher AdSense account.",
+                            "path": "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}",
+                            "httpMethod": "DELETE",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adsensehost"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account which contains the ad unit.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "adClientId",
+                                    "desc": "Ad client for which to get ad unit.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "adUnitId",
+                                    "desc": "Ad unit to delete.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "AdUnit"
+                        },
+                        {
+                            "name": "get",
+                            "desc": "Get the specified host ad unit in this AdSense account.",
+                            "path": "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adsensehost"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account which contains the ad unit.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "adClientId",
+                                    "desc": "Ad client for which to get ad unit.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "adUnitId",
+                                    "desc": "Ad unit to get.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "AdUnit"
+                        },
+                        {
+                            "name": "getAdCode",
+                            "desc": "Get ad code for the specified ad unit, attaching the specified host custom channels.",
+                            "path": "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}/adcode",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adsensehost"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account which contains the ad client.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "adClientId",
+                                    "desc": "Ad client with contains the ad unit.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "adUnitId",
+                                    "desc": "Ad unit to get the code for.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "hostCustomChannelId",
+                                    "desc": "Host custom channel to attach to the ad code.",
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "AdCode"
+                        },
+                        {
+                            "name": "insert",
+                            "desc": "Insert the supplied ad unit into the specified publisher AdSense account.",
+                            "path": "accounts/{accountId}/adclients/{adClientId}/adunits",
+                            "httpMethod": "POST",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adsensehost"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account which will contain the ad unit.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "adClientId",
+                                    "desc": "Ad client into which to insert the ad unit.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "request": "AdUnit",
+                            "response": "AdUnit"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "adclients",
+            "methods": [
+                {
+                    "name": "get",
+                    "desc": "Get information about one of the ad clients in the Host AdSense account.",
+                    "path": "adclients/{adClientId}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client to get.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "AdClient"
+                },
+                {
+                    "name": "list",
+                    "desc": "List all host ad clients in this AdSense account.",
+                    "path": "adclients",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "maxResults",
+                            "desc": "The maximum number of ad clients to include in the response, used for paging.",
+                            "type": "uint32",
+                            "min": "0",
+                            "max": "10000"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "A continuation token, used to page through ad clients. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "AdClients"
+                }
+            ]
+        },
+        {
+            "name": "associationsessions",
+            "methods": [
+                {
+                    "name": "verify",
+                    "desc": "Verify an association session after the association callback returns from AdSense signup.",
+                    "path": "associationsessions/verify",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "requiredQueryParams": [
+                        {
+                            "name": "token",
+                            "desc": "The token returned to the association callback URL.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "AssociationSession"
+                },
+                {
+                    "name": "start",
+                    "desc": "Create an association session for initiating an association with an AdSense user.",
+                    "path": "associationsessions/start",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "requiredQueryParams": [
+                        {
+                            "name": "productCode",
+                            "desc": "Products to associate with the user.",
+                            "required": true,
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "AFC",
+                                    "desc": "AdSense For Content"
+                                },
+                                {
+                                    "name": "AFG",
+                                    "desc": "AdSense For Games"
+                                },
+                                {
+                                    "name": "AFMC",
+                                    "desc": "AdSense For Mobile Content - deprecated"
+                                },
+                                {
+                                    "name": "AFS",
+                                    "desc": "AdSense For Search - deprecated"
+                                },
+                                {
+                                    "name": "AFV",
+                                    "desc": "AdSense For Video"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "websiteUrl",
+                            "desc": "The URL of the user's hosted website.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "userLocale",
+                            "desc": "The preferred locale of the user.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "websiteLocale",
+                            "desc": "The locale of the user's hosted website.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "AssociationSession"
+                }
+            ]
+        },
+        {
+            "name": "customchannels",
+            "methods": [
+                {
+                    "name": "get",
+                    "desc": "Get a specific custom channel from the host AdSense account.",
+                    "path": "adclients/{adClientId}/customchannels/{customChannelId}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client from which to get the custom channel.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "customChannelId",
+                            "desc": "Custom channel to get.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "CustomChannel"
+                },
+                {
+                    "name": "insert",
+                    "desc": "Add a new custom channel to the host AdSense account.",
+                    "path": "adclients/{adClientId}/customchannels",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client to which the new custom channel will be added.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "CustomChannel",
+                    "response": "CustomChannel"
+                },
+                {
+                    "name": "list",
+                    "desc": "List all host custom channels in this AdSense account.",
+                    "path": "adclients/{adClientId}/customchannels",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client for which to list custom channels.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "maxResults",
+                            "desc": "The maximum number of custom channels to include in the response, used for paging.",
+                            "type": "uint32",
+                            "min": "0",
+                            "max": "10000"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "A continuation token, used to page through custom channels. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "CustomChannels"
+                },
+                {
+                    "name": "patch",
+                    "desc": "Update a custom channel in the host AdSense account. This method supports patch semantics.",
+                    "path": "adclients/{adClientId}/customchannels",
+                    "httpMethod": "PATCH",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client in which the custom channel will be updated.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "requiredQueryParams": [
+                        {
+                            "name": "customChannelId",
+                            "desc": "Custom channel to get.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "CustomChannel",
+                    "response": "CustomChannel"
+                },
+                {
+                    "name": "update",
+                    "desc": "Update a custom channel in the host AdSense account.",
+                    "path": "adclients/{adClientId}/customchannels",
+                    "httpMethod": "PUT",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client in which the custom channel will be updated.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "CustomChannel",
+                    "response": "CustomChannel"
+                },
+                {
+                    "name": "delete",
+                    "desc": "Delete a specific custom channel from the host AdSense account.",
+                    "path": "adclients/{adClientId}/customchannels/{customChannelId}",
+                    "httpMethod": "DELETE",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client from which to delete the custom channel.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "customChannelId",
+                            "desc": "Custom channel to delete.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "CustomChannel"
+                }
+            ]
+        },
+        {
+            "name": "reports",
+            "methods": [
+                {
+                    "name": "generate",
+                    "desc": "Generate an AdSense report based on the report request sent in the query parameters. Returns the result as JSON; to retrieve output in CSV format specify \"alt=csv\" as a query parameter.",
+                    "path": "reports",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adsensehost"
+                    ],
+                    "requiredQueryParams": [
+                        {
+                            "name": "startDate",
+                            "desc": "Start of the date range to report on in \"YYYY-MM-DD\" format, inclusive.",
+                            "required": true,
+                            "type": "string",
+                            "pattern": "\\d{4}-\\d{2}-\\d{2}|(today|startOfMonth|startOfYear)(([\\-\\+]\\d+[dwmy]){0,3}?)"
+                        },
+                        {
+                            "name": "endDate",
+                            "desc": "End of the date range to report on in \"YYYY-MM-DD\" format, inclusive.",
+                            "required": true,
+                            "type": "string",
+                            "pattern": "\\d{4}-\\d{2}-\\d{2}|(today|startOfMonth|startOfYear)(([\\-\\+]\\d+[dwmy]){0,3}?)"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "sort",
+                            "desc": "The name of a dimension or metric to sort the resulting report on, optionally prefixed with \"+\" to sort ascending or \"-\" to sort descending. If no prefix is specified, the column is sorted ascending.",
+                            "type": "string",
+                            "pattern": "(\\+|-)?[a-zA-Z_]+"
+                        },
+                        {
+                            "name": "dimension",
+                            "desc": "Dimensions to base the report on.",
+                            "type": "string",
+                            "pattern": "[a-zA-Z_]+"
+                        },
+                        {
+                            "name": "filter",
+                            "desc": "Filters to be run on the report.",
+                            "type": "string",
+                            "pattern": "[a-zA-Z_]+(==|=@).+"
+                        },
+                        {
+                            "name": "metric",
+                            "desc": "Numeric columns to include in the report.",
+                            "type": "string",
+                            "pattern": "[a-zA-Z_]+"
+                        },
+                        {
+                            "name": "locale",
+                            "desc": "Optional locale to use for translating report output to a local language. Defaults to \"en_US\" if not specified.",
+                            "type": "string",
+                            "pattern": "[a-zA-Z_]+"
+                        },
+                        {
+                            "name": "maxResults",
+                            "desc": "The maximum number of rows of report data to return.",
+                            "type": "uint32",
+                            "min": "0",
+                            "max": "50000"
+                        },
+                        {
+                            "name": "startIndex",
+                            "desc": "Index of the first row of report data to return.",
+                            "type": "uint32",
+                            "min": "0",
+                            "max": "5000"
+                        }
+                    ],
+                    "response": "Report"
+                }
+            ]
+        }
+    ]
+}

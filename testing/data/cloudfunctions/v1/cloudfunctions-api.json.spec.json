@@ -1,0 +1,215 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "",
+    "discoveryVersion": "v1",
+    "id": "cloudfunctions:v1",
+    "name": "cloudfunctions",
+    "version": "v1",
+    "title": "Google Cloud Functions API",
+    "description": "API for managing lightweight user-provided functions executed in response to events.",
+    "documentationLink": "https://cloud.google.com/functions",
+    "protocol": "rest",
+    "rootUrl": "https://cloudfunctions.googleapis.com/",
+    "auth": {
+        "oauth2": [
+            "https://www.googleapis.com/auth/cloud-platform"
+        ]
+    },
+    "parameters": [
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                },
+                {
+                    "name": "media",
+                    "desc": "Media download with context-dependent Content-Type"
+                },
+                {
+                    "name": "proto",
+                    "desc": "Responses with Content-Type of application/x-protobuf"
+                }
+            ]
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "uploadType",
+            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "$.xgafv",
+            "desc": "V1 error format.",
+            "type": "string",
+            "enum": [
+                {
+                    "name": "1",
+                    "desc": "v1 error format"
+                },
+                {
+                    "name": "2",
+                    "desc": "v2 error format"
+                }
+            ]
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "OperationMetadataV1Beta2",
+            "desc": "Metadata describing an Operation",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "target",
+                    "desc": "Target of the operation - for example\nprojects/project-1/locations/region-1/functions/function-1",
+                    "type": "string"
+                },
+                {
+                    "name": "request",
+                    "desc": "The original request that started the operation.",
+                    "collection": "map",
+                    "type": "any"
+                },
+                {
+                    "name": "type",
+                    "desc": "Type of operation.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "OPERATION_UNSPECIFIED",
+                            "desc": "Unknown operation type."
+                        },
+                        {
+                            "name": "CREATE_FUNCTION",
+                            "desc": "Triggered by CreateFunction call"
+                        },
+                        {
+                            "name": "UPDATE_FUNCTION",
+                            "desc": "Triggered by UpdateFunction call"
+                        },
+                        {
+                            "name": "DELETE_FUNCTION",
+                            "desc": "Triggered by DeleteFunction call."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Location",
+            "desc": "A resource that represents Google Cloud Platform location.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "labels",
+                    "desc": "Cross-service attributes for the location. For example\n\n    {\"cloud.googleapis.com/region\": \"us-east1\"}",
+                    "collection": "map",
+                    "type": "string"
+                },
+                {
+                    "name": "name",
+                    "desc": "Resource name for the location, which may vary between implementations.\nFor example: `\"projects/example-project/locations/us-east1\"`",
+                    "type": "string"
+                },
+                {
+                    "name": "locationId",
+                    "desc": "The canonical id for this location. For example: `\"us-east1\"`.",
+                    "type": "string"
+                },
+                {
+                    "name": "metadata",
+                    "desc": "Service-specific metadata. For example the available capacity at the given\nlocation.",
+                    "collection": "map",
+                    "type": "any"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "projects",
+            "resources": [
+                {
+                    "name": "locations",
+                    "methods": [
+                        {
+                            "name": "get",
+                            "desc": "Get information about a location.",
+                            "path": "v1/{+name}",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/cloud-platform"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "name",
+                                    "desc": "Resource name for the location.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^projects/[^/]+/locations/[^/]+$"
+                                }
+                            ],
+                            "response": "Location"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

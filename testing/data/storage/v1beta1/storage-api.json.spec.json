@@ -1,0 +1,1274 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "\"ye6orv2F-1npMW3u9suM3a7C5Bo/bTGfIvC19RkllzOnE1QWbh07cyk\"",
+    "discoveryVersion": "v1",
+    "id": "storage:v1beta1",
+    "name": "storage",
+    "version": "v1beta1",
+    "title": "Cloud Storage JSON API",
+    "description": "Lets you store and retrieve potentially-large, immutable data objects.",
+    "documentationLink": "https://developers.google.com/storage/docs/json_api/",
+    "labels": [
+        "labs"
+    ],
+    "protocol": "rest",
+    "rootUrl": "https://www.googleapis.com/",
+    "auth": {
+        "oauth2": [
+            "https://www.googleapis.com/auth/devstorage.read_write",
+            "https://www.googleapis.com/auth/devstorage.full_control",
+            "https://www.googleapis.com/auth/devstorage.read_only"
+        ]
+    },
+    "parameters": [
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "Bucket",
+            "desc": "A bucket.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "The kind of item this is. For buckets, this is always storage#bucket.",
+                    "type": "string",
+                    "default": "storage#bucket"
+                },
+                {
+                    "name": "owner",
+                    "desc": "The owner of the bucket. This will always be the project team's owner group.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "entity",
+                            "desc": "The entity, in the form group-groupId.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "entityId",
+                            "desc": "The ID for the entity.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "timeCreated",
+                    "desc": "Creation time of the bucket in RFC 3339 format.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "acl",
+                    "desc": "Access controls on the bucket.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "BucketAccessControl"
+                },
+                {
+                    "name": "defaultObjectAcl",
+                    "desc": "Default access controls to apply to new objects when no ACL is provided.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ObjectAccessControl"
+                },
+                {
+                    "name": "id",
+                    "desc": "The name of the bucket.",
+                    "type": "string"
+                },
+                {
+                    "name": "location",
+                    "desc": "The location of the bucket. Object data for objects in the bucket resides in physical storage in this location. Can be US or EU. Defaults to US.",
+                    "type": "string"
+                },
+                {
+                    "name": "projectId",
+                    "desc": "The project the bucket belongs to.",
+                    "type": "uint64"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "The URI of this bucket.",
+                    "type": "string"
+                },
+                {
+                    "name": "website",
+                    "desc": "The bucket's website configuration.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "mainPageSuffix",
+                            "desc": "Behaves as the bucket's directory index where missing objects are treated as potential directories.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "notFoundPage",
+                            "desc": "The custom object to return when a requested resource is not found.",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "BucketAccessControl",
+            "desc": "An access-control entry.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "domain",
+                    "desc": "The domain associated with the entity, if any.",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "desc": "The email address associated with the entity, if any.",
+                    "type": "string"
+                },
+                {
+                    "name": "entityId",
+                    "desc": "The ID for the entity, if any.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "The ID of the access-control entry.",
+                    "type": "string"
+                },
+                {
+                    "name": "bucket",
+                    "desc": "The name of the bucket.",
+                    "type": "string"
+                },
+                {
+                    "name": "entity",
+                    "desc": "The entity holding the permission, in one of the following forms: \n- user-userId \n- user-email \n- group-groupId \n- group-email \n- domain-domain \n- allUsers \n- allAuthenticatedUsers Examples: \n- The user liz@example.com would be user-liz@example.com. \n- The group example@googlegroups.com would be group-example@googlegroups.com. \n- To refer to all members of the Google Apps for Business domain example.com, the entity would be domain-example.com.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of item this is. For bucket access control entries, this is always storage#bucketAccessControl.",
+                    "type": "string",
+                    "default": "storage#bucketAccessControl"
+                },
+                {
+                    "name": "role",
+                    "desc": "The access permission for the entity. Can be READER, WRITER, or OWNER.",
+                    "type": "string"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "The link to this access-control entry.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "BucketAccessControls",
+            "desc": "An access-control list.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "items",
+                    "desc": "The list of items.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "BucketAccessControl"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of item this is. For lists of bucket access control entries, this is always storage#bucketAccessControls.",
+                    "type": "string",
+                    "default": "storage#bucketAccessControls"
+                }
+            ]
+        },
+        {
+            "name": "Buckets",
+            "desc": "A list of buckets.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "items",
+                    "desc": "The list of items.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Bucket"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of item this is. For lists of buckets, this is always storage#buckets.",
+                    "type": "string",
+                    "default": "storage#buckets"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "The continuation token, used to page through large result sets. Provide this value in a subsequent request to return the next page of results.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Object",
+            "desc": "An object.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "acl",
+                    "desc": "Access controls on the object.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ObjectAccessControl"
+                },
+                {
+                    "name": "bucket",
+                    "desc": "The bucket containing this object.",
+                    "type": "string"
+                },
+                {
+                    "name": "cacheControl",
+                    "desc": "Cache-Control directive for the object data.",
+                    "type": "string"
+                },
+                {
+                    "name": "contentLanguage",
+                    "desc": "Content-Language of the object data.",
+                    "type": "string"
+                },
+                {
+                    "name": "name",
+                    "desc": "The name of this object. Required if not specified by URL parameter.",
+                    "type": "string"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "The link to this object.",
+                    "type": "string"
+                },
+                {
+                    "name": "owner",
+                    "desc": "The owner of the object. This will always be the uploader of the object.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "entity",
+                            "desc": "The entity, in the form user-userId.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "entityId",
+                            "desc": "The ID for the entity.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "contentDisposition",
+                    "desc": "Content-Disposition of the object data.",
+                    "type": "string"
+                },
+                {
+                    "name": "contentEncoding",
+                    "desc": "Content-Encoding of the object data.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "The ID of the object.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of item this is. For objects, this is always storage#object.",
+                    "type": "string",
+                    "default": "storage#object"
+                },
+                {
+                    "name": "media",
+                    "desc": "Object media data. Provided on your behalf when uploading raw media or multipart/related with an auxiliary media part.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "algorithm",
+                            "desc": "Hash algorithm used. Currently only MD5 is supported. Required if a hash is provided.",
+                            "type": "string",
+                            "default": "MD5"
+                        },
+                        {
+                            "name": "contentType",
+                            "desc": "Content-Type of the object data.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "data",
+                            "desc": "URL-safe Base64-encoded data. This property can be used to insert objects under 64KB in size, and will only be returned in response to the get method for objects so created. When this resource is returned in response to the list method, this property is omitted.",
+                            "type": "byte"
+                        },
+                        {
+                            "name": "hash",
+                            "desc": "Hash of the data. Required if a hash algorithm is provided.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "length",
+                            "desc": "Content-Length of the data in bytes.",
+                            "type": "uint64"
+                        },
+                        {
+                            "name": "link",
+                            "desc": "Media download link.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "timeCreated",
+                            "desc": "Creation time of the data in RFC 3339 format.",
+                            "type": "datetime"
+                        }
+                    ]
+                },
+                {
+                    "name": "metadata",
+                    "desc": "User-provided metadata, in key/value pairs.",
+                    "collection": "map",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "ObjectAccessControl",
+            "desc": "An access-control entry.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "email",
+                    "desc": "The email address associated with the entity, if any.",
+                    "type": "string"
+                },
+                {
+                    "name": "entity",
+                    "desc": "The entity holding the permission, in one of the following forms: \n- user-userId \n- user-email \n- group-groupId \n- group-email \n- domain-domain \n- allUsers \n- allAuthenticatedUsers Examples: \n- The user liz@example.com would be user-liz@example.com. \n- The group example@googlegroups.com would be group-example@googlegroups.com. \n- To refer to all members of the Google Apps for Business domain example.com, the entity would be domain-example.com.",
+                    "type": "string"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "The link to this access-control entry.",
+                    "type": "string"
+                },
+                {
+                    "name": "bucket",
+                    "desc": "The name of the bucket.",
+                    "type": "string"
+                },
+                {
+                    "name": "domain",
+                    "desc": "The domain associated with the entity, if any.",
+                    "type": "string"
+                },
+                {
+                    "name": "entityId",
+                    "desc": "The ID for the entity, if any.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "The ID of the access-control entry.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of item this is. For object access control entries, this is always storage#objectAccessControl.",
+                    "type": "string",
+                    "default": "storage#objectAccessControl"
+                },
+                {
+                    "name": "object",
+                    "desc": "The name of the object.",
+                    "type": "string"
+                },
+                {
+                    "name": "role",
+                    "desc": "The access permission for the entity. Can be READER or OWNER.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "ObjectAccessControls",
+            "desc": "An access-control list.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "The kind of item this is. For lists of object access control entries, this is always storage#objectAccessControls.",
+                    "type": "string",
+                    "default": "storage#objectAccessControls"
+                },
+                {
+                    "name": "items",
+                    "desc": "The list of items.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ObjectAccessControl"
+                }
+            ]
+        },
+        {
+            "name": "Objects",
+            "desc": "A list of objects.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "items",
+                    "desc": "The list of items.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Object"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of item this is. For lists of objects, this is always storage#objects.",
+                    "type": "string",
+                    "default": "storage#objects"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "The continuation token, used to page through large result sets. Provide this value in a subsequent request to return the next page of results.",
+                    "type": "string"
+                },
+                {
+                    "name": "prefixes",
+                    "desc": "The list of prefixes of objects matching-but-not-listed up to and including the requested delimiter.",
+                    "collection": "array",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "objectAccessControls",
+            "methods": [
+                {
+                    "name": "list",
+                    "desc": "Retrieves ACL entries on the specified object.",
+                    "path": "b/{bucket}/o/{object}/acl",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "object",
+                            "desc": "Name of the object.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "ObjectAccessControls"
+                },
+                {
+                    "name": "patch",
+                    "desc": "Updates an ACL entry on the specified object. This method supports patch semantics.",
+                    "path": "b/{bucket}/o/{object}/acl/{entity}",
+                    "httpMethod": "PATCH",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "object",
+                            "desc": "Name of the object.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "entity",
+                            "desc": "The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId, group-emailAddress, allUsers, or allAuthenticatedUsers.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "ObjectAccessControl",
+                    "response": "ObjectAccessControl"
+                },
+                {
+                    "name": "update",
+                    "desc": "Updates an ACL entry on the specified object.",
+                    "path": "b/{bucket}/o/{object}/acl/{entity}",
+                    "httpMethod": "PUT",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "object",
+                            "desc": "Name of the object.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "entity",
+                            "desc": "The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId, group-emailAddress, allUsers, or allAuthenticatedUsers.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "ObjectAccessControl",
+                    "response": "ObjectAccessControl"
+                },
+                {
+                    "name": "delete",
+                    "desc": "Deletes the ACL entry for the specified entity on the specified object.",
+                    "path": "b/{bucket}/o/{object}/acl/{entity}",
+                    "httpMethod": "DELETE",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "object",
+                            "desc": "Name of the object.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "entity",
+                            "desc": "The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId, group-emailAddress, allUsers, or allAuthenticatedUsers.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "get",
+                    "desc": "Returns the ACL entry for the specified entity on the specified object.",
+                    "path": "b/{bucket}/o/{object}/acl/{entity}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "object",
+                            "desc": "Name of the object.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "entity",
+                            "desc": "The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId, group-emailAddress, allUsers, or allAuthenticatedUsers.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "ObjectAccessControl"
+                },
+                {
+                    "name": "insert",
+                    "desc": "Creates a new ACL entry on the specified object.",
+                    "path": "b/{bucket}/o/{object}/acl",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "object",
+                            "desc": "Name of the object.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "ObjectAccessControl",
+                    "response": "ObjectAccessControl"
+                }
+            ]
+        },
+        {
+            "name": "objects",
+            "methods": [
+                {
+                    "name": "get",
+                    "desc": "Retrieves objects or their associated metadata.",
+                    "path": "b/{bucket}/o/{object}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_only",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of the bucket in which the object resides.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "object",
+                            "desc": "Name of the object.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projection",
+                            "desc": "Set of properties to return. Defaults to no_acl.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "full",
+                                    "desc": "Include all properties."
+                                },
+                                {
+                                    "name": "no_acl",
+                                    "desc": "Omit the acl property."
+                                }
+                            ]
+                        }
+                    ],
+                    "response": "Object"
+                },
+                {
+                    "name": "insert",
+                    "desc": "Stores new data blobs and associated metadata.",
+                    "path": "b/{bucket}/o",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of the bucket in which to store the new object. Overrides the provided object metadata's bucket value, if any.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projection",
+                            "desc": "Set of properties to return. Defaults to no_acl, unless the object resource specifies the acl property, when it defaults to full.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "full",
+                                    "desc": "Include all properties."
+                                },
+                                {
+                                    "name": "no_acl",
+                                    "desc": "Omit the acl property."
+                                }
+                            ]
+                        },
+                        {
+                            "name": "name",
+                            "desc": "Name of the object. Required when the object metadata is not otherwise provided. Overrides the object metadata's name value, if any.",
+                            "type": "string"
+                        }
+                    ],
+                    "request": "Object",
+                    "response": "Object"
+                },
+                {
+                    "name": "list",
+                    "desc": "Retrieves a list of objects matching the criteria.",
+                    "path": "b/{bucket}/o",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_only",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of the bucket in which to look for objects.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "prefix",
+                            "desc": "Filter results to objects whose names begin with this prefix.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "projection",
+                            "desc": "Set of properties to return. Defaults to no_acl.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "full",
+                                    "desc": "Include all properties."
+                                },
+                                {
+                                    "name": "no_acl",
+                                    "desc": "Omit the acl property."
+                                }
+                            ]
+                        },
+                        {
+                            "name": "delimiter",
+                            "desc": "Returns results in a directory-like mode. items will contain only objects whose names, aside from the prefix, do not contain delimiter. Objects whose names, aside from the prefix, contain delimiter will have their name, truncated after the delimiter, returned in prefixes. Duplicate prefixes are omitted.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "max-results",
+                            "desc": "Maximum number of items plus prefixes to return. As duplicate prefixes are omitted, fewer total results may be returned than requested.",
+                            "type": "uint32",
+                            "min": "0"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "A previously-returned page token representing part of the larger set of results to view.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "Objects"
+                },
+                {
+                    "name": "patch",
+                    "desc": "Updates a data blob's associated metadata. This method supports patch semantics.",
+                    "path": "b/{bucket}/o/{object}",
+                    "httpMethod": "PATCH",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of the bucket in which the object resides.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "object",
+                            "desc": "Name of the object.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projection",
+                            "desc": "Set of properties to return. Defaults to full.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "full",
+                                    "desc": "Include all properties."
+                                },
+                                {
+                                    "name": "no_acl",
+                                    "desc": "Omit the acl property."
+                                }
+                            ]
+                        }
+                    ],
+                    "request": "Object",
+                    "response": "Object"
+                },
+                {
+                    "name": "update",
+                    "desc": "Updates a data blob's associated metadata.",
+                    "path": "b/{bucket}/o/{object}",
+                    "httpMethod": "PUT",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of the bucket in which the object resides.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "object",
+                            "desc": "Name of the object.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projection",
+                            "desc": "Set of properties to return. Defaults to full.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "full",
+                                    "desc": "Include all properties."
+                                },
+                                {
+                                    "name": "no_acl",
+                                    "desc": "Omit the acl property."
+                                }
+                            ]
+                        }
+                    ],
+                    "request": "Object",
+                    "response": "Object"
+                },
+                {
+                    "name": "delete",
+                    "desc": "Deletes data blobs and associated metadata.",
+                    "path": "b/{bucket}/o/{object}",
+                    "httpMethod": "DELETE",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of the bucket in which the object resides.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "object",
+                            "desc": "Name of the object.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "bucketAccessControls",
+            "methods": [
+                {
+                    "name": "delete",
+                    "desc": "Deletes the ACL entry for the specified entity on the specified bucket.",
+                    "path": "b/{bucket}/acl/{entity}",
+                    "httpMethod": "DELETE",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "entity",
+                            "desc": "The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId, group-emailAddress, allUsers, or allAuthenticatedUsers.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "get",
+                    "desc": "Returns the ACL entry for the specified entity on the specified bucket.",
+                    "path": "b/{bucket}/acl/{entity}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "entity",
+                            "desc": "The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId, group-emailAddress, allUsers, or allAuthenticatedUsers.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "BucketAccessControl"
+                },
+                {
+                    "name": "insert",
+                    "desc": "Creates a new ACL entry on the specified bucket.",
+                    "path": "b/{bucket}/acl",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "BucketAccessControl",
+                    "response": "BucketAccessControl"
+                },
+                {
+                    "name": "list",
+                    "desc": "Retrieves ACL entries on the specified bucket.",
+                    "path": "b/{bucket}/acl",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "BucketAccessControls"
+                },
+                {
+                    "name": "patch",
+                    "desc": "Updates an ACL entry on the specified bucket. This method supports patch semantics.",
+                    "path": "b/{bucket}/acl/{entity}",
+                    "httpMethod": "PATCH",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "entity",
+                            "desc": "The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId, group-emailAddress, allUsers, or allAuthenticatedUsers.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "BucketAccessControl",
+                    "response": "BucketAccessControl"
+                },
+                {
+                    "name": "update",
+                    "desc": "Updates an ACL entry on the specified bucket.",
+                    "path": "b/{bucket}/acl/{entity}",
+                    "httpMethod": "PUT",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "entity",
+                            "desc": "The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId, group-emailAddress, allUsers, or allAuthenticatedUsers.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "BucketAccessControl",
+                    "response": "BucketAccessControl"
+                }
+            ]
+        },
+        {
+            "name": "buckets",
+            "methods": [
+                {
+                    "name": "get",
+                    "desc": "Returns metadata for the specified bucket.",
+                    "path": "b/{bucket}",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_only",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projection",
+                            "desc": "Set of properties to return. Defaults to no_acl.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "full",
+                                    "desc": "Include all properties."
+                                },
+                                {
+                                    "name": "no_acl",
+                                    "desc": "Omit acl and defaultObjectAcl properties."
+                                }
+                            ]
+                        }
+                    ],
+                    "response": "Bucket"
+                },
+                {
+                    "name": "insert",
+                    "desc": "Creates a new bucket.",
+                    "path": "b",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projection",
+                            "desc": "Set of properties to return. Defaults to no_acl, unless the bucket resource specifies acl or defaultObjectAcl properties, when it defaults to full.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "full",
+                                    "desc": "Include all properties."
+                                },
+                                {
+                                    "name": "no_acl",
+                                    "desc": "Omit acl and defaultObjectAcl properties."
+                                }
+                            ]
+                        }
+                    ],
+                    "request": "Bucket",
+                    "response": "Bucket"
+                },
+                {
+                    "name": "list",
+                    "desc": "Retrieves a list of buckets for a given project.",
+                    "path": "b",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_only",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "requiredQueryParams": [
+                        {
+                            "name": "projectId",
+                            "desc": "A valid API project identifier.",
+                            "required": true,
+                            "type": "uint64"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "max-results",
+                            "desc": "Maximum number of buckets to return.",
+                            "type": "uint32",
+                            "min": "0"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "A previously-returned page token representing part of the larger set of results to view.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "projection",
+                            "desc": "Set of properties to return. Defaults to no_acl.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "full",
+                                    "desc": "Include all properties."
+                                },
+                                {
+                                    "name": "no_acl",
+                                    "desc": "Omit acl and defaultObjectAcl properties."
+                                }
+                            ]
+                        }
+                    ],
+                    "response": "Buckets"
+                },
+                {
+                    "name": "patch",
+                    "desc": "Updates a bucket. This method supports patch semantics.",
+                    "path": "b/{bucket}",
+                    "httpMethod": "PATCH",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projection",
+                            "desc": "Set of properties to return. Defaults to full.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "full",
+                                    "desc": "Include all properties."
+                                },
+                                {
+                                    "name": "no_acl",
+                                    "desc": "Omit acl and defaultObjectAcl properties."
+                                }
+                            ]
+                        }
+                    ],
+                    "request": "Bucket",
+                    "response": "Bucket"
+                },
+                {
+                    "name": "update",
+                    "desc": "Updates a bucket.",
+                    "path": "b/{bucket}",
+                    "httpMethod": "PUT",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projection",
+                            "desc": "Set of properties to return. Defaults to full.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "full",
+                                    "desc": "Include all properties."
+                                },
+                                {
+                                    "name": "no_acl",
+                                    "desc": "Omit acl and defaultObjectAcl properties."
+                                }
+                            ]
+                        }
+                    ],
+                    "request": "Bucket",
+                    "response": "Bucket"
+                },
+                {
+                    "name": "delete",
+                    "desc": "Deletes an empty bucket.",
+                    "path": "b/{bucket}",
+                    "httpMethod": "DELETE",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_write"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "bucket",
+                            "desc": "Name of a bucket.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

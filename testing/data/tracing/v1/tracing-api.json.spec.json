@@ -1,0 +1,648 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "",
+    "discoveryVersion": "v1",
+    "id": "tracing:v1",
+    "name": "tracing",
+    "version": "v1",
+    "title": "Google Tracing API",
+    "description": "Send and retrieve trace data from Google Stackdriver Trace.\n",
+    "documentationLink": "https://cloud.google.com/trace",
+    "protocol": "rest",
+    "rootUrl": "https://tracing.googleapis.com/",
+    "auth": {
+        "oauth2": [
+            "https://www.googleapis.com/auth/trace.append",
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/trace.readonly"
+        ]
+    },
+    "parameters": [
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                },
+                {
+                    "name": "media",
+                    "desc": "Media download with context-dependent Content-Type"
+                },
+                {
+                    "name": "proto",
+                    "desc": "Responses with Content-Type of application/x-protobuf"
+                }
+            ]
+        },
+        {
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "uploadType",
+            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "$.xgafv",
+            "desc": "V1 error format.",
+            "type": "string",
+            "enum": [
+                {
+                    "name": "1",
+                    "desc": "v1 error format"
+                },
+                {
+                    "name": "2",
+                    "desc": "v2 error format"
+                }
+            ]
+        },
+        {
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "ListTracesResponse",
+            "desc": "The response message for the `ListTraces` method.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "traces",
+                    "desc": "List of trace records returned.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Trace"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "If defined, indicates that there are more traces that match the request\nand that this value should be passed to the next request to continue\nretrieving additional traces.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "StackTrace",
+            "desc": "StackTrace collected in a trace.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "stackTraceHashId",
+                    "desc": "The hash ID is used to conserve network bandwidth for duplicate\nstack traces within a single trace.\n\nOften multiple spans will have identical stack traces.\nThe first occurance of a stack trace should contain both the\n`stackFrame` content and a value in `stackTraceHashId`.\n\nSubsequent spans within the same request can refer\nto that stack trace by only setting `stackTraceHashId`.",
+                    "type": "uint64"
+                },
+                {
+                    "name": "stackFrame",
+                    "desc": "Stack frames of this stack trace.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "StackFrame"
+                }
+            ]
+        },
+        {
+            "name": "Span",
+            "desc": "A span represents a single operation within a trace. Spans can be nested\nto form a trace tree. Often, a trace contains a root span that\ndescribes the end-to-end latency and, optionally, one or more subspans for\nits sub-operations. (A trace could alternatively contain multiple root spans,\nor none at all.) Spans do not need to be contiguous. There may be gaps\nand/or overlaps between spans in a trace.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "links",
+                    "desc": "A collection of links, which are references from this span to another span\nin a different trace.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Link"
+                },
+                {
+                    "name": "attributes",
+                    "desc": "Properties of a span in key:value format. The maximum length for the\nkey is 128 characters. The value can be a string (up to 2000 characters),\nint, or boolean.\n\nSome common pair examples:\n\n    \"/instance_id\": \"my-instance\"\n    \"/zone\": \"us-central1-a\"\n    \"/grpc/peer_address\": \"ip:port\" (dns, etc.)\n    \"/grpc/deadline\": \"Duration\"\n    \"/http/user_agent\"\n    \"/http/request_bytes\": 300\n    \"/http/response_bytes\": 1200\n    \"/http/url\": google.com/apis\n    \"abc.com/myattribute\": true",
+                    "collection": "map",
+                    "type": "ref",
+                    "refType": "AttributeValue"
+                },
+                {
+                    "name": "hasRemoteParent",
+                    "desc": "True if this span has a remote parent (is an RPC server span).",
+                    "type": "bool"
+                },
+                {
+                    "name": "localEndTime",
+                    "desc": "End time of the span.\nOn the client side, this is the local machine clock time at which the span\nexecution was ended; on the server\nside, this is the time at which the server application handler stopped\nrunning.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "parentId",
+                    "desc": "ID of the parent span. If this is a root span, the value must be `0` or\nempty.",
+                    "type": "uint64"
+                },
+                {
+                    "name": "status",
+                    "desc": "An optional final status for this span.",
+                    "type": "ref",
+                    "refType": "Status"
+                },
+                {
+                    "name": "name",
+                    "desc": "Name of the span. The span name is sanitized and displayed in the\nStackdriver Trace tool in the {% dynamic print site_values.console_name %}.\nThe name may be a method name or some other per-call site name.\nFor the same executable and the same call point, a best practice is\nto use a consistent name, which makes it easier to correlate\ncross-trace spans.",
+                    "type": "string"
+                },
+                {
+                    "name": "stackTrace",
+                    "desc": "Stack trace captured at the start of the span.",
+                    "type": "ref",
+                    "refType": "StackTrace"
+                },
+                {
+                    "name": "id",
+                    "desc": "Identifier for the span. Must be a 64-bit integer other than 0 and\nunique within a trace.",
+                    "type": "uint64"
+                },
+                {
+                    "name": "localStartTime",
+                    "desc": "Start time of the span.\nOn the client side, this is the local machine clock time at which the span\nexecution was started; on the server\nside, this is the time at which the server application handler started\nrunning.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "timeEvents",
+                    "desc": "A collection of `TimeEvent`s. A `TimeEvent` is a time-stamped annotation\non the span, consisting of either user-supplied key:value pairs, or\ndetails of an RPC message sent/received on the network.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "TimeEvent"
+                }
+            ]
+        },
+        {
+            "name": "ListSpansResponse",
+            "desc": "The response message for the `ListSpans` method.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "spans",
+                    "desc": "The requested spans if there are any in the specified trace.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Span"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "If defined, indicates that there are more spans that match the request.\nPass this as the value of `pageToken` in a subsequent request to retrieve\nadditional spans.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "TimeEvent",
+            "desc": "A time-stamped annotation in the Span.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "annotation",
+                    "desc": "One or more key:value pairs.",
+                    "type": "ref",
+                    "refType": "Annotation"
+                },
+                {
+                    "name": "localTime",
+                    "desc": "The timestamp indicating the time the event occurred.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "networkEvent",
+                    "desc": "An event describing an RPC message sent/received on the network.",
+                    "type": "ref",
+                    "refType": "NetworkEvent"
+                }
+            ]
+        },
+        {
+            "name": "Annotation",
+            "desc": "Text annotation with a set of attributes.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "description",
+                    "desc": "A user-supplied message describing the event.",
+                    "type": "string"
+                },
+                {
+                    "name": "attributes",
+                    "desc": "A set of attributes on the annotation.",
+                    "collection": "map",
+                    "type": "ref",
+                    "refType": "AttributeValue"
+                }
+            ]
+        },
+        {
+            "name": "Trace",
+            "desc": "A trace describes how long it takes for an application to perform some\noperations. It consists of a set of spans, each representing\nan operation and including time information and operation details.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "name",
+                    "desc": "A globally unique identifier for the trace in the format\n`projects/PROJECT_NUMBER/traces/TRACE_ID`. `TRACE_ID` is a base16-encoded\nstring of a 128-bit number and is required to be 32 char long.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Module",
+            "desc": "Binary module.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "module",
+                    "desc": "E.g. main binary, kernel modules, and dynamic libraries\nsuch as libc.so, sharedlib.so",
+                    "type": "string"
+                },
+                {
+                    "name": "buildId",
+                    "desc": "Build_id is a unique identifier for the module,\nusually a hash of its contents",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Status",
+            "desc": "The `Status` type defines a logical error model that is suitable for different\nprogramming environments, including REST APIs and RPC APIs. It is used by\n[gRPC](https://github.com/grpc). The error model is designed to be:\n\n- Simple to use and understand for most users\n- Flexible enough to meet unexpected needs\n\n# Overview\n\nThe `Status` message contains three pieces of data: error code, error message,\nand error details. The error code should be an enum value of\ngoogle.rpc.Code, but it may accept additional error codes if needed.  The\nerror message should be a developer-facing English message that helps\ndevelopers *understand* and *resolve* the error. If a localized user-facing\nerror message is needed, put the localized message in the error details or\nlocalize it in the client. The optional error details may contain arbitrary\ninformation about the error. There is a predefined set of error detail types\nin the package `google.rpc` which can be used for common error conditions.\n\n# Language mapping\n\nThe `Status` message is the logical representation of the error model, but it\nis not necessarily the actual wire format. When the `Status` message is\nexposed in different client libraries and different wire protocols, it can be\nmapped differently. For example, it will likely be mapped to some exceptions\nin Java, but more likely mapped to some error codes in C.\n\n# Other uses\n\nThe error model and the `Status` message can be used in a variety of\nenvironments, either with or without APIs, to provide a\nconsistent developer experience across different environments.\n\nExample uses of this error model include:\n\n- Partial errors. If a service needs to return partial errors to the client,\n    it may embed the `Status` in the normal response to indicate the partial\n    errors.\n\n- Workflow errors. A typical workflow has multiple steps. Each step may\n    have a `Status` message for error reporting purpose.\n\n- Batch operations. If a client uses batch request and batch response, the\n    `Status` message should be used directly inside batch response, one for\n    each error sub-response.\n\n- Asynchronous operations. If an API call embeds asynchronous operation\n    results in its response, the status of those operations should be\n    represented directly using the `Status` message.\n\n- Logging. If some API errors are stored in logs, the message `Status` could\n    be used directly after any stripping needed for security/privacy reasons.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "code",
+                    "desc": "The status code, which should be an enum value of google.rpc.Code.",
+                    "type": "int32"
+                },
+                {
+                    "name": "message",
+                    "desc": "A developer-facing error message, which should be in English. Any\nuser-facing error message should be localized and sent in the\ngoogle.rpc.Status.details field, or localized by the client.",
+                    "type": "string"
+                },
+                {
+                    "name": "details",
+                    "desc": "A list of messages that carry the error details.  There will be a\ncommon set of message types for APIs to use.",
+                    "collection": "array",
+                    "collectionItem": {
+                        "collection": "map",
+                        "type": "any"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Empty",
+            "desc": "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
+            "type": "object"
+        },
+        {
+            "name": "AttributeValue",
+            "desc": "The allowed types for the value side of an attribute key:value pair.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "intValue",
+                    "desc": "An integer value.",
+                    "type": "int64"
+                },
+                {
+                    "name": "stringValue",
+                    "desc": "A string value.",
+                    "type": "string"
+                },
+                {
+                    "name": "boolValue",
+                    "desc": "A boolean value.",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "BatchUpdateSpansRequest",
+            "desc": "The request message for the `BatchUpdateSpans` method.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "spanUpdates",
+                    "desc": "A map from trace name to spans to be stored or updated.",
+                    "collection": "map",
+                    "type": "ref",
+                    "refType": "SpanUpdates"
+                }
+            ]
+        },
+        {
+            "name": "NetworkEvent",
+            "desc": "An event describing an RPC message sent/received on the network.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kernelTime",
+                    "desc": "If available, this is the kernel time:\n\n*  For sent messages, this is the time at which the first bit was sent.\n*  For received messages, this is the time at which the last bit was\n   received.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "type",
+                    "desc": "Type of NetworkEvent. Indicates whether the RPC message was sent or\nreceived.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "TYPE_UNSPECIFIED",
+                            "desc": "Unknown event type."
+                        },
+                        {
+                            "name": "SENT",
+                            "desc": "Indicates a sent RPC message."
+                        },
+                        {
+                            "name": "RECV",
+                            "desc": "Indicates a received RPC message."
+                        }
+                    ]
+                },
+                {
+                    "name": "messageId",
+                    "desc": "An identifier for the message, which must be unique in this span.",
+                    "type": "uint64"
+                },
+                {
+                    "name": "messageSize",
+                    "desc": "The number of bytes sent or received.",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "SpanUpdates",
+            "desc": "Collection of spans to update.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "spans",
+                    "desc": "A collection of spans.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Span"
+                }
+            ]
+        },
+        {
+            "name": "StackFrame",
+            "desc": "Represents a single stack frame in a stack trace.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "sourceVersion",
+                    "desc": "The version of the deployed source code.",
+                    "type": "string"
+                },
+                {
+                    "name": "originalFunctionName",
+                    "desc": "Used when the function name is\n[mangled](http://www.avabodh.com/cxxin/namemangling.html). May be\nfully-qualified.",
+                    "type": "string"
+                },
+                {
+                    "name": "functionName",
+                    "desc": "The fully-qualified name that uniquely identifies this function or\nmethod.",
+                    "type": "string"
+                },
+                {
+                    "name": "lineNumber",
+                    "desc": "Line number of the frame.",
+                    "type": "int64"
+                },
+                {
+                    "name": "loadModule",
+                    "desc": "Binary module the code is loaded from.",
+                    "type": "ref",
+                    "refType": "Module"
+                },
+                {
+                    "name": "columnNumber",
+                    "desc": "Column number is important in JavaScript (anonymous functions).\nMay not be available in some languages.",
+                    "type": "int64"
+                },
+                {
+                    "name": "fileName",
+                    "desc": "The filename of the file containing this frame.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Link",
+            "desc": "A pointer from this span to another span in a different `Trace`. Used\n(for example) in batching operations, where a single batch handler\nprocesses multiple requests from different traces.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "spanId",
+                    "desc": "The `id` of the linked span.",
+                    "type": "uint64"
+                },
+                {
+                    "name": "type",
+                    "desc": "The relationship of the current span relative to the linked span.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "TYPE_UNSPECIFIED",
+                            "desc": "The relationship of the two spans is unknown."
+                        },
+                        {
+                            "name": "CHILD",
+                            "desc": "The current span is a child of the linked span."
+                        },
+                        {
+                            "name": "PARENT",
+                            "desc": "The current span is the parent of the linked span."
+                        }
+                    ]
+                },
+                {
+                    "name": "traceId",
+                    "desc": "The ID of the parent trace of the linked span.",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "projects",
+            "resources": [
+                {
+                    "name": "traces",
+                    "methods": [
+                        {
+                            "name": "listSpans",
+                            "desc": "Returns a list of spans within a trace.",
+                            "path": "v1/{+name}:listSpans",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/cloud-platform",
+                                "https://www.googleapis.com/auth/trace.readonly"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "name",
+                                    "desc": "ID of the trace for which to list child spans. Format is\n`projects/PROJECT_ID/traces/TRACE_ID`.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^projects/[^/]+/traces/[^/]+$"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "pageToken",
+                                    "desc": "Token identifying the page of results to return. If provided, use the\nvalue of the `nextPageToken` field from a previous request. Optional.",
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "ListSpansResponse"
+                        },
+                        {
+                            "name": "list",
+                            "desc": "Returns of a list of traces that match the specified filter conditions.",
+                            "path": "v1/{+parent}/traces",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/cloud-platform",
+                                "https://www.googleapis.com/auth/trace.readonly"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "parent",
+                                    "desc": "ID of the Cloud project where the trace data is stored.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^projects/[^/]+$"
+                                }
+                            ],
+                            "optinalQueryParams": [
+                                {
+                                    "name": "orderBy",
+                                    "desc": "Field used to sort the returned traces. Optional.\nCan be one of the following:\n\n*   `trace_id`\n*   `name` (`name` field of root span in the trace)\n*   `duration` (difference between `end_time` and `start_time` fields of\n     the root span)\n*   `start` (`start_time` field of the root span)\n\nDescending order can be specified by appending `desc` to the sort field\n(for example, `name desc`).\n\nOnly one sort field is permitted.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "filter",
+                                    "desc": "An optional filter for the request.\nExample:\n`version_label_key:a some_label:some_label_key`\nreturns traces from version `a` and has `some_label` with `some_label_key`.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "endTime",
+                                    "desc": "End of the time interval (inclusive) during which the trace data was\ncollected from the application.",
+                                    "type": "datetime"
+                                },
+                                {
+                                    "name": "pageToken",
+                                    "desc": "Token identifying the page of results to return. If provided, use the\nvalue of the `next_page_token` field from a previous request. Optional.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "startTime",
+                                    "desc": "Start of the time interval (inclusive) during which the trace data was\ncollected from the application.",
+                                    "type": "datetime"
+                                },
+                                {
+                                    "name": "pageSize",
+                                    "desc": "Maximum number of traces to return. If not specified or \u003c= 0, the\nimplementation selects a reasonable value. The implementation may\nreturn fewer traces than the requested page size. Optional.",
+                                    "type": "int32"
+                                }
+                            ],
+                            "response": "ListTracesResponse"
+                        },
+                        {
+                            "name": "get",
+                            "desc": "Returns a specific trace.",
+                            "path": "v1/{+name}",
+                            "httpMethod": "GET",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/cloud-platform",
+                                "https://www.googleapis.com/auth/trace.readonly"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "name",
+                                    "desc": "ID of the trace. Format is `projects/PROJECT_ID/traces/TRACE_ID`.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^projects/[^/]+/traces/[^/]+$"
+                                }
+                            ],
+                            "response": "Trace"
+                        },
+                        {
+                            "name": "batchUpdate",
+                            "desc": "Sends new spans to Stackdriver Trace or updates existing spans. If the\nname of a trace that you send matches that of an existing trace, any fields\nin the existing trace and its spans are overwritten by the provided values,\nand any new fields provided are merged with the existing trace data. If the\nname does not match, a new trace is created with given set of spans.",
+                            "path": "v1/{+parent}/traces:batchUpdate",
+                            "httpMethod": "POST",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/cloud-platform",
+                                "https://www.googleapis.com/auth/trace.append"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "parent",
+                                    "desc": "ID of the Cloud project where the trace data is stored.",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^projects/[^/]+$"
+                                }
+                            ],
+                            "request": "BatchUpdateSpansRequest",
+                            "response": "Empty"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

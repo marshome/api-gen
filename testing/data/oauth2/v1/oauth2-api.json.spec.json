@@ -1,0 +1,316 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "\"tbys6C40o18GZwyMen5GMkdK-3s/ZNWWs55SDv_tc8yf5oM647SvRm8\"",
+    "discoveryVersion": "v1",
+    "id": "oauth2:v1",
+    "name": "oauth2",
+    "version": "v1",
+    "title": "Google OAuth2 API",
+    "description": "Obtains end-user authorization grants for use with other Google APIs.",
+    "documentationLink": "https://developers.google.com/accounts/docs/OAuth2",
+    "protocol": "rest",
+    "rootUrl": "https://www.googleapis.com/",
+    "auth": {
+        "oauth2": [
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/plus.login",
+            "https://www.googleapis.com/auth/plus.me",
+            "https://www.googleapis.com/auth/userinfo.email"
+        ]
+    },
+    "parameters": [
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "X509",
+            "collection": "map",
+            "type": "string"
+        },
+        {
+            "name": "Jwk",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "keys",
+                    "collection": "array",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "e",
+                            "type": "string"
+                        },
+                        {
+                            "name": "kid",
+                            "type": "string"
+                        },
+                        {
+                            "name": "kty",
+                            "type": "string",
+                            "default": "RSA"
+                        },
+                        {
+                            "name": "n",
+                            "type": "string"
+                        },
+                        {
+                            "name": "use",
+                            "type": "string",
+                            "default": "sig"
+                        },
+                        {
+                            "name": "alg",
+                            "type": "string",
+                            "default": "RS256"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Raw",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "keyvalues",
+                    "collection": "array",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "algorithm",
+                            "type": "string",
+                            "default": "RSA"
+                        },
+                        {
+                            "name": "exponent",
+                            "type": "string"
+                        },
+                        {
+                            "name": "keyid",
+                            "type": "string"
+                        },
+                        {
+                            "name": "modulus",
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Tokeninfo",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "issued_at",
+                    "desc": "The issue time of the token, as number of seconds.",
+                    "type": "int32"
+                },
+                {
+                    "name": "user_id",
+                    "desc": "The obfuscated user id.",
+                    "type": "string"
+                },
+                {
+                    "name": "issued_to",
+                    "desc": "To whom was the token issued to. In general the same as audience.",
+                    "type": "string"
+                },
+                {
+                    "name": "issuer",
+                    "desc": "Who issued the token.",
+                    "type": "string"
+                },
+                {
+                    "name": "nonce",
+                    "desc": "Nonce of the id token.",
+                    "type": "string"
+                },
+                {
+                    "name": "access_type",
+                    "desc": "The access type granted with this token. It can be offline or online.",
+                    "type": "string"
+                },
+                {
+                    "name": "audience",
+                    "desc": "Who is the intended audience for this token. In general the same as issued_to.",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "desc": "The email address of the user. Present only if the email scope is present in the request.",
+                    "type": "string"
+                },
+                {
+                    "name": "email_verified",
+                    "desc": "Boolean flag which is true if the email address is verified. Present only if the email scope is present in the request.",
+                    "type": "bool"
+                },
+                {
+                    "name": "expires_in",
+                    "desc": "The expiry time of the token, as number of seconds left until expiry.",
+                    "type": "int32"
+                },
+                {
+                    "name": "scope",
+                    "desc": "The space separated list of scopes granted to this token.",
+                    "type": "string"
+                },
+                {
+                    "name": "verified_email",
+                    "desc": "Boolean flag which is true if the email address is verified. Present only if the email scope is present in the request.",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "Userinfoplus",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "given_name",
+                    "desc": "The user's first name.",
+                    "type": "string"
+                },
+                {
+                    "name": "name",
+                    "desc": "The user's full name.",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "desc": "The user's email address.",
+                    "type": "string"
+                },
+                {
+                    "name": "family_name",
+                    "desc": "The user's last name.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "The obfuscated ID of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "link",
+                    "desc": "URL of the profile page.",
+                    "type": "string"
+                },
+                {
+                    "name": "locale",
+                    "desc": "The user's preferred locale.",
+                    "type": "string"
+                },
+                {
+                    "name": "picture",
+                    "desc": "URL of the user's picture image.",
+                    "type": "string"
+                },
+                {
+                    "name": "verified_email",
+                    "desc": "Boolean flag which is true if the email address is verified. Always verified because we only return the user's primary email address.",
+                    "type": "bool",
+                    "default": "true"
+                },
+                {
+                    "name": "gender",
+                    "desc": "The user's gender.",
+                    "type": "string"
+                },
+                {
+                    "name": "hd",
+                    "desc": "The hosted domain e.g. example.com if the user is Google apps user.",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "userinfo",
+            "methods": [
+                {
+                    "name": "get",
+                    "desc": "Get user info",
+                    "path": "oauth2/v1/userinfo",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/plus.login",
+                        "https://www.googleapis.com/auth/plus.me",
+                        "https://www.googleapis.com/auth/userinfo.email",
+                        "https://www.googleapis.com/auth/userinfo.profile"
+                    ],
+                    "response": "Userinfoplus"
+                }
+            ],
+            "resources": [
+                {
+                    "name": "v2",
+                    "resources": [
+                        {
+                            "name": "me",
+                            "methods": [
+                                {
+                                    "name": "get",
+                                    "desc": "Get user info",
+                                    "path": "userinfo/v2/me",
+                                    "httpMethod": "GET",
+                                    "scopes": [
+                                        "https://www.googleapis.com/auth/plus.login",
+                                        "https://www.googleapis.com/auth/plus.me",
+                                        "https://www.googleapis.com/auth/userinfo.email",
+                                        "https://www.googleapis.com/auth/userinfo.profile"
+                                    ],
+                                    "response": "Userinfoplus"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
