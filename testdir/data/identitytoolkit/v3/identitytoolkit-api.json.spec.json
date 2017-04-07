@@ -1,0 +1,1954 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "\"tbys6C40o18GZwyMen5GMkdK-3s/e7L4gGXJzl8PkSEyyAcfyGJlqQA\"",
+    "discoveryVersion": "v1",
+    "id": "identitytoolkit:v3",
+    "name": "identitytoolkit",
+    "version": "v3",
+    "title": "Google Identity Toolkit API",
+    "description": "Help the third party sites to implement federated login.",
+    "documentationLink": "https://developers.google.com/identity-toolkit/v3/",
+    "protocol": "rest",
+    "rootUrl": "https://www.googleapis.com/",
+    "auth": {
+        "oauth2": [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/firebase"
+        ]
+    },
+    "parameters": [
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "DeleteAccountResponse",
+            "desc": "Respone of deleting account.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#DeleteAccountResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#DeleteAccountResponse"
+                }
+            ]
+        },
+        {
+            "name": "DownloadAccountResponse",
+            "desc": "Response of downloading accounts in batch.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#DownloadAccountResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#DownloadAccountResponse"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "The next page token. To be used in a subsequent request to return the next page of results.",
+                    "type": "string"
+                },
+                {
+                    "name": "users",
+                    "desc": "The user accounts data.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "UserInfo"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartyDownloadAccountRequest",
+            "desc": "Request to download user account in batch.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "delegatedProjectNumber",
+                    "desc": "GCP project number of the requesting delegated app. Currently only intended for Firebase V1 migration.",
+                    "type": "int64"
+                },
+                {
+                    "name": "maxResults",
+                    "desc": "The max number of results to return in the response.",
+                    "type": "uint32"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "The token for the next page. This should be taken from the previous response.",
+                    "type": "string"
+                },
+                {
+                    "name": "targetProjectId",
+                    "desc": "Specify which project (field value is actually project id) to operate. Only used when provided credential.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "SetAccountInfoResponse",
+            "desc": "Respone of setting the account information.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "photoUrl",
+                    "desc": "The photo url of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "refreshToken",
+                    "desc": "If idToken is STS id token, then this field will be refresh token.",
+                    "type": "string"
+                },
+                {
+                    "name": "displayName",
+                    "desc": "The name of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "emailVerified",
+                    "desc": "If email has been verified.",
+                    "type": "bool"
+                },
+                {
+                    "name": "localId",
+                    "desc": "The local ID of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "passwordHash",
+                    "desc": "The user's hashed password.",
+                    "type": "byte"
+                },
+                {
+                    "name": "newEmail",
+                    "desc": "The new email the user attempts to change to.",
+                    "type": "string"
+                },
+                {
+                    "name": "providerUserInfo",
+                    "desc": "The user's profiles at the associated IdPs.",
+                    "collection": "array",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "displayName",
+                            "desc": "The user's display name at the IDP.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "federatedId",
+                            "desc": "User's identifier at IDP.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "photoUrl",
+                            "desc": "The user's photo url at the IDP.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "providerId",
+                            "desc": "The IdP ID. For whitelisted IdPs it's a short domain name, e.g., google.com, aol.com, live.net and yahoo.com. For other OpenID IdPs it's the OP identifier.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "email",
+                    "desc": "The email of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "expiresIn",
+                    "desc": "If idToken is STS id token, then this field will be expiration time of STS id token in seconds.",
+                    "type": "int64"
+                },
+                {
+                    "name": "idToken",
+                    "desc": "The Gitkit id token to login the newly sign up user.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#SetAccountInfoResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#SetAccountInfoResponse"
+                }
+            ]
+        },
+        {
+            "name": "GetRecaptchaParamResponse",
+            "desc": "Response of getting recaptcha param.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#GetRecaptchaParamResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#GetRecaptchaParamResponse"
+                },
+                {
+                    "name": "recaptchaSiteKey",
+                    "desc": "Site key registered at recaptcha.",
+                    "type": "string"
+                },
+                {
+                    "name": "recaptchaStoken",
+                    "desc": "The stoken field for the recaptcha widget, used to request captcha challenge.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartySignOutUserRequest",
+            "desc": "Request to sign out user.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "instanceId",
+                    "desc": "Instance id token of the app.",
+                    "type": "string"
+                },
+                {
+                    "name": "localId",
+                    "desc": "The local ID of the user.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "SignupNewUserResponse",
+            "desc": "Response of signing up new user, creating anonymous user or anonymous user reauth.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "displayName",
+                    "desc": "The name of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "desc": "The email of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "expiresIn",
+                    "desc": "If idToken is STS id token, then this field will be expiration time of STS id token in seconds.",
+                    "type": "int64"
+                },
+                {
+                    "name": "idToken",
+                    "desc": "The Gitkit id token to login the newly sign up user.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#SignupNewUserResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#SignupNewUserResponse"
+                },
+                {
+                    "name": "localId",
+                    "desc": "The RP local ID of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "refreshToken",
+                    "desc": "If idToken is STS id token, then this field will be refresh token.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "VerifyPasswordResponse",
+            "desc": "Request of verifying the password.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "displayName",
+                    "desc": "The name of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "desc": "The email returned by the IdP. NOTE: The federated login user may not own the email.",
+                    "type": "string"
+                },
+                {
+                    "name": "expiresIn",
+                    "desc": "If idToken is STS id token, then this field will be expiration time of STS id token in seconds.",
+                    "type": "int64"
+                },
+                {
+                    "name": "localId",
+                    "desc": "The RP local ID if it's already been mapped to the IdP account identified by the federated ID.",
+                    "type": "string"
+                },
+                {
+                    "name": "oauthAccessToken",
+                    "desc": "The OAuth2 access token.",
+                    "type": "string"
+                },
+                {
+                    "name": "oauthAuthorizationCode",
+                    "desc": "The OAuth2 authorization code.",
+                    "type": "string"
+                },
+                {
+                    "name": "refreshToken",
+                    "desc": "If idToken is STS id token, then this field will be refresh token.",
+                    "type": "string"
+                },
+                {
+                    "name": "idToken",
+                    "desc": "The GITKit token for authenticated user.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#VerifyPasswordResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#VerifyPasswordResponse"
+                },
+                {
+                    "name": "oauthExpireIn",
+                    "desc": "The lifetime in seconds of the OAuth2 access token.",
+                    "type": "int32"
+                },
+                {
+                    "name": "photoUrl",
+                    "desc": "The URI of the user's photo at IdP",
+                    "type": "string"
+                },
+                {
+                    "name": "registered",
+                    "desc": "Whether the email is registered.",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "GetAccountInfoResponse",
+            "desc": "Response of getting account information.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#GetAccountInfoResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#GetAccountInfoResponse"
+                },
+                {
+                    "name": "users",
+                    "desc": "The info of the users.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "UserInfo"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartyCreateAuthUriRequest",
+            "desc": "Request to get the IDP authentication URL.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "clientId",
+                    "desc": "The relying party OAuth client ID.",
+                    "type": "string"
+                },
+                {
+                    "name": "openidRealm",
+                    "desc": "Optional realm for OpenID protocol. The sub string \"scheme://domain:port\" of the param \"continueUri\" is used if this is not set.",
+                    "type": "string"
+                },
+                {
+                    "name": "providerId",
+                    "desc": "The IdP ID. For white listed IdPs it's a short domain name e.g. google.com, aol.com, live.net and yahoo.com. For other OpenID IdPs it's the OP identifier.",
+                    "type": "string"
+                },
+                {
+                    "name": "context",
+                    "desc": "The opaque value used by the client to maintain context info between the authentication request and the IDP callback.",
+                    "type": "string"
+                },
+                {
+                    "name": "continueUri",
+                    "desc": "The URI to which the IDP redirects the user after the federated login flow.",
+                    "type": "string"
+                },
+                {
+                    "name": "oauthScope",
+                    "desc": "Additional oauth scopes, beyond the basid user profile, that the user would be prompted to grant",
+                    "type": "string"
+                },
+                {
+                    "name": "otaApp",
+                    "desc": "The native app package for OTA installation.",
+                    "type": "string"
+                },
+                {
+                    "name": "appId",
+                    "desc": "The app ID of the mobile app, base64(CERT_SHA1):PACKAGE_NAME for Android, BUNDLE_ID for iOS.",
+                    "type": "string"
+                },
+                {
+                    "name": "customParameter",
+                    "desc": "The query parameter that client can customize by themselves in auth url. The following parameters are reserved for server so that they cannot be customized by clients: client_id, response_type, scope, redirect_uri, state, oauth_token.",
+                    "collection": "map",
+                    "type": "string"
+                },
+                {
+                    "name": "hostedDomain",
+                    "desc": "The hosted domain to restrict sign-in to accounts at that domain for Google Apps hosted accounts.",
+                    "type": "string"
+                },
+                {
+                    "name": "identifier",
+                    "desc": "The email or federated ID of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "authFlowType",
+                    "desc": "Explicitly specify the auth flow type. Currently only support \"CODE_FLOW\" type. The field is only used for Google provider.",
+                    "type": "string"
+                },
+                {
+                    "name": "oauthConsumerKey",
+                    "desc": "The developer's consumer key for OpenId OAuth Extension",
+                    "type": "string"
+                },
+                {
+                    "name": "sessionId",
+                    "desc": "The session_id passed by client.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartyGetAccountInfoRequest",
+            "desc": "Request to get the account information.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "delegatedProjectNumber",
+                    "desc": "GCP project number of the requesting delegated app. Currently only intended for Firebase V1 migration.",
+                    "type": "int64"
+                },
+                {
+                    "name": "email",
+                    "desc": "The list of emails of the users to inquiry.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "idToken",
+                    "desc": "The GITKit token of the authenticated user.",
+                    "type": "string"
+                },
+                {
+                    "name": "localId",
+                    "desc": "The list of local ID's of the users to inquiry.",
+                    "collection": "array",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartyVerifyCustomTokenRequest",
+            "desc": "Request to verify a custom token",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "delegatedProjectNumber",
+                    "desc": "GCP project number of the requesting delegated app. Currently only intended for Firebase V1 migration.",
+                    "type": "int64"
+                },
+                {
+                    "name": "instanceId",
+                    "desc": "Instance id token of the app.",
+                    "type": "string"
+                },
+                {
+                    "name": "returnSecureToken",
+                    "desc": "Whether return sts id token and refresh token instead of gitkit token.",
+                    "type": "bool"
+                },
+                {
+                    "name": "token",
+                    "desc": "The custom token to verify",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "VerifyAssertionResponse",
+            "desc": "Response of verifying the IDP assertion.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "nickName",
+                    "desc": "The nick name of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "errorMessage",
+                    "desc": "Client error code.",
+                    "type": "string"
+                },
+                {
+                    "name": "expiresIn",
+                    "desc": "If idToken is STS id token, then this field will be expiration time of STS id token in seconds.",
+                    "type": "int64"
+                },
+                {
+                    "name": "isNewUser",
+                    "desc": "True if it's a new user sign-in, false if it's a returning user.",
+                    "type": "bool"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#VerifyAssertionResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#VerifyAssertionResponse"
+                },
+                {
+                    "name": "language",
+                    "desc": "The language preference of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "oauthAuthorizationCode",
+                    "desc": "The OAuth2 authorization code.",
+                    "type": "string"
+                },
+                {
+                    "name": "oauthTokenSecret",
+                    "desc": "The OAuth1 access token secret.",
+                    "type": "string"
+                },
+                {
+                    "name": "timeZone",
+                    "desc": "The timezone of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "displayName",
+                    "desc": "The display name of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "dateOfBirth",
+                    "desc": "The birth date of the IdP account.",
+                    "type": "string"
+                },
+                {
+                    "name": "emailVerified",
+                    "desc": "The value is true if the IDP is also the email provider. It means the user owns the email.",
+                    "type": "bool"
+                },
+                {
+                    "name": "needConfirmation",
+                    "desc": "Whether the assertion is from a non-trusted IDP and need account linking confirmation.",
+                    "type": "bool"
+                },
+                {
+                    "name": "oauthScope",
+                    "desc": "The scope for the OpenID OAuth extension.",
+                    "type": "string"
+                },
+                {
+                    "name": "refreshToken",
+                    "desc": "If idToken is STS id token, then this field will be refresh token.",
+                    "type": "string"
+                },
+                {
+                    "name": "appScheme",
+                    "desc": "The custom scheme used by mobile app.",
+                    "type": "string"
+                },
+                {
+                    "name": "fullName",
+                    "desc": "The full name of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "lastName",
+                    "desc": "The last name of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "originalEmail",
+                    "desc": "The original email stored in the mapping storage. It's returned when the federated ID is associated to a different email.",
+                    "type": "string"
+                },
+                {
+                    "name": "photoUrl",
+                    "desc": "The URI of the public accessible profiel picture.",
+                    "type": "string"
+                },
+                {
+                    "name": "rawUserInfo",
+                    "desc": "Raw IDP-returned user info.",
+                    "type": "string"
+                },
+                {
+                    "name": "screenName",
+                    "desc": "The screen_name of a Twitter user or the login name at Github.",
+                    "type": "string"
+                },
+                {
+                    "name": "firstName",
+                    "desc": "The first name of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "inputEmail",
+                    "desc": "It's the identifier param in the createAuthUri request if the identifier is an email. It can be used to check whether the user input email is different from the asserted email.",
+                    "type": "string"
+                },
+                {
+                    "name": "oauthExpireIn",
+                    "desc": "The lifetime in seconds of the OAuth2 access token.",
+                    "type": "int32"
+                },
+                {
+                    "name": "verifiedProvider",
+                    "desc": "When action is 'map', contains the idps which can be used for confirmation.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "desc": "The email returned by the IdP. NOTE: The federated login user may not own the email.",
+                    "type": "string"
+                },
+                {
+                    "name": "context",
+                    "desc": "The opaque value used by the client to maintain context info between the authentication request and the IDP callback.",
+                    "type": "string"
+                },
+                {
+                    "name": "federatedId",
+                    "desc": "The unique ID identifies the IdP account.",
+                    "type": "string"
+                },
+                {
+                    "name": "providerId",
+                    "desc": "The IdP ID. For white listed IdPs it's a short domain name e.g. google.com, aol.com, live.net and yahoo.com. If the \"providerId\" param is set to OpenID OP identifer other than the whilte listed IdPs the OP identifier is returned. If the \"identifier\" param is federated ID in the createAuthUri request. The domain part of the federated ID is returned.",
+                    "type": "string"
+                },
+                {
+                    "name": "appInstallationUrl",
+                    "desc": "URL for OTA app installation.",
+                    "type": "string"
+                },
+                {
+                    "name": "emailRecycled",
+                    "desc": "It's true if the email is recycled.",
+                    "type": "bool"
+                },
+                {
+                    "name": "idToken",
+                    "desc": "The ID token.",
+                    "type": "string"
+                },
+                {
+                    "name": "localId",
+                    "desc": "The RP local ID if it's already been mapped to the IdP account identified by the federated ID.",
+                    "type": "string"
+                },
+                {
+                    "name": "needEmail",
+                    "desc": "Whether need client to supply email to complete the federated login flow.",
+                    "type": "bool"
+                },
+                {
+                    "name": "oauthAccessToken",
+                    "desc": "The OAuth2 access token.",
+                    "type": "string"
+                },
+                {
+                    "name": "oauthIdToken",
+                    "desc": "The OIDC id token.",
+                    "type": "string"
+                },
+                {
+                    "name": "oauthRequestToken",
+                    "desc": "The user approved request token for the OpenID OAuth extension.",
+                    "type": "string"
+                },
+                {
+                    "name": "action",
+                    "desc": "The action code.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "CreateAuthUriResponse",
+            "desc": "Response of creating the IDP authentication URL.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "registered",
+                    "desc": "Whether the user is registered if the identifier is an email.",
+                    "type": "bool"
+                },
+                {
+                    "name": "sessionId",
+                    "desc": "Session ID which should be passed in the following verifyAssertion request.",
+                    "type": "string"
+                },
+                {
+                    "name": "allProviders",
+                    "desc": "all providers the user has once used to do federated login",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "authUri",
+                    "desc": "The URI used by the IDP to authenticate the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "captchaRequired",
+                    "desc": "True if captcha is required.",
+                    "type": "bool"
+                },
+                {
+                    "name": "forExistingProvider",
+                    "desc": "True if the authUri is for user's existing provider.",
+                    "type": "bool"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string identitytoolkit#CreateAuthUriResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#CreateAuthUriResponse"
+                },
+                {
+                    "name": "providerId",
+                    "desc": "The provider ID of the auth URI.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartyDeleteAccountRequest",
+            "desc": "Request to delete account.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "delegatedProjectNumber",
+                    "desc": "GCP project number of the requesting delegated app. Currently only intended for Firebase V1 migration.",
+                    "type": "int64"
+                },
+                {
+                    "name": "idToken",
+                    "desc": "The GITKit token or STS id token of the authenticated user.",
+                    "type": "string"
+                },
+                {
+                    "name": "localId",
+                    "desc": "The local ID of the user.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartySetProjectConfigResponse",
+            "desc": "Response of setting the project configuration.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "projectId",
+                    "desc": "Project ID of the relying party.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartySignOutUserResponse",
+            "desc": "Response of signing out user.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "localId",
+                    "desc": "The local ID of the user.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "EmailTemplate",
+            "desc": "Template for an email template.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "from",
+                    "desc": "From address of the email.",
+                    "type": "string"
+                },
+                {
+                    "name": "fromDisplayName",
+                    "desc": "From display name.",
+                    "type": "string"
+                },
+                {
+                    "name": "replyTo",
+                    "desc": "Reply-to address.",
+                    "type": "string"
+                },
+                {
+                    "name": "subject",
+                    "desc": "Subject of the email.",
+                    "type": "string"
+                },
+                {
+                    "name": "body",
+                    "desc": "Email body.",
+                    "type": "string"
+                },
+                {
+                    "name": "format",
+                    "desc": "Email body format.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "GetOobConfirmationCodeResponse",
+            "desc": "Response of getting a code for user confirmation (reset password, change email etc.).",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "email",
+                    "desc": "The email address that the email is sent to.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#GetOobConfirmationCodeResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#GetOobConfirmationCodeResponse"
+                },
+                {
+                    "name": "oobCode",
+                    "desc": "The code to be send to the user.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartyResetPasswordRequest",
+            "desc": "Request to reset the password.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "email",
+                    "desc": "The email address of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "newPassword",
+                    "desc": "The new password inputted by the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "oldPassword",
+                    "desc": "The old password inputted by the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "oobCode",
+                    "desc": "The confirmation code.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartySetAccountInfoRequest",
+            "desc": "Request to set the account information.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "disableUser",
+                    "desc": "Whether to disable the user.",
+                    "type": "bool"
+                },
+                {
+                    "name": "idToken",
+                    "desc": "The GITKit token of the authenticated user.",
+                    "type": "string"
+                },
+                {
+                    "name": "photoUrl",
+                    "desc": "The photo url of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "returnSecureToken",
+                    "desc": "Whether return sts id token and refresh token instead of gitkit token.",
+                    "type": "bool"
+                },
+                {
+                    "name": "captchaResponse",
+                    "desc": "Response to the captcha.",
+                    "type": "string"
+                },
+                {
+                    "name": "deleteAttribute",
+                    "desc": "The attributes users request to delete.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "desc": "The email of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "validSince",
+                    "desc": "Timestamp in seconds for valid login token.",
+                    "type": "int64"
+                },
+                {
+                    "name": "createdAt",
+                    "desc": "The timestamp when the account is created.",
+                    "type": "int64"
+                },
+                {
+                    "name": "delegatedProjectNumber",
+                    "desc": "GCP project number of the requesting delegated app. Currently only intended for Firebase V1 migration.",
+                    "type": "int64"
+                },
+                {
+                    "name": "deleteProvider",
+                    "desc": "The IDPs the user request to delete.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "instanceId",
+                    "desc": "Instance id token of the app.",
+                    "type": "string"
+                },
+                {
+                    "name": "lastLoginAt",
+                    "desc": "Last login timestamp.",
+                    "type": "int64"
+                },
+                {
+                    "name": "oobCode",
+                    "desc": "The out-of-band code of the change email request.",
+                    "type": "string"
+                },
+                {
+                    "name": "password",
+                    "desc": "The new password of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "captchaChallenge",
+                    "desc": "The captcha challenge.",
+                    "type": "string"
+                },
+                {
+                    "name": "displayName",
+                    "desc": "The name of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "emailVerified",
+                    "desc": "Mark the email as verified or not.",
+                    "type": "bool"
+                },
+                {
+                    "name": "localId",
+                    "desc": "The local ID of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "provider",
+                    "desc": "The associated IDPs of the user.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "upgradeToFederatedLogin",
+                    "desc": "Mark the user to upgrade to federated login.",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "VerifyCustomTokenResponse",
+            "desc": "Response from verifying a custom token",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "idToken",
+                    "desc": "The GITKit token for authenticated user.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#VerifyCustomTokenResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#VerifyCustomTokenResponse"
+                },
+                {
+                    "name": "refreshToken",
+                    "desc": "If idToken is STS id token, then this field will be refresh token.",
+                    "type": "string"
+                },
+                {
+                    "name": "expiresIn",
+                    "desc": "If idToken is STS id token, then this field will be expiration time of STS id token in seconds.",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "ResetPasswordResponse",
+            "desc": "Response of resetting the password.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "email",
+                    "desc": "The user's email. If the out-of-band code is for email recovery, the user's original email.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#ResetPasswordResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#ResetPasswordResponse"
+                },
+                {
+                    "name": "newEmail",
+                    "desc": "If the out-of-band code is for email recovery, the user's new email.",
+                    "type": "string"
+                },
+                {
+                    "name": "requestType",
+                    "desc": "The request type.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "UploadAccountResponse",
+            "desc": "Respone of uploading accounts in batch.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "error",
+                    "desc": "The error encountered while processing the account info.",
+                    "collection": "array",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "index",
+                            "desc": "The index of the malformed account, starting from 0.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "message",
+                            "desc": "Detailed error message for the account info.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#UploadAccountResponse\".",
+                    "type": "string",
+                    "default": "identitytoolkit#UploadAccountResponse"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartySetProjectConfigRequest",
+            "desc": "Request to set the project configuration.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "idpConfig",
+                    "desc": "Oauth2 provider configuration.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "IdpConfig"
+                },
+                {
+                    "name": "resetPasswordTemplate",
+                    "desc": "Reset password email template.",
+                    "type": "ref",
+                    "refType": "EmailTemplate"
+                },
+                {
+                    "name": "useEmailSending",
+                    "desc": "Whether to use email sending provided by Firebear.",
+                    "type": "bool"
+                },
+                {
+                    "name": "verifyEmailTemplate",
+                    "desc": "Verify email template.",
+                    "type": "ref",
+                    "refType": "EmailTemplate"
+                },
+                {
+                    "name": "allowPasswordUser",
+                    "desc": "Whether to allow password user sign in or sign up.",
+                    "type": "bool"
+                },
+                {
+                    "name": "enableAnonymousUser",
+                    "desc": "Whether to enable anonymous user.",
+                    "type": "bool"
+                },
+                {
+                    "name": "changeEmailTemplate",
+                    "desc": "Change email template.",
+                    "type": "ref",
+                    "refType": "EmailTemplate"
+                },
+                {
+                    "name": "delegatedProjectNumber",
+                    "desc": "GCP project number of the requesting delegated app. Currently only intended for Firebase V1 migration.",
+                    "type": "int64"
+                },
+                {
+                    "name": "legacyResetPasswordTemplate",
+                    "desc": "Legacy reset password email template.",
+                    "type": "ref",
+                    "refType": "EmailTemplate"
+                },
+                {
+                    "name": "apiKey",
+                    "desc": "Browser API key, needed when making http request to Apiary.",
+                    "type": "string"
+                },
+                {
+                    "name": "authorizedDomains",
+                    "desc": "Authorized domains for widget redirect.",
+                    "collection": "array",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartySignupNewUserRequest",
+            "desc": "Request to signup new user, create anonymous user or anonymous user reauth.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "localId",
+                    "desc": "Privileged caller can create user with specified user id.",
+                    "type": "string"
+                },
+                {
+                    "name": "captchaResponse",
+                    "desc": "Response to the captcha.",
+                    "type": "string"
+                },
+                {
+                    "name": "disabled",
+                    "desc": "Whether to disable the user. Only can be used by service account.",
+                    "type": "bool"
+                },
+                {
+                    "name": "emailVerified",
+                    "desc": "Mark the email as verified or not. Only can be used by service account.",
+                    "type": "bool"
+                },
+                {
+                    "name": "instanceId",
+                    "desc": "Instance id token of the app.",
+                    "type": "string"
+                },
+                {
+                    "name": "password",
+                    "desc": "The new password of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "photoUrl",
+                    "desc": "The photo url of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "captchaChallenge",
+                    "desc": "The captcha challenge.",
+                    "type": "string"
+                },
+                {
+                    "name": "displayName",
+                    "desc": "The name of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "desc": "The email of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "idToken",
+                    "desc": "The GITKit token of the authenticated user.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartyUploadAccountRequest",
+            "desc": "Request to upload user account in batch.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "delegatedProjectNumber",
+                    "desc": "GCP project number of the requesting delegated app. Currently only intended for Firebase V1 migration.",
+                    "type": "int64"
+                },
+                {
+                    "name": "rounds",
+                    "desc": "Rounds for hash calculation. Used by scrypt and similar algorithms.",
+                    "type": "int32"
+                },
+                {
+                    "name": "sanityCheck",
+                    "desc": "If true, backend will do sanity check(including duplicate email and federated id) when uploading account.",
+                    "type": "bool"
+                },
+                {
+                    "name": "targetProjectId",
+                    "desc": "Specify which project (field value is actually project id) to operate. Only used when provided credential.",
+                    "type": "string"
+                },
+                {
+                    "name": "allowOverwrite",
+                    "desc": "Whether allow overwrite existing account when user local_id exists.",
+                    "type": "bool"
+                },
+                {
+                    "name": "hashAlgorithm",
+                    "desc": "The password hash algorithm.",
+                    "type": "string"
+                },
+                {
+                    "name": "memoryCost",
+                    "desc": "Memory cost for hash calculation. Used by scrypt similar algorithms.",
+                    "type": "int32"
+                },
+                {
+                    "name": "saltSeparator",
+                    "desc": "The salt separator.",
+                    "type": "byte"
+                },
+                {
+                    "name": "signerKey",
+                    "desc": "The key for to hash the password.",
+                    "type": "byte"
+                },
+                {
+                    "name": "users",
+                    "desc": "The account info to be stored.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "UserInfo"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartyVerifyPasswordRequest",
+            "desc": "Request to verify the password.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "delegatedProjectNumber",
+                    "desc": "GCP project number of the requesting delegated app. Currently only intended for Firebase V1 migration.",
+                    "type": "int64"
+                },
+                {
+                    "name": "idToken",
+                    "desc": "The GITKit token of the authenticated user.",
+                    "type": "string"
+                },
+                {
+                    "name": "instanceId",
+                    "desc": "Instance id token of the app.",
+                    "type": "string"
+                },
+                {
+                    "name": "password",
+                    "desc": "The password inputed by the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "captchaChallenge",
+                    "desc": "The captcha challenge.",
+                    "type": "string"
+                },
+                {
+                    "name": "captchaResponse",
+                    "desc": "Response to the captcha.",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "desc": "The email of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "pendingIdToken",
+                    "desc": "The GITKit token for the non-trusted IDP, which is to be confirmed by the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "returnSecureToken",
+                    "desc": "Whether return sts id token and refresh token instead of gitkit token.",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "IdpConfig",
+            "desc": "Template for a single idp configuration.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "clientId",
+                    "desc": "OAuth2 client ID.",
+                    "type": "string"
+                },
+                {
+                    "name": "enabled",
+                    "desc": "Whether this IDP is enabled.",
+                    "type": "bool"
+                },
+                {
+                    "name": "experimentPercent",
+                    "desc": "Percent of users who will be prompted/redirected federated login for this IDP.",
+                    "type": "int32"
+                },
+                {
+                    "name": "provider",
+                    "desc": "OAuth2 provider.",
+                    "type": "string"
+                },
+                {
+                    "name": "secret",
+                    "desc": "OAuth2 client secret.",
+                    "type": "string"
+                },
+                {
+                    "name": "whitelistedAudiences",
+                    "desc": "Whitelisted client IDs for audience check.",
+                    "collection": "array",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Relyingparty",
+            "desc": "Request of getting a code for user confirmation (reset password, change email etc.)",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "iOSBundleId",
+                    "desc": "the iOS bundle id of iOS app to handle the action code",
+                    "type": "string"
+                },
+                {
+                    "name": "requestType",
+                    "desc": "The request type.",
+                    "type": "string"
+                },
+                {
+                    "name": "androidInstallApp",
+                    "desc": "whether or not to install the android app on the device where the link is opened",
+                    "type": "bool"
+                },
+                {
+                    "name": "androidPackageName",
+                    "desc": "android package name of the android app to handle the action code",
+                    "type": "string"
+                },
+                {
+                    "name": "captchaResp",
+                    "desc": "The recaptcha response from the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "newEmail",
+                    "desc": "The new email if the code is for email change.",
+                    "type": "string"
+                },
+                {
+                    "name": "userIp",
+                    "desc": "The IP address of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "androidMinimumVersion",
+                    "desc": "minimum version of the app. if the version on the device is lower than this version then the user is taken to the play store to upgrade the app",
+                    "type": "string"
+                },
+                {
+                    "name": "continueUrl",
+                    "desc": "The url to continue to the Gitkit app",
+                    "type": "string"
+                },
+                {
+                    "name": "iOSAppStoreId",
+                    "desc": "iOS app store id to download the app if it's not already installed",
+                    "type": "string"
+                },
+                {
+                    "name": "idToken",
+                    "desc": "The user's Gitkit login token for email change.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The fixed string \"identitytoolkit#relyingparty\".",
+                    "type": "string",
+                    "default": "identitytoolkit#relyingparty"
+                },
+                {
+                    "name": "canHandleCodeInApp",
+                    "desc": "whether or not the app can handle the oob code without first going to web",
+                    "type": "bool"
+                },
+                {
+                    "name": "challenge",
+                    "desc": "The recaptcha challenge presented to the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "email",
+                    "desc": "The email of the user.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartyGetProjectConfigResponse",
+            "desc": "Response of getting the project configuration.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "authorizedDomains",
+                    "desc": "Authorized domains.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "idpConfig",
+                    "desc": "OAuth2 provider configuration.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "IdpConfig"
+                },
+                {
+                    "name": "legacyResetPasswordTemplate",
+                    "desc": "Legacy reset password email template.",
+                    "type": "ref",
+                    "refType": "EmailTemplate"
+                },
+                {
+                    "name": "resetPasswordTemplate",
+                    "desc": "Reset password email template.",
+                    "type": "ref",
+                    "refType": "EmailTemplate"
+                },
+                {
+                    "name": "useEmailSending",
+                    "desc": "Whether to use email sending provided by Firebear.",
+                    "type": "bool"
+                },
+                {
+                    "name": "verifyEmailTemplate",
+                    "desc": "Verify email template.",
+                    "type": "ref",
+                    "refType": "EmailTemplate"
+                },
+                {
+                    "name": "allowPasswordUser",
+                    "desc": "Whether to allow password user sign in or sign up.",
+                    "type": "bool"
+                },
+                {
+                    "name": "apiKey",
+                    "desc": "Browser API key, needed when making http request to Apiary.",
+                    "type": "string"
+                },
+                {
+                    "name": "changeEmailTemplate",
+                    "desc": "Change email template.",
+                    "type": "ref",
+                    "refType": "EmailTemplate"
+                },
+                {
+                    "name": "dynamicLinksDomain",
+                    "type": "string"
+                },
+                {
+                    "name": "enableAnonymousUser",
+                    "desc": "Whether anonymous user is enabled.",
+                    "type": "bool"
+                },
+                {
+                    "name": "projectId",
+                    "desc": "Project ID of the relying party.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartyGetPublicKeysResponse",
+            "desc": "Respone of getting public keys.",
+            "collection": "map",
+            "type": "string"
+        },
+        {
+            "name": "IdentitytoolkitRelyingpartyVerifyAssertionRequest",
+            "desc": "Request to verify the IDP assertion.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "instanceId",
+                    "desc": "Instance id token of the app.",
+                    "type": "string"
+                },
+                {
+                    "name": "requestUri",
+                    "desc": "The URI to which the IDP redirects the user back. It may contain federated login result params added by the IDP.",
+                    "type": "string"
+                },
+                {
+                    "name": "autoCreate",
+                    "desc": "When it's true, automatically creates a new account if the user doesn't exist. When it's false, allows existing user to sign in normally and throws exception if the user doesn't exist.",
+                    "type": "bool"
+                },
+                {
+                    "name": "idToken",
+                    "desc": "The GITKit token of the authenticated user.",
+                    "type": "string"
+                },
+                {
+                    "name": "pendingIdToken",
+                    "desc": "The GITKit token for the non-trusted IDP pending to be confirmed by the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "postBody",
+                    "desc": "The post body if the request is a HTTP POST.",
+                    "type": "string"
+                },
+                {
+                    "name": "returnIdpCredential",
+                    "desc": "Whether return 200 and IDP credential rather than throw exception when federated id is already linked.",
+                    "type": "bool"
+                },
+                {
+                    "name": "returnRefreshToken",
+                    "desc": "Whether to return refresh tokens.",
+                    "type": "bool"
+                },
+                {
+                    "name": "returnSecureToken",
+                    "desc": "Whether return sts id token and refresh token instead of gitkit token.",
+                    "type": "bool"
+                },
+                {
+                    "name": "sessionId",
+                    "desc": "Session ID, which should match the one in previous createAuthUri request.",
+                    "type": "string"
+                },
+                {
+                    "name": "delegatedProjectNumber",
+                    "desc": "GCP project number of the requesting delegated app. Currently only intended for Firebase V1 migration.",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "UserInfo",
+            "desc": "Template for an individual account info.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "providerUserInfo",
+                    "desc": "The IDP of the user.",
+                    "collection": "array",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "photoUrl",
+                            "desc": "The user's photo url at the IDP.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "providerId",
+                            "desc": "The IdP ID. For white listed IdPs it's a short domain name, e.g., google.com, aol.com, live.net and yahoo.com. For other OpenID IdPs it's the OP identifier.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "rawId",
+                            "desc": "User's raw identifier directly returned from IDP.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "screenName",
+                            "desc": "User's screen name at Twitter or login name at Github.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "displayName",
+                            "desc": "The user's display name at the IDP.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "email",
+                            "desc": "User's email at IDP.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "federatedId",
+                            "desc": "User's identifier at IDP.",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "rawPassword",
+                    "desc": "The user's plain text password.",
+                    "type": "string"
+                },
+                {
+                    "name": "lastLoginAt",
+                    "desc": "last login timestamp.",
+                    "type": "int64"
+                },
+                {
+                    "name": "localId",
+                    "desc": "The local ID of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "passwordHash",
+                    "desc": "The user's hashed password.",
+                    "type": "byte"
+                },
+                {
+                    "name": "passwordUpdatedAt",
+                    "desc": "The timestamp when the password was last updated.",
+                    "type": "float64"
+                },
+                {
+                    "name": "version",
+                    "desc": "Version of the user's password.",
+                    "type": "int32"
+                },
+                {
+                    "name": "displayName",
+                    "desc": "The name of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "customAuth",
+                    "desc": "Whether the user is authenticated by the developer.",
+                    "type": "bool"
+                },
+                {
+                    "name": "email",
+                    "desc": "The email of the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "emailVerified",
+                    "desc": "Whether the email has been verified.",
+                    "type": "bool"
+                },
+                {
+                    "name": "photoUrl",
+                    "desc": "The URL of the user profile photo.",
+                    "type": "string"
+                },
+                {
+                    "name": "validSince",
+                    "desc": "Timestamp in seconds for valid login token.",
+                    "type": "int64"
+                },
+                {
+                    "name": "createdAt",
+                    "desc": "User creation timestamp.",
+                    "type": "int64"
+                },
+                {
+                    "name": "salt",
+                    "desc": "The user's password salt.",
+                    "type": "byte"
+                },
+                {
+                    "name": "screenName",
+                    "desc": "User's screen name at Twitter or login name at Github.",
+                    "type": "string"
+                },
+                {
+                    "name": "disabled",
+                    "desc": "Whether the user is disabled.",
+                    "type": "bool"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "relyingparty",
+            "methods": [
+                {
+                    "name": "resetPassword",
+                    "desc": "Reset password for a user.",
+                    "path": "resetPassword",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartyResetPasswordRequest",
+                    "response": "ResetPasswordResponse"
+                },
+                {
+                    "name": "verifyCustomToken",
+                    "desc": "Verifies the developer asserted ID token.",
+                    "path": "verifyCustomToken",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartyVerifyCustomTokenRequest",
+                    "response": "VerifyCustomTokenResponse"
+                },
+                {
+                    "name": "getAccountInfo",
+                    "desc": "Returns the account info.",
+                    "path": "getAccountInfo",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartyGetAccountInfoRequest",
+                    "response": "GetAccountInfoResponse"
+                },
+                {
+                    "name": "getProjectConfig",
+                    "desc": "Get project configuration.",
+                    "path": "getProjectConfig",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "optinalQueryParams": [
+                        {
+                            "name": "projectNumber",
+                            "desc": "GCP project number of the request.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "delegatedProjectNumber",
+                            "desc": "Delegated GCP project number of the request.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "IdentitytoolkitRelyingpartyGetProjectConfigResponse"
+                },
+                {
+                    "name": "setProjectConfig",
+                    "desc": "Set project configuration.",
+                    "path": "setProjectConfig",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartySetProjectConfigRequest",
+                    "response": "IdentitytoolkitRelyingpartySetProjectConfigResponse"
+                },
+                {
+                    "name": "signupNewUser",
+                    "desc": "Signup new user.",
+                    "path": "signupNewUser",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartySignupNewUserRequest",
+                    "response": "SignupNewUserResponse"
+                },
+                {
+                    "name": "uploadAccount",
+                    "desc": "Batch upload existing user accounts.",
+                    "path": "uploadAccount",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/firebase"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartyUploadAccountRequest",
+                    "response": "UploadAccountResponse"
+                },
+                {
+                    "name": "getOobConfirmationCode",
+                    "desc": "Get a code for user action confirmation.",
+                    "path": "getOobConfirmationCode",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "Relyingparty",
+                    "response": "GetOobConfirmationCodeResponse"
+                },
+                {
+                    "name": "setAccountInfo",
+                    "desc": "Set account info for a user.",
+                    "path": "setAccountInfo",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartySetAccountInfoRequest",
+                    "response": "SetAccountInfoResponse"
+                },
+                {
+                    "name": "verifyAssertion",
+                    "desc": "Verifies the assertion returned by the IdP.",
+                    "path": "verifyAssertion",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartyVerifyAssertionRequest",
+                    "response": "VerifyAssertionResponse"
+                },
+                {
+                    "name": "verifyPassword",
+                    "desc": "Verifies the user entered password.",
+                    "path": "verifyPassword",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartyVerifyPasswordRequest",
+                    "response": "VerifyPasswordResponse"
+                },
+                {
+                    "name": "createAuthUri",
+                    "desc": "Creates the URI used by the IdP to authenticate the user.",
+                    "path": "createAuthUri",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartyCreateAuthUriRequest",
+                    "response": "CreateAuthUriResponse"
+                },
+                {
+                    "name": "deleteAccount",
+                    "desc": "Delete user account.",
+                    "path": "deleteAccount",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartyDeleteAccountRequest",
+                    "response": "DeleteAccountResponse"
+                },
+                {
+                    "name": "downloadAccount",
+                    "desc": "Batch download user accounts.",
+                    "path": "downloadAccount",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/firebase"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartyDownloadAccountRequest",
+                    "response": "DownloadAccountResponse"
+                },
+                {
+                    "name": "getPublicKeys",
+                    "desc": "Get token signing public key.",
+                    "path": "publicKeys",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "response": "IdentitytoolkitRelyingpartyGetPublicKeysResponse"
+                },
+                {
+                    "name": "getRecaptchaParam",
+                    "desc": "Get recaptcha secure param.",
+                    "path": "getRecaptchaParam",
+                    "httpMethod": "GET",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "response": "GetRecaptchaParamResponse"
+                },
+                {
+                    "name": "signOutUser",
+                    "desc": "Sign out user.",
+                    "path": "signOutUser",
+                    "httpMethod": "POST",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "request": "IdentitytoolkitRelyingpartySignOutUserRequest",
+                    "response": "IdentitytoolkitRelyingpartySignOutUserResponse"
+                }
+            ]
+        }
+    ]
+}

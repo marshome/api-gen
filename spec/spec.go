@@ -1,7 +1,7 @@
 package spec
 
 const(
-	TYPE_STIRNG="string"
+	TYPE_STRING ="string"
 	TYPE_BOOL="bool"
 	TYPE_BYTE="byte"
 	TYPE_INT32="int32"

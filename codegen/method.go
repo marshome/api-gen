@@ -120,7 +120,7 @@ func (m *Method)GenerateOptionalParams() {
 		m.c.Pn("_s=values.Get(\"%s\")", p.Name)
 		m.c.Pn("if _s!=\"\"{")
 		if p.Collection == spec.COLLECTION_NONE {
-			if p.Type == spec.TYPE_STIRNG {
+			if p.Type == spec.TYPE_STRING {
 				m.c.Pn("_opts.%s=marsapi.String(_s)", goName)
 				m.c.Pn("")
 			} else if p.Type == spec.TYPE_BOOL {
@@ -181,7 +181,7 @@ func (m *Method)GenerateOptionalParams() {
 					",param=" + p.Name + " " + p.Type)
 			}
 		} else if p.Collection == spec.COLLECTION_ARRAY {
-			if p.Type == spec.TYPE_STIRNG {
+			if p.Type == spec.TYPE_STRING {
 				m.c.Pn("_p,_err:=marsapi.ParseStringList(_s)")
 				onError()
 			} else if p.Type == spec.TYPE_INT32 {
@@ -243,7 +243,7 @@ func (m *Method)GenerateRouter() {
 			goName := GoName(p.Name, false)
 
 			if p.Collection == spec.COLLECTION_NONE {
-				if p.Type == spec.TYPE_STIRNG {
+				if p.Type == spec.TYPE_STRING {
 					m.c.Pn("_p_%s:=_s", goName, )
 				} else if p.Type == spec.TYPE_BYTE {
 					m.c.Pn("_p_%s_int64,_err:=strconv.ParseInt(_s,10,64)", goName)
@@ -293,7 +293,7 @@ func (m *Method)GenerateRouter() {
 			goName := GoName(p.Name, false)
 
 			if p.Collection == spec.COLLECTION_NONE {
-				if p.Type == spec.TYPE_STIRNG {
+				if p.Type == spec.TYPE_STRING {
 					m.c.Pn("_q_%s:=_s", goName)
 				} else if p.Type == spec.TYPE_BOOL {
 					m.c.Pn("_q_%s,_err:=strconv.ParseBool(_s)", goName)
@@ -337,7 +337,7 @@ func (m *Method)GenerateRouter() {
 						",param=" + p.Name + " " + p.Type)
 				}
 			} else if p.Collection == spec.COLLECTION_ARRAY {
-				if p.Type == spec.TYPE_STIRNG {
+				if p.Type == spec.TYPE_STRING {
 					m.c.Pn("_q_%s,_err:=marsapi.ParseStringList(_s)", goName)
 					onError()
 				} else if p.Type == spec.TYPE_INT32 {

@@ -87,7 +87,7 @@ func GoType(obj * spec.Object,parentName string,topCollectionItem bool)string {
 			panic("unknown type " + obj.Name + " " + obj.Type)
 		}
 		typ = GoType(obj.CollectionItem, parentName, topCollectionItem)
-	case spec.TYPE_STIRNG:typ = "string"
+	case spec.TYPE_STRING:typ = "string"
 	case spec.TYPE_BOOL:typ = "bool"
 	case spec.TYPE_BYTE:typ = "byte"
 	case spec.TYPE_INT32:typ = "int32"

@@ -59,7 +59,7 @@ func Convert(doc *APIDocument)(s *spec.Document) {
 func convertType(typ string,format string)string {
 	if typ == "string" {
 		if format == "" {
-			return spec.TYPE_STIRNG
+			return spec.TYPE_STRING
 		} else if format == "int64" {
 			return spec.TYPE_INT64
 		} else if format == "date-time" {
@@ -71,9 +71,9 @@ func convertType(typ string,format string)string {
 		}else if format=="uint64"{
 			return spec.TYPE_UINT64
 		}else if format=="google-duration"{
-			return spec.TYPE_STIRNG
+			return spec.TYPE_STRING
 		}else if format=="google-fieldmask"{
-			return spec.TYPE_STIRNG
+			return spec.TYPE_STRING
 		}else if format=="date"{
 			return spec.TYPE_DATE
 		}

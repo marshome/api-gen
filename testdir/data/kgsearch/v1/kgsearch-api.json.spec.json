@@ -1,0 +1,174 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "",
+    "discoveryVersion": "v1",
+    "id": "kgsearch:v1",
+    "name": "kgsearch",
+    "version": "v1",
+    "title": "Knowledge Graph Search API",
+    "description": "Searches the Google Knowledge Graph for entities.",
+    "documentationLink": "https://developers.google.com/knowledge-graph/",
+    "protocol": "rest",
+    "rootUrl": "https://kgsearch.googleapis.com/",
+    "auth": {},
+    "parameters": [
+        {
+            "name": "alt",
+            "desc": "Data format for response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                },
+                {
+                    "name": "media",
+                    "desc": "Media download with context-dependent Content-Type"
+                },
+                {
+                    "name": "proto",
+                    "desc": "Responses with Content-Type of application/x-protobuf"
+                }
+            ]
+        },
+        {
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
+            "name": "$.xgafv",
+            "desc": "V1 error format.",
+            "type": "string",
+            "enum": [
+                {
+                    "name": "1",
+                    "desc": "v1 error format"
+                },
+                {
+                    "name": "2",
+                    "desc": "v2 error format"
+                }
+            ]
+        },
+        {
+            "name": "uploadType",
+            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
+            "type": "string"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "SearchResponse",
+            "desc": "Response message includes the context and a list of matching results\nwhich contain the detail of associated entities.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "itemListElement",
+                    "desc": "The item list of search results.",
+                    "collection": "array",
+                    "type": "any"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "entities",
+            "methods": [
+                {
+                    "name": "search",
+                    "desc": "Searches Knowledge Graph for entities that match the constraints.\nA list of matched entities will be returned in response, which will be in\nJSON-LD format and compatible with http://schema.org",
+                    "path": "v1/entities:search",
+                    "httpMethod": "GET",
+                    "optinalQueryParams": [
+                        {
+                            "name": "languages",
+                            "desc": "The list of language codes (defined in ISO 693) to run the query with,\ne.g. 'en'.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "ids",
+                            "desc": "The list of entity id to be used for search instead of query string.\nTo specify multiple ids in the HTTP request, repeat the parameter in the\nURL as in ...?ids=A\u0026ids=B",
+                            "type": "string"
+                        },
+                        {
+                            "name": "limit",
+                            "desc": "Limits the number of entities to be returned.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "prefix",
+                            "desc": "Enables prefix match against names and aliases of entities",
+                            "type": "bool"
+                        },
+                        {
+                            "name": "query",
+                            "desc": "The literal query string for search.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "types",
+                            "desc": "Restricts returned entities with these types, e.g. Person\n(as defined in http://schema.org/Person). If multiple types are specified,\nreturned entities will contain one or more of these types.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "indent",
+                            "desc": "Enables indenting of json results.",
+                            "type": "bool"
+                        }
+                    ],
+                    "response": "SearchResponse"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,132 @@
+{
+    "kind": "discovery#restDescription",
+    "etag": "",
+    "discoveryVersion": "v1",
+    "id": "captcha:v1.0",
+    "name": "captcha",
+    "version": "v1.0",
+    "title": "Captcha Service API",
+    "description": "Captcha",
+    "documentationLink": "",
+    "protocol": "rest",
+    "rootUrl": "https://www.marsapi.com/",
+    "auth": {},
+    "parameters": [
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        }
+    ],
+    "schemas": [
+        {
+            "name": "Captcha",
+            "desc": "Captcha",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "id",
+                    "type": "string"
+                },
+                {
+                    "name": "image",
+                    "desc": "image",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "resources": [
+        {
+            "name": "Captcha",
+            "methods": [
+                {
+                    "name": "get",
+                    "desc": "Get new captcha",
+                    "path": "captcha/get",
+                    "httpMethod": "GET",
+                    "requiredQueryParams": [
+                        {
+                            "name": "length",
+                            "desc": "length",
+                            "required": true,
+                            "type": "int32"
+                        },
+                        {
+                            "name": "width",
+                            "desc": "width",
+                            "required": true,
+                            "type": "int32"
+                        },
+                        {
+                            "name": "height",
+                            "desc": "height",
+                            "required": true,
+                            "type": "int32"
+                        }
+                    ],
+                    "response": "Captcha"
+                },
+                {
+                    "name": "verify",
+                    "desc": "Verify captcha",
+                    "path": "captcha/verify",
+                    "httpMethod": "GET",
+                    "requiredQueryParams": [
+                        {
+                            "name": "id",
+                            "desc": "Captcha id",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "code",
+                            "desc": "Captcha code",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
