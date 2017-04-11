@@ -10,6 +10,7 @@
     "documentationLink": "https://developers.google.com/android-publisher",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "androidpublisher/v1/applications/",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/androidpublisher"
@@ -67,6 +68,11 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "autoRenewing",
+                    "desc": "Whether the subscription will automatically be renewed when it reaches its current expiry time.",
+                    "type": "bool"
+                },
+                {
                     "name": "initiationTimestampMsec",
                     "desc": "Time at which the subscription was granted, in milliseconds since the Epoch.",
                     "type": "int64"
@@ -81,11 +87,6 @@
                     "name": "validUntilTimestampMsec",
                     "desc": "Time at which the subscription will expire, in milliseconds since the Epoch.",
                     "type": "int64"
-                },
-                {
-                    "name": "autoRenewing",
-                    "desc": "Whether the subscription will automatically be renewed when it reaches its current expiry time.",
-                    "type": "bool"
                 }
             ]
         }
@@ -95,10 +96,10 @@
             "name": "purchases",
             "methods": [
                 {
-                    "name": "cancel",
-                    "desc": "Cancels a user's subscription purchase. The subscription remains valid until its expiration time.",
                     "path": "{packageName}/subscriptions/{subscriptionId}/purchases/{token}/cancel",
                     "httpMethod": "POST",
+                    "name": "cancel",
+                    "desc": "Cancels a user's subscription purchase. The subscription remains valid until its expiration time.",
                     "scopes": [
                         "https://www.googleapis.com/auth/androidpublisher"
                     ],
@@ -124,10 +125,10 @@
                     ]
                 },
                 {
-                    "name": "get",
-                    "desc": "Checks whether a user's subscription purchase is valid and returns its expiry time.",
                     "path": "{packageName}/subscriptions/{subscriptionId}/purchases/{token}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Checks whether a user's subscription purchase is valid and returns its expiry time.",
                     "scopes": [
                         "https://www.googleapis.com/auth/androidpublisher"
                     ],

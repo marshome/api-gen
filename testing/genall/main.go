@@ -8,11 +8,12 @@ import (
 	"strings"
 	"os"
 	"path/filepath"
-	"github.com/marshome/apis/googlespec"
-	"github.com/marshome/apis/codegen"
+	"github.com/marshome/i-api/spec/googlespec"
+	"github.com/marshome/i-api/codegen/golang"
 	"bytes"
 	"go/format"
-	"github.com/marshome/apis/spec"
+	"github.com/marshome/i-api/spec"
+	"github.com/marshome/x/filesystem"
 )
 
 var oddVersionRE = regexp.MustCompile(`^(.+)_(v[\d\.]+)$`)
@@ -27,7 +28,7 @@ func renameVersion(version string) string {
 	return version
 }
 
-var testingCode =bytes.NewBufferString("")
+var testingCode = bytes.NewBufferString("")
 
 func P(format string, args ...interface{}) {
 	testingCode.WriteString(fmt.Sprintf(format, args...))
@@ -37,30 +38,12 @@ func Pn(format string, args ...interface{}) {
 	testingCode.WriteString(fmt.Sprintf(format + "\n", args...))
 }
 
-func output_file(filePath string,data []byte)(err error) {
-	dir := filepath.Dir(filePath)
-	dirInfo, err := os.Stat(dir)
-	if dirInfo == nil || os.IsNotExist(err) {
-		err = os.MkdirAll(dir, os.ModePerm)
-		if err != nil {
-			return err
-		}
-	}
-
-	err = ioutil.WriteFile(filePath, data, os.ModePerm | os.ModeExclusive)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 type ServiceInfo struct {
 	Namespace   string
 	ServiceName string
 }
 
-func parseServiceInfo(r *spec.Resource,name string,namespace string)[] *ServiceInfo {
+func parseServiceInfo(r *spec.Resource, name string, namespace string) [] *ServiceInfo {
 	l := make([]*ServiceInfo, 0)
 	l = append(l, &ServiceInfo{
 		Namespace:namespace,
@@ -72,6 +55,34 @@ func parseServiceInfo(r *spec.Resource,name string,namespace string)[] *ServiceI
 	}
 
 	return l
+}
+
+func genTestAll(imports []string,services []*ServiceInfo) {
+	Pn("package main")
+	Pn("")
+	Pn("import(")
+	Pn("\"net/http\"")
+	Pn("\"github.com/marshome/i-api/genlib\"")
+	for _, v := range imports {
+		Pn("\"%s\"", strings.Replace(v, "..", "github.com/marshome/i-api/testing", -1))
+	}
+	Pn(")")
+	Pn("")
+
+	Pn("func main(){")
+	for _, v := range services {
+		Pn("%s_client.New(http.DefaultClient)", v.Namespace)
+		Pn("%s.Handle%sService(genlib.NewRouter(),&%s.Default%sService_{})", v.Namespace, v.ServiceName, v.Namespace, v.ServiceName)
+	}
+	Pn("}")
+
+	clean, err := format.Source(testingCode.Bytes())
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		filesystem.NewFile("../testall/main.go", testingCode.Bytes())
+	} else {
+		filesystem.NewFile("../testall/main.go", clean)
+	}
 }
 
 func main() {
@@ -127,43 +138,42 @@ func main() {
 			continue
 		}
 
-		output_file(json_path + ".spec.json", jsonData)
-
-		namespace := strings.Replace(name + "_" + version, ".", "_", -1)
+		filesystem.NewFile(json_path + ".spec.json", jsonData)
 
 		//server
-		serverCode, serverCodeErr := codegen.GenerateServer(jsonData, namespace)
+		serverCode, serverCodeErr := codegen.GenerateServer(jsonData)
 		if serverCodeErr != nil {
 			fmt.Fprintln(os.Stderr, serverCodeErr)
 		}
 
-		serverFile := filepath.Dir(json_path) + "/gen/server/marsapi/marsapi.go"
+		serverFile := filepath.Dir(json_path) + "/gen/server/server.go"
 
-		output_file(serverFile, []byte(serverCode))
+		filesystem.NewFile(serverFile, serverCode)
 
 		if serverCodeErr != nil {
 			return
 		}
 
 		//client
-		clientCode,clientCodeErr:=codegen.GenerateClient(jsonData,namespace+"_client")
-		if clientCodeErr!=nil{
+		clientCode, clientCodeErr := codegen.GenerateClient(jsonData)
+		if clientCodeErr != nil {
 			fmt.Fprintln(os.Stderr, clientCodeErr)
 		}
 
-		clientFile := filepath.Dir(json_path) + "/gen/client/marsapi/marsapi.go"
+		clientFile := filepath.Dir(json_path) + "/gen/client/client.go"
 
-		output_file(clientFile, []byte(clientCode))
+		filesystem.NewFile(clientFile, clientCode)
 
 		if clientCodeErr != nil {
 			return
 		}
 
-		if spec.Resources!=nil&&len(spec.Resources)>0{
-			imports = append(imports, strings.Replace(filepath.Dir(json_path) + "/gen/server/marsapi", "\\", "/", -1))
-			imports = append(imports, strings.Replace(filepath.Dir(json_path) + "/gen/client/marsapi", "\\", "/", -1))
+		if spec.Resources != nil&&len(spec.Resources) > 0 {
+			imports = append(imports, strings.Replace(filepath.Dir(json_path) + "/gen/server", "\\", "/", -1))
+			imports = append(imports, strings.Replace(filepath.Dir(json_path) + "/gen/client", "\\", "/", -1))
 		}
 
+		namespace := codegen.Namespace(name, version)
 		if spec.Resources != nil {
 			for _, r := range spec.Resources {
 				services = append(services, parseServiceInfo(r, r.Name, namespace)...)
@@ -171,29 +181,5 @@ func main() {
 		}
 	}
 
-	Pn("package main")
-	Pn("")
-	Pn("import(")
-	Pn("\"net/http\"")
-	Pn("\"github.com/marshome/apis/marsapi\"")
-	for _, v := range imports {
-		Pn("\"%s\"", strings.Replace(v, "..", "github.com/marshome/apis/testing", -1))
-	}
-	Pn(")")
-	Pn("")
-
-	Pn("func main(){")
-	for _, v := range services {
-		Pn("%s_client.New(http.DefaultClient)",v.Namespace)
-		Pn("%s.Handle%sService(marsapi.NewRouter(),&%s.Default%sService_{})", v.Namespace, v.ServiceName, v.Namespace, v.ServiceName)
-	}
-	Pn("}")
-
-	clean, err := format.Source(testingCode.Bytes())
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		output_file("../testall/main.go", testingCode.Bytes())
-	} else {
-		output_file("../testall/main.go", clean)
-	}
+	genTestAll(imports, services)
 }

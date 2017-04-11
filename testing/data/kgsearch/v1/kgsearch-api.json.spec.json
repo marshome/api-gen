@@ -10,23 +10,9 @@
     "documentationLink": "https://developers.google.com/knowledge-graph/",
     "protocol": "rest",
     "rootUrl": "https://kgsearch.googleapis.com/",
+    "servicePath": "",
     "auth": {},
     "parameters": [
-        {
-            "name": "key",
-            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
-            "type": "string"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
-            "type": "string"
-        },
-        {
-            "name": "bearer_token",
-            "desc": "OAuth bearer token.",
-            "type": "string"
-        },
         {
             "name": "prettyPrint",
             "desc": "Returns response with indentations and line breaks.",
@@ -34,14 +20,19 @@
             "default": "true"
         },
         {
-            "name": "uploadType",
-            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
-            "type": "string"
-        },
-        {
-            "name": "callback",
-            "desc": "JSONP",
-            "type": "string"
+            "name": "$.xgafv",
+            "desc": "V1 error format.",
+            "type": "string",
+            "enum": [
+                {
+                    "name": "1",
+                    "desc": "v1 error format"
+                },
+                {
+                    "name": "2",
+                    "desc": "v2 error format"
+                }
+            ]
         },
         {
             "name": "alt",
@@ -64,13 +55,19 @@
             ]
         },
         {
-            "name": "access_token",
-            "desc": "OAuth access token.",
-            "type": "string"
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
         },
         {
             "name": "oauth_token",
             "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
             "type": "string"
         },
         {
@@ -79,30 +76,34 @@
             "type": "string"
         },
         {
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
             "name": "fields",
             "desc": "Selector specifying which fields to include in a partial response.",
             "type": "string"
         },
         {
-            "name": "$.xgafv",
-            "desc": "V1 error format.",
-            "type": "string",
-            "enum": [
-                {
-                    "name": "1",
-                    "desc": "v1 error format"
-                },
-                {
-                    "name": "2",
-                    "desc": "v2 error format"
-                }
-            ]
+            "name": "uploadType",
+            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+            "type": "string"
         },
         {
-            "name": "pp",
-            "desc": "Pretty-print response.",
-            "type": "bool",
-            "default": "true"
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
         }
     ],
     "schemas": [
@@ -125,16 +126,11 @@
             "name": "entities",
             "methods": [
                 {
-                    "name": "search",
-                    "desc": "Searches Knowledge Graph for entities that match the constraints.\nA list of matched entities will be returned in response, which will be in\nJSON-LD format and compatible with http://schema.org",
                     "path": "v1/entities:search",
                     "httpMethod": "GET",
-                    "optinalQueryParams": [
-                        {
-                            "name": "limit",
-                            "desc": "Limits the number of entities to be returned.",
-                            "type": "int32"
-                        },
+                    "name": "search",
+                    "desc": "Searches Knowledge Graph for entities that match the constraints.\nA list of matched entities will be returned in response, which will be in\nJSON-LD format and compatible with http://schema.org",
+                    "optionalQueryParams": [
                         {
                             "name": "prefix",
                             "desc": "Enables prefix match against names and aliases of entities",
@@ -164,6 +160,11 @@
                             "name": "ids",
                             "desc": "The list of entity id to be used for search instead of query string.\nTo specify multiple ids in the HTTP request, repeat the parameter in the\nURL as in ...?ids=A\u0026ids=B",
                             "type": "string"
+                        },
+                        {
+                            "name": "limit",
+                            "desc": "Limits the number of entities to be returned.",
+                            "type": "int32"
                         }
                     ],
                     "response": "SearchResponse"

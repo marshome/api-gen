@@ -10,6 +10,7 @@
     "documentationLink": "https://developers.google.com/google-apps/activity/",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "appsactivity/v1/",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/activity",
@@ -20,22 +21,6 @@
         ]
     },
     "parameters": [
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
-            "type": "string"
-        },
-        {
-            "name": "userIp",
-            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
-            "type": "string"
-        },
         {
             "name": "alt",
             "desc": "Data format for the response.",
@@ -62,126 +47,25 @@
             "name": "oauth_token",
             "desc": "OAuth 2.0 token for the current user.",
             "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
         }
     ],
     "schemas": [
-        {
-            "name": "Parent",
-            "desc": "Contains information about a parent object. For example, a folder in Drive is a parent for all files within it.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "id",
-                    "desc": "The parent's ID.",
-                    "type": "string"
-                },
-                {
-                    "name": "isRoot",
-                    "desc": "Whether this is the root folder.",
-                    "type": "bool"
-                },
-                {
-                    "name": "title",
-                    "desc": "The parent's title.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Permission",
-            "desc": "Contains information about the permissions and type of access allowed with regards to a Google Drive object. This is a subset of the fields contained in a corresponding Drive Permissions object.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "user",
-                    "desc": "The user's information if the type is USER.",
-                    "type": "ref",
-                    "refType": "User"
-                },
-                {
-                    "name": "withLink",
-                    "desc": "Whether the permission requires a link to the file.",
-                    "type": "bool"
-                },
-                {
-                    "name": "name",
-                    "desc": "The name of the user or group the permission applies to.",
-                    "type": "string"
-                },
-                {
-                    "name": "permissionId",
-                    "desc": "The ID for this permission. Corresponds to the Drive API's permission ID returned as part of the Drive Permissions resource.",
-                    "type": "string"
-                },
-                {
-                    "name": "role",
-                    "desc": "Indicates the Google Drive permissions role. The role determines a user's ability to read, write, or comment on the file.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "commenter"
-                        },
-                        {
-                            "name": "owner"
-                        },
-                        {
-                            "name": "reader"
-                        },
-                        {
-                            "name": "writer"
-                        }
-                    ]
-                },
-                {
-                    "name": "type",
-                    "desc": "Indicates how widely permissions are granted.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "anyone"
-                        },
-                        {
-                            "name": "domain"
-                        },
-                        {
-                            "name": "group"
-                        },
-                        {
-                            "name": "user"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "Photo",
-            "desc": "Photo information for a user.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "url",
-                    "desc": "The URL of the photo.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Rename",
-            "desc": "Contains information about a renametype event.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "newTitle",
-                    "desc": "The new title.",
-                    "type": "string"
-                },
-                {
-                    "name": "oldTitle",
-                    "desc": "The old title.",
-                    "type": "string"
-                }
-            ]
-        },
         {
             "name": "Activity",
             "desc": "An Activity resource is a combined view of multiple events. An activity has a list of individual events and a combined view of the common fields among all events.",
@@ -212,16 +96,6 @@
                     "desc": "Additional event types. Some events may have multiple types when multiple actions are part of a single event. For example, creating a document, renaming it, and sharing it may be part of a single file-creation event.",
                     "collection": "array",
                     "type": "string"
-                },
-                {
-                    "name": "eventTimeMillis",
-                    "desc": "The time at which the event occurred formatted as Unix time in milliseconds.",
-                    "type": "uint64"
-                },
-                {
-                    "name": "fromUserDeletion",
-                    "desc": "Whether this event is caused by a user being deleted.",
-                    "type": "bool"
                 },
                 {
                     "name": "primaryEventType",
@@ -264,19 +138,6 @@
                     ]
                 },
                 {
-                    "name": "move",
-                    "desc": "Extra information for move type events, such as changes in an object's parents.",
-                    "type": "ref",
-                    "refType": "Move"
-                },
-                {
-                    "name": "permissionChanges",
-                    "desc": "Extra information for permissionChange type events, such as the user or group the new permission applies to.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "PermissionChange"
-                },
-                {
                     "name": "rename",
                     "desc": "Extra information for rename type events, such as the old and new names.",
                     "type": "ref",
@@ -293,6 +154,29 @@
                     "desc": "Represents the user responsible for the event.",
                     "type": "ref",
                     "refType": "User"
+                },
+                {
+                    "name": "eventTimeMillis",
+                    "desc": "The time at which the event occurred formatted as Unix time in milliseconds.",
+                    "type": "uint64"
+                },
+                {
+                    "name": "fromUserDeletion",
+                    "desc": "Whether this event is caused by a user being deleted.",
+                    "type": "bool"
+                },
+                {
+                    "name": "move",
+                    "desc": "Extra information for move type events, such as changes in an object's parents.",
+                    "type": "ref",
+                    "refType": "Move"
+                },
+                {
+                    "name": "permissionChanges",
+                    "desc": "Extra information for permissionChange type events, such as the user or group the new permission applies to.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "PermissionChange"
                 }
             ]
         },
@@ -316,10 +200,109 @@
             ]
         },
         {
+            "name": "Permission",
+            "desc": "Contains information about the permissions and type of access allowed with regards to a Google Drive object. This is a subset of the fields contained in a corresponding Drive Permissions object.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "type",
+                    "desc": "Indicates how widely permissions are granted.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "anyone"
+                        },
+                        {
+                            "name": "domain"
+                        },
+                        {
+                            "name": "group"
+                        },
+                        {
+                            "name": "user"
+                        }
+                    ]
+                },
+                {
+                    "name": "user",
+                    "desc": "The user's information if the type is USER.",
+                    "type": "ref",
+                    "refType": "User"
+                },
+                {
+                    "name": "withLink",
+                    "desc": "Whether the permission requires a link to the file.",
+                    "type": "bool"
+                },
+                {
+                    "name": "name",
+                    "desc": "The name of the user or group the permission applies to.",
+                    "type": "string"
+                },
+                {
+                    "name": "permissionId",
+                    "desc": "The ID for this permission. Corresponds to the Drive API's permission ID returned as part of the Drive Permissions resource.",
+                    "type": "string"
+                },
+                {
+                    "name": "role",
+                    "desc": "Indicates the Google Drive permissions role. The role determines a user's ability to read, write, or comment on the file.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "commenter"
+                        },
+                        {
+                            "name": "owner"
+                        },
+                        {
+                            "name": "reader"
+                        },
+                        {
+                            "name": "writer"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Target",
+            "desc": "Information about the object modified by the event.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "The ID of the target. For example, in Google Drive, this is the file or folder ID.",
+                    "type": "string"
+                },
+                {
+                    "name": "mimeType",
+                    "desc": "The MIME type of the target.",
+                    "type": "string"
+                },
+                {
+                    "name": "name",
+                    "desc": "The name of the target. For example, in Google Drive, this is the title of the file.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
             "name": "User",
             "desc": "A representation of a user.",
             "type": "object",
             "fields": [
+                {
+                    "name": "permissionId",
+                    "desc": "The permission ID associated with this user. Equivalent to the Drive API's permission ID for this user, returned as part of the Drive Permissions resource.",
+                    "type": "string"
+                },
+                {
+                    "name": "photo",
+                    "desc": "The profile photo of the user. Not present if the user has no profile photo.",
+                    "type": "ref",
+                    "refType": "Photo"
+                },
                 {
                     "name": "isDeleted",
                     "desc": "A boolean which indicates whether the specified User was deleted. If true, name, photo and permission_id will be omitted.",
@@ -334,17 +317,6 @@
                     "name": "name",
                     "desc": "The displayable name of the user.",
                     "type": "string"
-                },
-                {
-                    "name": "permissionId",
-                    "desc": "The permission ID associated with this user. Equivalent to the Drive API's permission ID for this user, returned as part of the Drive Permissions resource.",
-                    "type": "string"
-                },
-                {
-                    "name": "photo",
-                    "desc": "The profile photo of the user. Not present if the user has no profile photo.",
-                    "type": "ref",
-                    "refType": "Photo"
                 }
             ]
         },
@@ -370,6 +342,28 @@
             ]
         },
         {
+            "name": "Parent",
+            "desc": "Contains information about a parent object. For example, a folder in Drive is a parent for all files within it.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "The parent's ID.",
+                    "type": "string"
+                },
+                {
+                    "name": "isRoot",
+                    "desc": "Whether this is the root folder.",
+                    "type": "bool"
+                },
+                {
+                    "name": "title",
+                    "desc": "The parent's title.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
             "name": "PermissionChange",
             "desc": "Contains information about a Drive object's permissions that changed as a result of a permissionChange type event.",
             "type": "object",
@@ -391,23 +385,30 @@
             ]
         },
         {
-            "name": "Target",
-            "desc": "Information about the object modified by the event.",
+            "name": "Photo",
+            "desc": "Photo information for a user.",
             "type": "object",
             "fields": [
                 {
-                    "name": "id",
-                    "desc": "The ID of the target. For example, in Google Drive, this is the file or folder ID.",
+                    "name": "url",
+                    "desc": "The URL of the photo.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Rename",
+            "desc": "Contains information about a renametype event.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "newTitle",
+                    "desc": "The new title.",
                     "type": "string"
                 },
                 {
-                    "name": "mimeType",
-                    "desc": "The MIME type of the target.",
-                    "type": "string"
-                },
-                {
-                    "name": "name",
-                    "desc": "The name of the target. For example, in Google Drive, this is the title of the file.",
+                    "name": "oldTitle",
+                    "desc": "The old title.",
                     "type": "string"
                 }
             ]
@@ -418,10 +419,10 @@
             "name": "activities",
             "methods": [
                 {
-                    "name": "list",
-                    "desc": "Returns a list of activities visible to the current logged in user. Visible activities are determined by the visiblity settings of the object that was acted on, e.g. Drive files a user can see. An activity is a record of past events. Multiple events may be merged if they are similar. A request is scoped to activities from a given Google service using the source parameter.",
                     "path": "activities",
                     "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "Returns a list of activities visible to the current logged in user. Visible activities are determined by the visiblity settings of the object that was acted on, e.g. Drive files a user can see. An activity is a record of past events. Multiple events may be merged if they are similar. A request is scoped to activities from a given Google service using the source parameter.",
                     "scopes": [
                         "https://www.googleapis.com/auth/activity",
                         "https://www.googleapis.com/auth/drive",
@@ -429,7 +430,7 @@
                         "https://www.googleapis.com/auth/drive.metadata.readonly",
                         "https://www.googleapis.com/auth/drive.readonly"
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
                         {
                             "name": "pageToken",
                             "desc": "A token to retrieve a specific page of results.",

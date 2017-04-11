@@ -10,6 +10,7 @@
     "documentationLink": "https://developers.google.com/ad-exchange/seller-rest/",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "adexchangeseller/v1/",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/adexchange.seller",
@@ -17,22 +18,6 @@
         ]
     },
     "parameters": [
-        {
-            "name": "alt",
-            "desc": "Data format for the response.",
-            "type": "string",
-            "default": "json",
-            "enum": [
-                {
-                    "name": "csv",
-                    "desc": "Responses with Content-Type of text/csv"
-                },
-                {
-                    "name": "json",
-                    "desc": "Responses with Content-Type of application/json"
-                }
-            ]
-        },
         {
             "name": "fields",
             "desc": "Selector specifying which fields to include in a partial response.",
@@ -63,9 +48,137 @@
             "name": "userIp",
             "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
             "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "csv",
+                    "desc": "Responses with Content-Type of text/csv"
+                },
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
         }
     ],
     "schemas": [
+        {
+            "name": "AdClients",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token used to page through ad clients. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
+                    "type": "string"
+                },
+                {
+                    "name": "etag",
+                    "desc": "ETag of this response for caching purposes.",
+                    "type": "string"
+                },
+                {
+                    "name": "items",
+                    "desc": "The ad clients returned in this list response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "AdClient"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adexchangeseller#adClients.",
+                    "type": "string",
+                    "default": "adexchangeseller#adClients"
+                }
+            ]
+        },
+        {
+            "name": "AdUnit",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "Unique identifier of this ad unit. This should be considered an opaque identifier; it is not safe to rely on it being in any particular format.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is, in this case adexchangeseller#adUnit.",
+                    "type": "string",
+                    "default": "adexchangeseller#adUnit"
+                },
+                {
+                    "name": "name",
+                    "desc": "Name of this ad unit.",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "desc": "Status of this ad unit. Possible values are:\nNEW: Indicates that the ad unit was created within the last seven days and does not yet have any activity associated with it.\n\nACTIVE: Indicates that there has been activity on this ad unit in the last seven days.\n\nINACTIVE: Indicates that there has been no activity on this ad unit in the last seven days.",
+                    "type": "string"
+                },
+                {
+                    "name": "code",
+                    "desc": "Identity code of this ad unit, not necessarily unique across ad clients.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "SavedReport",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "Unique identifier of this saved report.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is, in this case adexchangeseller#savedReport.",
+                    "type": "string",
+                    "default": "adexchangeseller#savedReport"
+                },
+                {
+                    "name": "name",
+                    "desc": "This saved report's name.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "SavedReports",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "etag",
+                    "desc": "ETag of this response for caching purposes.",
+                    "type": "string"
+                },
+                {
+                    "name": "items",
+                    "desc": "The saved reports returned in this list response.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "SavedReport"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adexchangeseller#savedReports.",
+                    "type": "string",
+                    "default": "adexchangeseller#savedReports"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token used to page through saved reports. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
+                    "type": "string"
+                }
+            ]
+        },
         {
             "name": "UrlChannel",
             "type": "object",
@@ -121,102 +234,9 @@
             ]
         },
         {
-            "name": "AdClients",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "items",
-                    "desc": "The ad clients returned in this list response.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "AdClient"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of list this is, in this case adexchangeseller#adClients.",
-                    "type": "string",
-                    "default": "adexchangeseller#adClients"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "Continuation token used to page through ad clients. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
-                    "type": "string"
-                },
-                {
-                    "name": "etag",
-                    "desc": "ETag of this response for caching purposes.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "AdUnit",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "kind",
-                    "desc": "Kind of resource this is, in this case adexchangeseller#adUnit.",
-                    "type": "string",
-                    "default": "adexchangeseller#adUnit"
-                },
-                {
-                    "name": "name",
-                    "desc": "Name of this ad unit.",
-                    "type": "string"
-                },
-                {
-                    "name": "status",
-                    "desc": "Status of this ad unit. Possible values are:\nNEW: Indicates that the ad unit was created within the last seven days and does not yet have any activity associated with it.\n\nACTIVE: Indicates that there has been activity on this ad unit in the last seven days.\n\nINACTIVE: Indicates that there has been no activity on this ad unit in the last seven days.",
-                    "type": "string"
-                },
-                {
-                    "name": "code",
-                    "desc": "Identity code of this ad unit, not necessarily unique across ad clients.",
-                    "type": "string"
-                },
-                {
-                    "name": "id",
-                    "desc": "Unique identifier of this ad unit. This should be considered an opaque identifier; it is not safe to rely on it being in any particular format.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
             "name": "CustomChannel",
             "type": "object",
             "fields": [
-                {
-                    "name": "name",
-                    "desc": "Name of this custom channel.",
-                    "type": "string"
-                },
-                {
-                    "name": "targetingInfo",
-                    "desc": "The targeting information of this custom channel, if activated.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "description",
-                            "desc": "The external description of the channel.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "location",
-                            "desc": "The locations in which ads appear. (Only valid for content and mobile content ads). Acceptable values for content ads are: TOP_LEFT, TOP_CENTER, TOP_RIGHT, MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT, MULTIPLE_LOCATIONS. Acceptable values for mobile content ads are: TOP, MIDDLE, BOTTOM, MULTIPLE_LOCATIONS.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "siteLanguage",
-                            "desc": "The language of the sites ads will be displayed on.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "adsAppearOn",
-                            "desc": "The name used to describe this channel externally.",
-                            "type": "string"
-                        }
-                    ]
-                },
                 {
                     "name": "code",
                     "desc": "Code of this custom channel, not necessarily unique across ad clients.",
@@ -232,6 +252,38 @@
                     "desc": "Kind of resource this is, in this case adexchangeseller#customChannel.",
                     "type": "string",
                     "default": "adexchangeseller#customChannel"
+                },
+                {
+                    "name": "name",
+                    "desc": "Name of this custom channel.",
+                    "type": "string"
+                },
+                {
+                    "name": "targetingInfo",
+                    "desc": "The targeting information of this custom channel, if activated.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "adsAppearOn",
+                            "desc": "The name used to describe this channel externally.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "description",
+                            "desc": "The external description of the channel.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "location",
+                            "desc": "The locations in which ads appear. (Only valid for content and mobile content ads). Acceptable values for content ads are: TOP_LEFT, TOP_CENTER, TOP_RIGHT, MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT, MULTIPLE_LOCATIONS. Acceptable values for mobile content ads are: TOP, MIDDLE, BOTTOM, MULTIPLE_LOCATIONS.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "siteLanguage",
+                            "desc": "The language of the sites ads will be displayed on.",
+                            "type": "string"
+                        }
+                    ]
                 }
             ]
         },
@@ -239,17 +291,6 @@
             "name": "CustomChannels",
             "type": "object",
             "fields": [
-                {
-                    "name": "kind",
-                    "desc": "Kind of list this is, in this case adexchangeseller#customChannels.",
-                    "type": "string",
-                    "default": "adexchangeseller#customChannels"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "Continuation token used to page through custom channels. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
-                    "type": "string"
-                },
                 {
                     "name": "etag",
                     "desc": "ETag of this response for caching purposes.",
@@ -261,6 +302,17 @@
                     "collection": "array",
                     "type": "ref",
                     "refType": "CustomChannel"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adexchangeseller#customChannels.",
+                    "type": "string",
+                    "default": "adexchangeseller#customChannels"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token used to page through custom channels. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
+                    "type": "string"
                 }
             ]
         },
@@ -268,11 +320,6 @@
             "name": "Report",
             "type": "object",
             "fields": [
-                {
-                    "name": "totalMatchedRows",
-                    "desc": "The total number of rows matched by the report request. Fewer rows may be returned in the response due to being limited by the row count requested or the report row limit.",
-                    "type": "int64"
-                },
                 {
                     "name": "totals",
                     "desc": "The totals of the report. This is the same length as any other row in the report; cells corresponding to dimension columns are empty.",
@@ -328,35 +375,11 @@
                         "collection": "array",
                         "type": "string"
                     }
-                }
-            ]
-        },
-        {
-            "name": "SavedReports",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "etag",
-                    "desc": "ETag of this response for caching purposes.",
-                    "type": "string"
                 },
                 {
-                    "name": "items",
-                    "desc": "The saved reports returned in this list response.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "SavedReport"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of list this is, in this case adexchangeseller#savedReports.",
-                    "type": "string",
-                    "default": "adexchangeseller#savedReports"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "Continuation token used to page through saved reports. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
-                    "type": "string"
+                    "name": "totalMatchedRows",
+                    "desc": "The total number of rows matched by the report request. Fewer rows may be returned in the response due to being limited by the row count requested or the report row limit.",
+                    "type": "int64"
                 }
             ]
         },
@@ -394,6 +417,17 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "kind",
+                    "desc": "Kind of list this is, in this case adexchangeseller#adUnits.",
+                    "type": "string",
+                    "default": "adexchangeseller#adUnits"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token used to page through ad units. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
+                    "type": "string"
+                },
+                {
                     "name": "etag",
                     "desc": "ETag of this response for caching purposes.",
                     "type": "string"
@@ -404,57 +438,213 @@
                     "collection": "array",
                     "type": "ref",
                     "refType": "AdUnit"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of list this is, in this case adexchangeseller#adUnits.",
-                    "type": "string",
-                    "default": "adexchangeseller#adUnits"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "Continuation token used to page through ad units. To retrieve the next page of results, set the next request's \"pageToken\" value to this.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "SavedReport",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "id",
-                    "desc": "Unique identifier of this saved report.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of resource this is, in this case adexchangeseller#savedReport.",
-                    "type": "string",
-                    "default": "adexchangeseller#savedReport"
-                },
-                {
-                    "name": "name",
-                    "desc": "This saved report's name.",
-                    "type": "string"
                 }
             ]
         }
     ],
     "resources": [
         {
-            "name": "adclients",
+            "name": "reports",
             "methods": [
                 {
-                    "name": "list",
-                    "desc": "List all ad clients in this Ad Exchange account.",
-                    "path": "adclients",
+                    "path": "reports",
                     "httpMethod": "GET",
+                    "name": "generate",
+                    "desc": "Generate an Ad Exchange report based on the report request sent in the query parameters. Returns the result as JSON; to retrieve output in CSV format specify \"alt=csv\" as a query parameter.",
                     "scopes": [
                         "https://www.googleapis.com/auth/adexchange.seller",
                         "https://www.googleapis.com/auth/adexchange.seller.readonly"
                     ],
-                    "optinalQueryParams": [
+                    "requiredQueryParams": [
+                        {
+                            "name": "startDate",
+                            "desc": "Start of the date range to report on in \"YYYY-MM-DD\" format, inclusive.",
+                            "required": true,
+                            "type": "string",
+                            "pattern": "\\d{4}-\\d{2}-\\d{2}|(today|startOfMonth|startOfYear)(([\\-\\+]\\d+[dwmy]){0,3}?)"
+                        },
+                        {
+                            "name": "endDate",
+                            "desc": "End of the date range to report on in \"YYYY-MM-DD\" format, inclusive.",
+                            "required": true,
+                            "type": "string",
+                            "pattern": "\\d{4}-\\d{2}-\\d{2}|(today|startOfMonth|startOfYear)(([\\-\\+]\\d+[dwmy]){0,3}?)"
+                        }
+                    ],
+                    "optionalQueryParams": [
+                        {
+                            "name": "filter",
+                            "desc": "Filters to be run on the report.",
+                            "type": "string",
+                            "pattern": "[a-zA-Z_]+(==|=@).+"
+                        },
+                        {
+                            "name": "sort",
+                            "desc": "The name of a dimension or metric to sort the resulting report on, optionally prefixed with \"+\" to sort ascending or \"-\" to sort descending. If no prefix is specified, the column is sorted ascending.",
+                            "type": "string",
+                            "pattern": "(\\+|-)?[a-zA-Z_]+"
+                        },
+                        {
+                            "name": "startIndex",
+                            "desc": "Index of the first row of report data to return.",
+                            "type": "uint32",
+                            "min": "0",
+                            "max": "5000"
+                        },
+                        {
+                            "name": "dimension",
+                            "desc": "Dimensions to base the report on.",
+                            "type": "string",
+                            "pattern": "[a-zA-Z_]+"
+                        },
+                        {
+                            "name": "locale",
+                            "desc": "Optional locale to use for translating report output to a local language. Defaults to \"en_US\" if not specified.",
+                            "type": "string",
+                            "pattern": "[a-zA-Z_]+"
+                        },
+                        {
+                            "name": "maxResults",
+                            "desc": "The maximum number of rows of report data to return.",
+                            "type": "uint32",
+                            "min": "0",
+                            "max": "50000"
+                        },
+                        {
+                            "name": "metric",
+                            "desc": "Numeric columns to include in the report.",
+                            "type": "string",
+                            "pattern": "[a-zA-Z_]+"
+                        }
+                    ],
+                    "response": "Report"
+                }
+            ],
+            "resources": [
+                {
+                    "name": "saved",
+                    "methods": [
+                        {
+                            "path": "reports/{savedReportId}",
+                            "httpMethod": "GET",
+                            "name": "generate",
+                            "desc": "Generate an Ad Exchange report based on the saved report ID sent in the query parameters.",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adexchange.seller",
+                                "https://www.googleapis.com/auth/adexchange.seller.readonly"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "savedReportId",
+                                    "desc": "The saved report to retrieve.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optionalQueryParams": [
+                                {
+                                    "name": "locale",
+                                    "desc": "Optional locale to use for translating report output to a local language. Defaults to \"en_US\" if not specified.",
+                                    "type": "string",
+                                    "pattern": "[a-zA-Z_]+"
+                                },
+                                {
+                                    "name": "maxResults",
+                                    "desc": "The maximum number of rows of report data to return.",
+                                    "type": "int32",
+                                    "min": "0",
+                                    "max": "50000"
+                                },
+                                {
+                                    "name": "startIndex",
+                                    "desc": "Index of the first row of report data to return.",
+                                    "type": "int32",
+                                    "min": "0",
+                                    "max": "5000"
+                                }
+                            ],
+                            "response": "Report"
+                        },
+                        {
+                            "path": "reports/saved",
+                            "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "List all saved reports in this Ad Exchange account.",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adexchange.seller",
+                                "https://www.googleapis.com/auth/adexchange.seller.readonly"
+                            ],
+                            "optionalQueryParams": [
+                                {
+                                    "name": "maxResults",
+                                    "desc": "The maximum number of saved reports to include in the response, used for paging.",
+                                    "type": "int32",
+                                    "min": "0",
+                                    "max": "100"
+                                },
+                                {
+                                    "name": "pageToken",
+                                    "desc": "A continuation token, used to page through saved reports. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
+                                    "type": "string"
+                                }
+                            ],
+                            "response": "SavedReports"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "urlchannels",
+            "methods": [
+                {
+                    "path": "adclients/{adClientId}/urlchannels",
+                    "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "List all URL channels in the specified ad client for this Ad Exchange account.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adexchange.seller",
+                        "https://www.googleapis.com/auth/adexchange.seller.readonly"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "adClientId",
+                            "desc": "Ad client for which to list URL channels.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optionalQueryParams": [
+                        {
+                            "name": "maxResults",
+                            "desc": "The maximum number of URL channels to include in the response, used for paging.",
+                            "type": "uint32",
+                            "min": "0",
+                            "max": "10000"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "A continuation token, used to page through URL channels. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "UrlChannels"
+                }
+            ]
+        },
+        {
+            "name": "adclients",
+            "methods": [
+                {
+                    "path": "adclients",
+                    "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "List all ad clients in this Ad Exchange account.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/adexchange.seller",
+                        "https://www.googleapis.com/auth/adexchange.seller.readonly"
+                    ],
+                    "optionalQueryParams": [
                         {
                             "name": "maxResults",
                             "desc": "The maximum number of ad clients to include in the response, used for paging.",
@@ -476,10 +666,10 @@
             "name": "adunits",
             "methods": [
                 {
-                    "name": "get",
-                    "desc": "Gets the specified ad unit in the specified ad client.",
                     "path": "adclients/{adClientId}/adunits/{adUnitId}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Gets the specified ad unit in the specified ad client.",
                     "scopes": [
                         "https://www.googleapis.com/auth/adexchange.seller",
                         "https://www.googleapis.com/auth/adexchange.seller.readonly"
@@ -501,10 +691,10 @@
                     "response": "AdUnit"
                 },
                 {
-                    "name": "list",
-                    "desc": "List all ad units in the specified ad client for this Ad Exchange account.",
                     "path": "adclients/{adClientId}/adunits",
                     "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "List all ad units in the specified ad client for this Ad Exchange account.",
                     "scopes": [
                         "https://www.googleapis.com/auth/adexchange.seller",
                         "https://www.googleapis.com/auth/adexchange.seller.readonly"
@@ -517,7 +707,7 @@
                             "type": "string"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
                         {
                             "name": "includeInactive",
                             "desc": "Whether to include inactive ad units. Default: true.",
@@ -544,10 +734,10 @@
                     "name": "customchannels",
                     "methods": [
                         {
-                            "name": "list",
-                            "desc": "List all custom channels which the specified ad unit belongs to.",
                             "path": "adclients/{adClientId}/adunits/{adUnitId}/customchannels",
                             "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "List all custom channels which the specified ad unit belongs to.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/adexchange.seller",
                                 "https://www.googleapis.com/auth/adexchange.seller.readonly"
@@ -566,7 +756,7 @@
                                     "type": "string"
                                 }
                             ],
-                            "optinalQueryParams": [
+                            "optionalQueryParams": [
                                 {
                                     "name": "maxResults",
                                     "desc": "The maximum number of custom channels to include in the response, used for paging.",
@@ -590,10 +780,10 @@
             "name": "customchannels",
             "methods": [
                 {
-                    "name": "get",
-                    "desc": "Get the specified custom channel from the specified ad client.",
                     "path": "adclients/{adClientId}/customchannels/{customChannelId}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Get the specified custom channel from the specified ad client.",
                     "scopes": [
                         "https://www.googleapis.com/auth/adexchange.seller",
                         "https://www.googleapis.com/auth/adexchange.seller.readonly"
@@ -615,10 +805,10 @@
                     "response": "CustomChannel"
                 },
                 {
-                    "name": "list",
-                    "desc": "List all custom channels in the specified ad client for this Ad Exchange account.",
                     "path": "adclients/{adClientId}/customchannels",
                     "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "List all custom channels in the specified ad client for this Ad Exchange account.",
                     "scopes": [
                         "https://www.googleapis.com/auth/adexchange.seller",
                         "https://www.googleapis.com/auth/adexchange.seller.readonly"
@@ -631,7 +821,7 @@
                             "type": "string"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
                         {
                             "name": "pageToken",
                             "desc": "A continuation token, used to page through custom channels. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
@@ -653,10 +843,10 @@
                     "name": "adunits",
                     "methods": [
                         {
-                            "name": "list",
-                            "desc": "List all ad units in the specified custom channel.",
                             "path": "adclients/{adClientId}/customchannels/{customChannelId}/adunits",
                             "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "List all ad units in the specified custom channel.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/adexchange.seller",
                                 "https://www.googleapis.com/auth/adexchange.seller.readonly"
@@ -675,7 +865,7 @@
                                     "type": "string"
                                 }
                             ],
-                            "optinalQueryParams": [
+                            "optionalQueryParams": [
                                 {
                                     "name": "includeInactive",
                                     "desc": "Whether to include inactive ad units. Default: true.",
@@ -697,195 +887,6 @@
                             "response": "AdUnits"
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "name": "reports",
-            "methods": [
-                {
-                    "name": "generate",
-                    "desc": "Generate an Ad Exchange report based on the report request sent in the query parameters. Returns the result as JSON; to retrieve output in CSV format specify \"alt=csv\" as a query parameter.",
-                    "path": "reports",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/adexchange.seller",
-                        "https://www.googleapis.com/auth/adexchange.seller.readonly"
-                    ],
-                    "requiredQueryParams": [
-                        {
-                            "name": "startDate",
-                            "desc": "Start of the date range to report on in \"YYYY-MM-DD\" format, inclusive.",
-                            "required": true,
-                            "type": "string",
-                            "pattern": "\\d{4}-\\d{2}-\\d{2}|(today|startOfMonth|startOfYear)(([\\-\\+]\\d+[dwmy]){0,3}?)"
-                        },
-                        {
-                            "name": "endDate",
-                            "desc": "End of the date range to report on in \"YYYY-MM-DD\" format, inclusive.",
-                            "required": true,
-                            "type": "string",
-                            "pattern": "\\d{4}-\\d{2}-\\d{2}|(today|startOfMonth|startOfYear)(([\\-\\+]\\d+[dwmy]){0,3}?)"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "dimension",
-                            "desc": "Dimensions to base the report on.",
-                            "type": "string",
-                            "pattern": "[a-zA-Z_]+"
-                        },
-                        {
-                            "name": "filter",
-                            "desc": "Filters to be run on the report.",
-                            "type": "string",
-                            "pattern": "[a-zA-Z_]+(==|=@).+"
-                        },
-                        {
-                            "name": "metric",
-                            "desc": "Numeric columns to include in the report.",
-                            "type": "string",
-                            "pattern": "[a-zA-Z_]+"
-                        },
-                        {
-                            "name": "startIndex",
-                            "desc": "Index of the first row of report data to return.",
-                            "type": "uint32",
-                            "min": "0",
-                            "max": "5000"
-                        },
-                        {
-                            "name": "locale",
-                            "desc": "Optional locale to use for translating report output to a local language. Defaults to \"en_US\" if not specified.",
-                            "type": "string",
-                            "pattern": "[a-zA-Z_]+"
-                        },
-                        {
-                            "name": "maxResults",
-                            "desc": "The maximum number of rows of report data to return.",
-                            "type": "uint32",
-                            "min": "0",
-                            "max": "50000"
-                        },
-                        {
-                            "name": "sort",
-                            "desc": "The name of a dimension or metric to sort the resulting report on, optionally prefixed with \"+\" to sort ascending or \"-\" to sort descending. If no prefix is specified, the column is sorted ascending.",
-                            "type": "string",
-                            "pattern": "(\\+|-)?[a-zA-Z_]+"
-                        }
-                    ],
-                    "response": "Report"
-                }
-            ],
-            "resources": [
-                {
-                    "name": "saved",
-                    "methods": [
-                        {
-                            "name": "generate",
-                            "desc": "Generate an Ad Exchange report based on the saved report ID sent in the query parameters.",
-                            "path": "reports/{savedReportId}",
-                            "httpMethod": "GET",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/adexchange.seller",
-                                "https://www.googleapis.com/auth/adexchange.seller.readonly"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "savedReportId",
-                                    "desc": "The saved report to retrieve.",
-                                    "required": true,
-                                    "type": "string"
-                                }
-                            ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "startIndex",
-                                    "desc": "Index of the first row of report data to return.",
-                                    "type": "int32",
-                                    "min": "0",
-                                    "max": "5000"
-                                },
-                                {
-                                    "name": "locale",
-                                    "desc": "Optional locale to use for translating report output to a local language. Defaults to \"en_US\" if not specified.",
-                                    "type": "string",
-                                    "pattern": "[a-zA-Z_]+"
-                                },
-                                {
-                                    "name": "maxResults",
-                                    "desc": "The maximum number of rows of report data to return.",
-                                    "type": "int32",
-                                    "min": "0",
-                                    "max": "50000"
-                                }
-                            ],
-                            "response": "Report"
-                        },
-                        {
-                            "name": "list",
-                            "desc": "List all saved reports in this Ad Exchange account.",
-                            "path": "reports/saved",
-                            "httpMethod": "GET",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/adexchange.seller",
-                                "https://www.googleapis.com/auth/adexchange.seller.readonly"
-                            ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "maxResults",
-                                    "desc": "The maximum number of saved reports to include in the response, used for paging.",
-                                    "type": "int32",
-                                    "min": "0",
-                                    "max": "100"
-                                },
-                                {
-                                    "name": "pageToken",
-                                    "desc": "A continuation token, used to page through saved reports. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
-                                    "type": "string"
-                                }
-                            ],
-                            "response": "SavedReports"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "urlchannels",
-            "methods": [
-                {
-                    "name": "list",
-                    "desc": "List all URL channels in the specified ad client for this Ad Exchange account.",
-                    "path": "adclients/{adClientId}/urlchannels",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/adexchange.seller",
-                        "https://www.googleapis.com/auth/adexchange.seller.readonly"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "adClientId",
-                            "desc": "Ad client for which to list URL channels.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "maxResults",
-                            "desc": "The maximum number of URL channels to include in the response, used for paging.",
-                            "type": "uint32",
-                            "min": "0",
-                            "max": "10000"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "A continuation token, used to page through URL channels. To retrieve the next page, set this parameter to the value of \"nextPageToken\" from the previous response.",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "UrlChannels"
                 }
             ]
         }

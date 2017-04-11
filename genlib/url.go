@@ -6,7 +6,7 @@
 // Template, http://tools.ietf.org/html/rfc6570).
 // uritemplates does not support composite values (in Go: slices or maps)
 // and so does not qualify as a level 4 implementation.
-package marsapi
+package genlib
 
 import (
 	"bytes"
@@ -18,18 +18,18 @@ import (
 
 var (
 	unreserved = regexp.MustCompile("[^A-Za-z0-9\\-._~]")
-	reserved   = regexp.MustCompile("[^A-Za-z0-9\\-._~:/?#[\\]@!$&'()*+,;=]")
-	validname  = regexp.MustCompile("^([A-Za-z0-9_\\.]|%[0-9A-Fa-f][0-9A-Fa-f])+$")
-	hex        = []byte("0123456789ABCDEF")
+	reserved = regexp.MustCompile("[^A-Za-z0-9\\-._~:/?#[\\]@!$&'()*+,;=]")
+	validname = regexp.MustCompile("^([A-Za-z0-9_\\.]|%[0-9A-Fa-f][0-9A-Fa-f])+$")
+	hex = []byte("0123456789ABCDEF")
 )
 
 func pctEncode(src []byte) []byte {
-	dst := make([]byte, len(src)*3)
+	dst := make([]byte, len(src) * 3)
 	for i, b := range src {
-		buf := dst[i*3 : i*3+3]
+		buf := dst[i * 3 : i * 3 + 3]
 		buf[0] = 0x25
-		buf[1] = hex[b/16]
-		buf[2] = hex[b%16]
+		buf[1] = hex[b / 16]
+		buf[2] = hex[b % 16]
 	}
 	return dst
 }
@@ -76,7 +76,7 @@ type uriTemplate struct {
 // parse parses a URI template string into a uriTemplate object.
 func parse(rawTemplate string) (*uriTemplate, error) {
 	split := strings.Split(rawTemplate, "{")
-	parts := make([]templatePart, len(split)*2-1)
+	parts := make([]templatePart, len(split) * 2 - 1)
 	for i, s := range split {
 		if i == 0 {
 			if strings.Contains(s, "}") {
@@ -91,11 +91,11 @@ func parse(rawTemplate string) (*uriTemplate, error) {
 		}
 		expression := subsplit[0]
 		var err error
-		parts[i*2-1], err = parseExpression(expression)
+		parts[i * 2 - 1], err = parseExpression(expression)
 		if err != nil {
 			return nil, err
 		}
-		parts[i*2].raw = subsplit[1]
+		parts[i * 2].raw = subsplit[1]
 	}
 	return &uriTemplate{
 		raw:   rawTemplate,
@@ -174,7 +174,7 @@ func parseTerm(term string) (result templateTerm, err error) {
 	// mistakenly used that attribute.
 	if strings.HasSuffix(term, "*") {
 		result.explode = true
-		term = term[:len(term)-1]
+		term = term[:len(term) - 1]
 	}
 	split := strings.Split(term, ":")
 	if len(split) == 1 {

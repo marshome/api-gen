@@ -10,12 +10,13 @@
     "documentationLink": "https://developers.google.com/prediction/docs/developer-guide",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "prediction/v1.4/",
     "auth": {
         "oauth2": [
+            "https://www.googleapis.com/auth/prediction",
             "https://www.googleapis.com/auth/devstorage.full_control",
             "https://www.googleapis.com/auth/devstorage.read_only",
-            "https://www.googleapis.com/auth/devstorage.read_write",
-            "https://www.googleapis.com/auth/prediction"
+            "https://www.googleapis.com/auth/devstorage.read_write"
         ]
     },
     "parameters": [
@@ -65,144 +66,6 @@
     ],
     "schemas": [
         {
-            "name": "Training",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "modelInfo",
-                    "desc": "Model metadata.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "numberInstances",
-                            "desc": "Number of valid data instances used in the trained model.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "numberLabels",
-                            "desc": "Number of class labels in the trained model [Categorical models only].",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "classWeightedAccuracy",
-                            "desc": "Estimated accuracy of model taking utility weights into account [Categorical models only].",
-                            "type": "float64"
-                        },
-                        {
-                            "name": "classificationAccuracy",
-                            "desc": "A number between 0.0 and 1.0, where 1.0 is 100% accurate. This is an estimate, based on the amount and quality of the training data, of the estimated prediction accuracy. You can use this is a guide to decide whether the results are accurate enough for your needs. This estimate will be more reliable if your real input data is similar to your training data [Categorical models only].",
-                            "type": "float64"
-                        },
-                        {
-                            "name": "confusionMatrix",
-                            "desc": "An output confusion matrix. This shows an estimate for how this model will do in predictions. This is first indexed by the true class label. For each true class label, this provides a pair {predicted_label, count}, where count is the estimated number of times the model will predict the predicted label given the true label. Will not output if more then 100 classes [Categorical models only].",
-                            "collection": "map",
-                            "collectionItem": {
-                                "collection": "map",
-                                "type": "float64"
-                            }
-                        },
-                        {
-                            "name": "confusionMatrixRowTotals",
-                            "desc": "A list of the confusion matrix row totals",
-                            "collection": "map",
-                            "type": "float64"
-                        },
-                        {
-                            "name": "meanSquaredError",
-                            "desc": "An estimated mean squared error. The can be used to measure the quality of the predicted model [Regression models only].",
-                            "type": "float64"
-                        },
-                        {
-                            "name": "modelType",
-                            "desc": "Type of predictive model (CLASSIFICATION or REGRESSION)",
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "utility",
-                    "desc": "A class weighting function, which allows the importance weights for class labels to be specified [Categorical models only].",
-                    "collection": "array",
-                    "collectionItem": {
-                        "desc": "Class label (string).",
-                        "collection": "map",
-                        "type": "float64"
-                    }
-                },
-                {
-                    "name": "storagePMMLLocation",
-                    "desc": "Google storage location of the preprocessing pmml file.",
-                    "type": "string"
-                },
-                {
-                    "name": "storagePMMLModelLocation",
-                    "desc": "Google storage location of the pmml model file.",
-                    "type": "string"
-                },
-                {
-                    "name": "trainingStatus",
-                    "desc": "The current status of the training job. This can be one of following: RUNNING; DONE; ERROR; ERROR: TRAINING JOB NOT FOUND",
-                    "type": "string"
-                },
-                {
-                    "name": "dataAnalysis",
-                    "desc": "Data Analysis.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "warnings",
-                            "collection": "array",
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "id",
-                    "desc": "The unique name for the predictive model.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "What kind of resource this is.",
-                    "type": "string",
-                    "default": "prediction#training"
-                },
-                {
-                    "name": "selfLink",
-                    "desc": "A URL to re-request this resource.",
-                    "type": "string"
-                },
-                {
-                    "name": "storageDataLocation",
-                    "desc": "Google storage location of the training data file.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Update",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "csvInstance",
-                    "desc": "The input features for this instance",
-                    "collection": "array",
-                    "type": "any"
-                },
-                {
-                    "name": "label",
-                    "desc": "The class label of this instance",
-                    "type": "string"
-                },
-                {
-                    "name": "output",
-                    "desc": "The generic output value - could be regression value or class label",
-                    "type": "string"
-                }
-            ]
-        },
-        {
             "name": "Input",
             "type": "object",
             "fields": [
@@ -225,6 +88,16 @@
             "name": "Output",
             "type": "object",
             "fields": [
+                {
+                    "name": "outputValue",
+                    "desc": "The estimated regression value [Regression models only].",
+                    "type": "float64"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "A URL to re-request this resource.",
+                    "type": "string"
+                },
                 {
                     "name": "id",
                     "desc": "The unique name for the predictive model.",
@@ -258,15 +131,143 @@
                             "type": "float64"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "name": "Training",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "The unique name for the predictive model.",
+                    "type": "string"
                 },
                 {
-                    "name": "outputValue",
-                    "desc": "The estimated regression value [Regression models only].",
-                    "type": "float64"
+                    "name": "kind",
+                    "desc": "What kind of resource this is.",
+                    "type": "string",
+                    "default": "prediction#training"
                 },
                 {
                     "name": "selfLink",
                     "desc": "A URL to re-request this resource.",
+                    "type": "string"
+                },
+                {
+                    "name": "storageDataLocation",
+                    "desc": "Google storage location of the training data file.",
+                    "type": "string"
+                },
+                {
+                    "name": "storagePMMLModelLocation",
+                    "desc": "Google storage location of the pmml model file.",
+                    "type": "string"
+                },
+                {
+                    "name": "trainingStatus",
+                    "desc": "The current status of the training job. This can be one of following: RUNNING; DONE; ERROR; ERROR: TRAINING JOB NOT FOUND",
+                    "type": "string"
+                },
+                {
+                    "name": "dataAnalysis",
+                    "desc": "Data Analysis.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "warnings",
+                            "collection": "array",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "modelInfo",
+                    "desc": "Model metadata.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "classificationAccuracy",
+                            "desc": "A number between 0.0 and 1.0, where 1.0 is 100% accurate. This is an estimate, based on the amount and quality of the training data, of the estimated prediction accuracy. You can use this is a guide to decide whether the results are accurate enough for your needs. This estimate will be more reliable if your real input data is similar to your training data [Categorical models only].",
+                            "type": "float64"
+                        },
+                        {
+                            "name": "confusionMatrix",
+                            "desc": "An output confusion matrix. This shows an estimate for how this model will do in predictions. This is first indexed by the true class label. For each true class label, this provides a pair {predicted_label, count}, where count is the estimated number of times the model will predict the predicted label given the true label. Will not output if more then 100 classes [Categorical models only].",
+                            "collection": "map",
+                            "collectionItem": {
+                                "collection": "map",
+                                "type": "float64"
+                            }
+                        },
+                        {
+                            "name": "confusionMatrixRowTotals",
+                            "desc": "A list of the confusion matrix row totals",
+                            "collection": "map",
+                            "type": "float64"
+                        },
+                        {
+                            "name": "meanSquaredError",
+                            "desc": "An estimated mean squared error. The can be used to measure the quality of the predicted model [Regression models only].",
+                            "type": "float64"
+                        },
+                        {
+                            "name": "modelType",
+                            "desc": "Type of predictive model (CLASSIFICATION or REGRESSION)",
+                            "type": "string"
+                        },
+                        {
+                            "name": "numberInstances",
+                            "desc": "Number of valid data instances used in the trained model.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "numberLabels",
+                            "desc": "Number of class labels in the trained model [Categorical models only].",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "classWeightedAccuracy",
+                            "desc": "Estimated accuracy of model taking utility weights into account [Categorical models only].",
+                            "type": "float64"
+                        }
+                    ]
+                },
+                {
+                    "name": "storagePMMLLocation",
+                    "desc": "Google storage location of the preprocessing pmml file.",
+                    "type": "string"
+                },
+                {
+                    "name": "utility",
+                    "desc": "A class weighting function, which allows the importance weights for class labels to be specified [Categorical models only].",
+                    "collection": "array",
+                    "collectionItem": {
+                        "desc": "Class label (string).",
+                        "collection": "map",
+                        "type": "float64"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Update",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "output",
+                    "desc": "The generic output value - could be regression value or class label",
+                    "type": "string"
+                },
+                {
+                    "name": "csvInstance",
+                    "desc": "The input features for this instance",
+                    "collection": "array",
+                    "type": "any"
+                },
+                {
+                    "name": "label",
+                    "desc": "The class label of this instance",
                     "type": "string"
                 }
             ]
@@ -277,10 +278,10 @@
             "name": "hostedmodels",
             "methods": [
                 {
-                    "name": "predict",
-                    "desc": "Submit input and request an output against a hosted model.",
                     "path": "hostedmodels/{hostedModelName}/predict",
                     "httpMethod": "POST",
+                    "name": "predict",
+                    "desc": "Submit input and request an output against a hosted model.",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
@@ -301,10 +302,61 @@
             "name": "trainedmodels",
             "methods": [
                 {
-                    "name": "update",
-                    "desc": "Add new data to a trained model.",
+                    "path": "trainedmodels/{id}",
+                    "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Check training status of your model.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/prediction"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "id",
+                            "desc": "The unique name for the predictive model.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "Training"
+                },
+                {
+                    "path": "trainedmodels",
+                    "httpMethod": "POST",
+                    "name": "insert",
+                    "desc": "Begin training your model.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/devstorage.full_control",
+                        "https://www.googleapis.com/auth/devstorage.read_only",
+                        "https://www.googleapis.com/auth/devstorage.read_write",
+                        "https://www.googleapis.com/auth/prediction"
+                    ],
+                    "request": "Training",
+                    "response": "Training"
+                },
+                {
+                    "path": "trainedmodels/{id}/predict",
+                    "httpMethod": "POST",
+                    "name": "predict",
+                    "desc": "Submit model id and request a prediction",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/prediction"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "id",
+                            "desc": "The unique name for the predictive model.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "Input",
+                    "response": "Output"
+                },
+                {
                     "path": "trainedmodels/{id}",
                     "httpMethod": "PUT",
+                    "name": "update",
+                    "desc": "Add new data to a trained model.",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
@@ -320,10 +372,10 @@
                     "response": "Training"
                 },
                 {
-                    "name": "delete",
-                    "desc": "Delete a trained model.",
                     "path": "trainedmodels/{id}",
                     "httpMethod": "DELETE",
+                    "name": "delete",
+                    "desc": "Delete a trained model.",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
@@ -335,57 +387,6 @@
                             "type": "string"
                         }
                     ]
-                },
-                {
-                    "name": "get",
-                    "desc": "Check training status of your model.",
-                    "path": "trainedmodels/{id}",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/prediction"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "id",
-                            "desc": "The unique name for the predictive model.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "response": "Training"
-                },
-                {
-                    "name": "insert",
-                    "desc": "Begin training your model.",
-                    "path": "trainedmodels",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/devstorage.full_control",
-                        "https://www.googleapis.com/auth/devstorage.read_only",
-                        "https://www.googleapis.com/auth/devstorage.read_write",
-                        "https://www.googleapis.com/auth/prediction"
-                    ],
-                    "request": "Training",
-                    "response": "Training"
-                },
-                {
-                    "name": "predict",
-                    "desc": "Submit model id and request a prediction",
-                    "path": "trainedmodels/{id}/predict",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/prediction"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "id",
-                            "desc": "The unique name for the predictive model.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "request": "Input",
-                    "response": "Output"
                 }
             ]
         }

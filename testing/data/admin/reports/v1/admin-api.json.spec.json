@@ -10,6 +10,7 @@
     "documentationLink": "https://developers.google.com/admin-sdk/reports/",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "admin/reports/v1/",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/admin.reports.audit.readonly",
@@ -68,26 +69,14 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "resourceUri",
-                    "desc": "A version-specific identifier for the watched resource.",
-                    "type": "string"
-                },
-                {
                     "name": "expiration",
                     "desc": "Date and time of notification channel expiration, expressed as a Unix timestamp, in milliseconds. Optional.",
                     "type": "int64"
                 },
                 {
-                    "name": "params",
-                    "desc": "Additional parameters controlling delivery channel behavior. Optional.",
-                    "collection": "map",
+                    "name": "id",
+                    "desc": "A UUID or similar unique string that identifies this channel.",
                     "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies this as a notification channel used to watch for changes to a resource. Value: the fixed string \"api#channel\".",
-                    "type": "string",
-                    "default": "api#channel"
                 },
                 {
                     "name": "payload",
@@ -97,11 +86,6 @@
                 {
                     "name": "resourceId",
                     "desc": "An opaque ID that identifies the resource being watched on this channel. Stable across different API versions.",
-                    "type": "string"
-                },
-                {
-                    "name": "token",
-                    "desc": "An arbitrary string delivered to the target address with each notification delivered over this channel. Optional.",
                     "type": "string"
                 },
                 {
@@ -115,8 +99,25 @@
                     "type": "string"
                 },
                 {
-                    "name": "id",
-                    "desc": "A UUID or similar unique string that identifies this channel.",
+                    "name": "kind",
+                    "desc": "Identifies this as a notification channel used to watch for changes to a resource. Value: the fixed string \"api#channel\".",
+                    "type": "string",
+                    "default": "api#channel"
+                },
+                {
+                    "name": "params",
+                    "desc": "Additional parameters controlling delivery channel behavior. Optional.",
+                    "collection": "map",
+                    "type": "string"
+                },
+                {
+                    "name": "resourceUri",
+                    "desc": "A version-specific identifier for the watched resource.",
+                    "type": "string"
+                },
+                {
+                    "name": "token",
+                    "desc": "An arbitrary string delivered to the target address with each notification delivered over this channel. Optional.",
                     "type": "string"
                 }
             ]
@@ -137,6 +138,11 @@
                     "type": "object",
                     "fields": [
                         {
+                            "name": "userEmail",
+                            "desc": "user's email.",
+                            "type": "string"
+                        },
+                        {
                             "name": "customerId",
                             "desc": "Obfuscated customer id for the record.",
                             "type": "string"
@@ -149,11 +155,6 @@
                         {
                             "name": "type",
                             "desc": "The type of item, can be a customer or user.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "userEmail",
-                            "desc": "user's email.",
                             "type": "string"
                         }
                     ]
@@ -175,6 +176,16 @@
                     "collection": "array",
                     "type": "object",
                     "fields": [
+                        {
+                            "name": "datetimeValue",
+                            "desc": "RFC 3339 formatted value of the parameter.",
+                            "type": "datetime"
+                        },
+                        {
+                            "name": "intValue",
+                            "desc": "Integral value of the parameter.",
+                            "type": "int64"
+                        },
                         {
                             "name": "msgValue",
                             "desc": "Nested message value of the parameter.",
@@ -198,16 +209,6 @@
                             "name": "boolValue",
                             "desc": "Boolean value of the parameter.",
                             "type": "bool"
-                        },
-                        {
-                            "name": "datetimeValue",
-                            "desc": "RFC 3339 formatted value of the parameter.",
-                            "type": "datetime"
-                        },
-                        {
-                            "name": "intValue",
-                            "desc": "Integral value of the parameter.",
-                            "type": "int64"
                         }
                     ]
                 }
@@ -218,17 +219,6 @@
             "desc": "JSON template for a collection of usage reports.",
             "type": "object",
             "fields": [
-                {
-                    "name": "etag",
-                    "desc": "ETag of the resource.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "The kind of object.",
-                    "type": "string",
-                    "default": "admin#reports#usageReports"
-                },
                 {
                     "name": "nextPageToken",
                     "desc": "Token for retrieving the next page",
@@ -276,6 +266,17 @@
                             "type": "string"
                         }
                     ]
+                },
+                {
+                    "name": "etag",
+                    "desc": "ETag of the resource.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of object.",
+                    "type": "string",
+                    "default": "admin#reports#usageReports"
                 }
             ]
         },
@@ -284,6 +285,11 @@
             "desc": "JSON template for a collection of activites.",
             "type": "object",
             "fields": [
+                {
+                    "name": "etag",
+                    "desc": "ETag of the resource.",
+                    "type": "string"
+                },
                 {
                     "name": "items",
                     "desc": "Each record in read response.",
@@ -301,11 +307,6 @@
                     "name": "nextPageToken",
                     "desc": "Token for retrieving the next page",
                     "type": "string"
-                },
-                {
-                    "name": "etag",
-                    "desc": "ETag of the resource.",
-                    "type": "string"
                 }
             ]
         },
@@ -314,12 +315,6 @@
             "desc": "JSON template for the activity resource.",
             "type": "object",
             "fields": [
-                {
-                    "name": "kind",
-                    "desc": "Kind of resource this is.",
-                    "type": "string",
-                    "default": "admin#reports#activity"
-                },
                 {
                     "name": "ownerDomain",
                     "desc": "Domain of source customer.",
@@ -331,16 +326,6 @@
                     "type": "object",
                     "fields": [
                         {
-                            "name": "key",
-                            "desc": "For OAuth 2LO API requests, consumer_key of the requestor.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "profileId",
-                            "desc": "Obfuscated user id of the user.",
-                            "type": "string"
-                        },
-                        {
                             "name": "callerType",
                             "desc": "User or OAuth 2LO request.",
                             "type": "string"
@@ -348,6 +333,16 @@
                         {
                             "name": "email",
                             "desc": "Email address of the user.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "key",
+                            "desc": "For OAuth 2LO API requests, consumer_key of the requestor.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "profileId",
+                            "desc": "Obfuscated user id of the user.",
                             "type": "string"
                         }
                     ]
@@ -375,11 +370,6 @@
                             "type": "object",
                             "fields": [
                                 {
-                                    "name": "boolValue",
-                                    "desc": "Boolean value of the parameter.",
-                                    "type": "bool"
-                                },
-                                {
                                     "name": "intValue",
                                     "desc": "Integral value of the parameter.",
                                     "type": "int64"
@@ -405,6 +395,11 @@
                                     "name": "value",
                                     "desc": "String value of the parameter.",
                                     "type": "string"
+                                },
+                                {
+                                    "name": "boolValue",
+                                    "desc": "Boolean value of the parameter.",
+                                    "type": "bool"
                                 }
                             ]
                         },
@@ -446,6 +441,12 @@
                     "name": "ipAddress",
                     "desc": "IP Address of the user doing the action.",
                     "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of resource this is.",
+                    "type": "string",
+                    "default": "admin#reports#activity"
                 }
             ]
         }
@@ -455,10 +456,10 @@
             "name": "activities",
             "methods": [
                 {
-                    "name": "list",
-                    "desc": "Retrieves a list of activities for a specific customer and application.",
                     "path": "activity/users/{userKey}/applications/{applicationName}",
                     "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "Retrieves a list of activities for a specific customer and application.",
                     "scopes": [
                         "https://www.googleapis.com/auth/admin.reports.audit.readonly"
                     ],
@@ -477,7 +478,13 @@
                             "pattern": "(admin)|(calendar)|(drive)|(login)|(mobile)|(token)|(groups)|(saml)|(chat)"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
+                        {
+                            "name": "filters",
+                            "desc": "Event parameters in the form [parameter1 name][operator][parameter1 value],[parameter2 name][operator][parameter2 value],...",
+                            "type": "string",
+                            "pattern": "(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+,)*(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+)"
+                        },
                         {
                             "name": "maxResults",
                             "desc": "Number of activity records to be shown in each page.",
@@ -486,10 +493,25 @@
                             "max": "1000"
                         },
                         {
+                            "name": "pageToken",
+                            "desc": "Token to specify next page.",
+                            "type": "string"
+                        },
+                        {
                             "name": "startTime",
                             "desc": "Return events which occurred at or after this time.",
                             "type": "string",
                             "pattern": "(\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d)T(\\d\\d):(\\d\\d):(\\d\\d)(?:\\.(\\d+))?(?:(Z)|([-+])(\\d\\d):(\\d\\d))"
+                        },
+                        {
+                            "name": "actorIpAddress",
+                            "desc": "IP Address of host where the event was performed. Supports both IPv4 and IPv6 addresses.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "eventName",
+                            "desc": "Name of the event being queried.",
+                            "type": "string"
                         },
                         {
                             "name": "customerId",
@@ -502,36 +524,15 @@
                             "desc": "Return events which occurred at or before this time.",
                             "type": "string",
                             "pattern": "(\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d)T(\\d\\d):(\\d\\d):(\\d\\d)(?:\\.(\\d+))?(?:(Z)|([-+])(\\d\\d):(\\d\\d))"
-                        },
-                        {
-                            "name": "filters",
-                            "desc": "Event parameters in the form [parameter1 name][operator][parameter1 value],[parameter2 name][operator][parameter2 value],...",
-                            "type": "string",
-                            "pattern": "(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+,)*(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+)"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "Token to specify next page.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "actorIpAddress",
-                            "desc": "IP Address of host where the event was performed. Supports both IPv4 and IPv6 addresses.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "eventName",
-                            "desc": "Name of the event being queried.",
-                            "type": "string"
                         }
                     ],
                     "response": "Activities"
                 },
                 {
-                    "name": "watch",
-                    "desc": "Push changes to activities",
                     "path": "activity/users/{userKey}/applications/{applicationName}/watch",
                     "httpMethod": "POST",
+                    "name": "watch",
+                    "desc": "Push changes to activities",
                     "scopes": [
                         "https://www.googleapis.com/auth/admin.reports.audit.readonly"
                     ],
@@ -550,7 +551,12 @@
                             "pattern": "(admin)|(calendar)|(drive)|(login)|(mobile)|(token)|(groups)|(saml)|(chat)"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
+                        {
+                            "name": "pageToken",
+                            "desc": "Token to specify next page.",
+                            "type": "string"
+                        },
                         {
                             "name": "customerId",
                             "desc": "Represents the customer for which the data is to be fetched.",
@@ -558,16 +564,23 @@
                             "pattern": "C.+"
                         },
                         {
+                            "name": "endTime",
+                            "desc": "Return events which occurred at or before this time.",
+                            "type": "string",
+                            "pattern": "(\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d)T(\\d\\d):(\\d\\d):(\\d\\d)(?:\\.(\\d+))?(?:(Z)|([-+])(\\d\\d):(\\d\\d))"
+                        },
+                        {
+                            "name": "filters",
+                            "desc": "Event parameters in the form [parameter1 name][operator][parameter1 value],[parameter2 name][operator][parameter2 value],...",
+                            "type": "string",
+                            "pattern": "(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+,)*(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+)"
+                        },
+                        {
                             "name": "maxResults",
                             "desc": "Number of activity records to be shown in each page.",
                             "type": "int32",
                             "min": "1",
                             "max": "1000"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "Token to specify next page.",
-                            "type": "string"
                         },
                         {
                             "name": "startTime",
@@ -581,21 +594,9 @@
                             "type": "string"
                         },
                         {
-                            "name": "endTime",
-                            "desc": "Return events which occurred at or before this time.",
-                            "type": "string",
-                            "pattern": "(\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d)T(\\d\\d):(\\d\\d):(\\d\\d)(?:\\.(\\d+))?(?:(Z)|([-+])(\\d\\d):(\\d\\d))"
-                        },
-                        {
                             "name": "eventName",
                             "desc": "Name of the event being queried.",
                             "type": "string"
-                        },
-                        {
-                            "name": "filters",
-                            "desc": "Event parameters in the form [parameter1 name][operator][parameter1 value],[parameter2 name][operator][parameter2 value],...",
-                            "type": "string",
-                            "pattern": "(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+,)*(.+[\u003c,\u003c=,==,\u003e=,\u003e,\u003c\u003e].+)"
                         }
                     ],
                     "request": "Channel",
@@ -607,10 +608,10 @@
             "name": "channels",
             "methods": [
                 {
-                    "name": "stop",
-                    "desc": "Stop watching resources through this channel",
                     "path": "/admin/reports_v1/channels/stop",
                     "httpMethod": "POST",
+                    "name": "stop",
+                    "desc": "Stop watching resources through this channel",
                     "scopes": [
                         "https://www.googleapis.com/auth/admin.reports.audit.readonly"
                     ],
@@ -622,10 +623,10 @@
             "name": "customerUsageReports",
             "methods": [
                 {
-                    "name": "get",
-                    "desc": "Retrieves a report which is a collection of properties / statistics for a specific customer.",
                     "path": "usage/dates/{date}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Retrieves a report which is a collection of properties / statistics for a specific customer.",
                     "scopes": [
                         "https://www.googleapis.com/auth/admin.reports.usage.readonly"
                     ],
@@ -638,7 +639,13 @@
                             "pattern": "(\\d){4}-(\\d){2}-(\\d){2}"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
+                        {
+                            "name": "customerId",
+                            "desc": "Represents the customer for which the data is to be fetched.",
+                            "type": "string",
+                            "pattern": "C.+"
+                        },
                         {
                             "name": "pageToken",
                             "desc": "Token to specify next page.",
@@ -649,12 +656,6 @@
                             "desc": "Represents the application name, parameter name pairs to fetch in csv as app_name1:param_name1, app_name2:param_name2.",
                             "type": "string",
                             "pattern": "(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[^,]+,)*(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[^,]+)"
-                        },
-                        {
-                            "name": "customerId",
-                            "desc": "Represents the customer for which the data is to be fetched.",
-                            "type": "string",
-                            "pattern": "C.+"
                         }
                     ],
                     "response": "UsageReports"
@@ -665,10 +666,10 @@
             "name": "userUsageReport",
             "methods": [
                 {
-                    "name": "get",
-                    "desc": "Retrieves a report which is a collection of properties / statistics for a set of users.",
                     "path": "usage/users/{userKey}/dates/{date}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Retrieves a report which is a collection of properties / statistics for a set of users.",
                     "scopes": [
                         "https://www.googleapis.com/auth/admin.reports.usage.readonly"
                     ],
@@ -687,7 +688,13 @@
                             "pattern": "(\\d){4}-(\\d){2}-(\\d){2}"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
+                        {
+                            "name": "customerId",
+                            "desc": "Represents the customer for which the data is to be fetched.",
+                            "type": "string",
+                            "pattern": "C.+"
+                        },
                         {
                             "name": "filters",
                             "desc": "Represents the set of filters including parameter operator value.",
@@ -710,12 +717,6 @@
                             "desc": "Represents the application name, parameter name pairs to fetch in csv as app_name1:param_name1, app_name2:param_name2.",
                             "type": "string",
                             "pattern": "(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[^,]+,)*(((accounts)|(cros)|(gmail)|(calendar)|(docs)|(gplus)|(sites)|(device_management)|(drive)):[^,]+)"
-                        },
-                        {
-                            "name": "customerId",
-                            "desc": "Represents the customer for which the data is to be fetched.",
-                            "type": "string",
-                            "pattern": "C.+"
                         }
                     ],
                     "response": "UsageReports"

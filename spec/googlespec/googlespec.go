@@ -22,32 +22,32 @@ type APIDirectoryItem struct {
 }
 
 type APIDocument struct {
-	Kind              string   `json:"kind"` //The kind for this response. The fixed string discovery#restDescription.
+	Kind              string   `json:"kind"`                                //The kind for this response. The fixed string discovery#restDescription.
 	ETag              string   `json:"etag"`
-	DiscoveryVersion  string   `json:"discoveryVersion"` //Indicate the version of the Discovery API used to generate this doc.
-	Id                string   `json:"id"`               //The ID of the Discovery document for the API. For example, urlshortener:v1.
-	Name              string   `json:"name"`             //The name of the API. For example, urlshortener.
-	CanonicalName     string   `json:"canonicalName"`    //人类可读的名字
-	Version           string   `json:"version"`          //The version of the API. For example, v1.
-	Revision          string   `json:"revision"`         //The revision of the API.
-	Title             string   `json:"title"`            //The title of the API. For example, "Google Url Shortener API".
-	Description       string   `json:"description"`      //The description of this API.
+	DiscoveryVersion  string   `json:"discoveryVersion"`                    //Indicate the version of the Discovery API used to generate this doc.
+	Id                string   `json:"id"`                                  //The ID of the Discovery document for the API. For example, urlshortener:v1.
+	Name              string   `json:"name"`                                //The name of the API. For example, urlshortener.
+	CanonicalName     string   `json:"canonicalName"`                       //人类可读的名字
+	Version           string   `json:"version"`                             //The version of the API. For example, v1.
+	Revision          string   `json:"revision"`                            //The revision of the API.
+	Title             string   `json:"title"`                               //The title of the API. For example, "Google Url Shortener API".
+	Description       string   `json:"description"`                         //The description of this API.
 	OwnerDomain       string   `json:"ownerDomain"`
 	OwnerName         string   `json:"ownerName"`
-	Icons             *APIIcon `json:"icons"`             //Links to 16x16 and 32x32 icons representing the API.
-	DocumentationLink string   `json:"documentationLink"` //A link to human-readable documentation for the API.
-	Labels            []string `json:"labels,omitempty"`  //Labels for the status of this API. Valid values include limited_availability or deprecated.
-	Protocol          string   `json:"protocol"`          //The protocol described by the document. For example, REST.
-	RootUrl           string   `json:"rootUrl"`           //The root url under which all API services live.
-	ServicePath       string   `json:"servicePath"`       //The base path for all REST requests.
-	BatchPath         string   `json:"batchPath"`         //The path for REST batch requests.
+	Icons             *APIIcon `json:"icons"`                               //Links to 16x16 and 32x32 icons representing the API.
+	DocumentationLink string   `json:"documentationLink"`                   //A link to human-readable documentation for the API.
+	Labels            []string `json:"labels,omitempty"`                    //Labels for the status of this API. Valid values include limited_availability or deprecated.
+	Protocol          string   `json:"protocol"`                            //The protocol described by the document. For example, REST.
+	RootUrl           string   `json:"rootUrl"`                             //The root url under which all API services live.
+	ServicePath       string   `json:"servicePath"`                         //The base path for all REST requests.
+	BatchPath         string   `json:"batchPath"`                           //The path for REST batch requests.
 
-	Parameters map[string]*APIObject   `json:"parameters,omitempty"` //Common parameters that apply across all apis.
-	Auth       *APIAuth                `json:"auth,omitempty"`       //Authentication information.
-	Features   []string                `json:"features,omitempty"`   //A list of supported features for this API.
-	Schemas    map[string]*APIObject   `json:"schemas,omitempty"`    //The schemas for this API.
-	Methods    map[string]*APIMethod   `json:"methods,omitempty"`    //API-level methods for this API.
-	Resources  map[string]*APIResource `json:"resources,omitempty"`  //object	The resources in this API.
+	Parameters        map[string]*APIObject   `json:"parameters,omitempty"` //Common parameters that apply across all apis.
+	Auth              *APIAuth                `json:"auth,omitempty"`       //Authentication information.
+	Features          []string                `json:"features,omitempty"`   //A list of supported features for this API.
+	Schemas           map[string]*APIObject   `json:"schemas,omitempty"`    //The schemas for this API.
+	Methods           map[string]*APIMethod   `json:"methods,omitempty"`    //API-level methods for this API.
+	Resources         map[string]*APIResource `json:"resources,omitempty"`  //object	The resources in this API.
 }
 
 type APIIcon struct {

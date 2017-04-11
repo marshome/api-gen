@@ -10,19 +10,9 @@
     "documentationLink": "http://developers.google.com/qpx-express",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "qpxExpress/v1/trips/",
     "auth": {},
     "parameters": [
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
-            "type": "string"
-        },
         {
             "name": "userIp",
             "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
@@ -54,51 +44,181 @@
             "name": "oauth_token",
             "desc": "OAuth 2.0 token for the current user.",
             "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
         }
     ],
     "schemas": [
         {
-            "name": "TripOptionsRequest",
-            "desc": "A QPX Express search request, which will yield one or more solutions.",
+            "name": "PricingInfo",
+            "desc": "The price of one or more travel segments. The currency used to purchase tickets is usually determined by the sale/ticketing city or the sale/ticketing country, unless none are specified, in which case it defaults to that of the journey origin country.",
             "type": "object",
             "fields": [
                 {
-                    "name": "ticketingCountry",
-                    "desc": "IATA country code representing the point of ticketing.",
+                    "name": "ptc",
+                    "desc": "The passenger type code for this pricing. An alphanumeric code used by a carrier to restrict fares to certain categories of passenger. For instance, a fare might be valid only for senior citizens.",
                     "type": "string"
                 },
                 {
-                    "name": "maxPrice",
-                    "desc": "Do not return solutions that cost more than this price. The alphabetical part of the price is in ISO 4217. The format, in regex, is [A-Z]{3}\\d+(\\.\\d+)? Example: $102.07",
+                    "name": "saleFareTotal",
+                    "desc": "The total fare in the sale or equivalent currency.",
+                    "type": "string"
+                },
+                {
+                    "name": "saleTaxTotal",
+                    "desc": "The taxes in the sale or equivalent currency.",
+                    "type": "string"
+                },
+                {
+                    "name": "saleTotal",
+                    "desc": "Total per-passenger price (fare and tax) in the sale or equivalent currency.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Identifies this as a pricing object, representing the price of one or more travel segments. Value: the fixed string qpxexpress#pricingInfo.",
+                    "type": "string",
+                    "default": "qpxexpress#pricingInfo"
+                },
+                {
+                    "name": "latestTicketingTime",
+                    "desc": "The latest ticketing time for this pricing assuming the reservation occurs at ticketing time and there is no change in fares/rules. The time is local to the point of sale (POS).",
                     "type": "string"
                 },
                 {
                     "name": "passengers",
-                    "desc": "Counts for each passenger type in the request.",
+                    "desc": "The number of passengers to which this price applies.",
                     "type": "ref",
                     "refType": "PassengerCounts"
                 },
                 {
                     "name": "refundable",
-                    "desc": "Return only solutions with refundable fares.",
+                    "desc": "Whether the fares on this pricing are refundable.",
                     "type": "bool"
                 },
                 {
-                    "name": "saleCountry",
-                    "desc": "IATA country code representing the point of sale. This determines the \"equivalent amount paid\" currency for the ticket.",
+                    "name": "segmentPricing",
+                    "desc": "The per-segment price and baggage information.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "SegmentPricing"
+                },
+                {
+                    "name": "tax",
+                    "desc": "The taxes used to calculate the tax total per ticket.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "TaxInfo"
+                },
+                {
+                    "name": "baseFareTotal",
+                    "desc": "The total fare in the base fare currency (the currency of the country of origin). This element is only present when the sales currency and the currency of the country of commencement are different.",
                     "type": "string"
                 },
                 {
-                    "name": "slice",
-                    "desc": "The slices that make up the itinerary of this trip. A slice represents a traveler's intent, the portion of a low-fare search corresponding to a traveler's request to get between two points. One-way journeys are generally expressed using one slice, round-trips using two. An example of a one slice trip with three segments might be BOS-SYD, SYD-LAX, LAX-BOS if the traveler only stopped in SYD and LAX just long enough to change planes.",
+                    "name": "fare",
+                    "desc": "The fare used to price one or more segments.",
                     "collection": "array",
                     "type": "ref",
-                    "refType": "SliceInput"
+                    "refType": "FareInfo"
                 },
                 {
-                    "name": "solutions",
-                    "desc": "The number of solutions to return, maximum 500.",
-                    "type": "int32"
+                    "name": "fareCalculation",
+                    "desc": "The horizontal fare calculation. This is a field on a ticket that displays all of the relevant items that go into the calculation of the fare.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "TaxData",
+            "desc": "Tax data.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "An identifier uniquely identifying a tax in a response.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Identifies this as a tax data object, representing some tax. Value: the fixed string qpxexpress#taxData.",
+                    "type": "string",
+                    "default": "qpxexpress#taxData"
+                },
+                {
+                    "name": "name",
+                    "desc": "The name of a tax.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "TripsSearchResponse",
+            "desc": "A QPX Express search response.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "Identifies this as a QPX Express API search response resource. Value: the fixed string qpxExpress#tripsSearch.",
+                    "type": "string",
+                    "default": "qpxExpress#tripsSearch"
+                },
+                {
+                    "name": "trips",
+                    "desc": "All possible solutions to the QPX Express search request.",
+                    "type": "ref",
+                    "refType": "TripOptionsResponse"
+                }
+            ]
+        },
+        {
+            "name": "FareInfo",
+            "desc": "Complete information about a fare used in the solution to a low-fare search query. In the airline industry a fare is a price an airline charges for one-way travel between two points. A fare typically contains a carrier code, two city codes, a price, and a fare basis. (A fare basis is a one-to-eight character alphanumeric code used to identify a fare.)",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "carrier",
+                    "desc": "The carrier of the aircraft or other vehicle commuting between two points.",
+                    "type": "string"
+                },
+                {
+                    "name": "destination",
+                    "desc": "The city code of the city the trip ends at.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "A unique identifier of the fare.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Identifies this as a fare object. Value: the fixed string qpxexpress#fareInfo.",
+                    "type": "string",
+                    "default": "qpxexpress#fareInfo"
+                },
+                {
+                    "name": "origin",
+                    "desc": "The city code of the city the trip begins at.",
+                    "type": "string"
+                },
+                {
+                    "name": "private",
+                    "desc": "Whether this is a private fare, for example one offered only to select customers rather than the general public.",
+                    "type": "bool"
+                },
+                {
+                    "name": "basisCode",
+                    "type": "string"
                 }
             ]
         },
@@ -124,18 +244,6 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "bagDescriptor",
-                    "desc": "A representation of a type of bag, such as an ATPCo subcode, Commercial Name, or other description.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "BagDescriptor"
-                },
-                {
-                    "name": "kilos",
-                    "desc": "The maximum number of kilos all the free baggage together may weigh.",
-                    "type": "int32"
-                },
-                {
                     "name": "kilosPerPiece",
                     "desc": "The maximum number of kilos any one piece of baggage may weigh.",
                     "type": "int32"
@@ -154,6 +262,18 @@
                 {
                     "name": "pounds",
                     "desc": "The number of pounds of free baggage allowed.",
+                    "type": "int32"
+                },
+                {
+                    "name": "bagDescriptor",
+                    "desc": "A representation of a type of bag, such as an ATPCo subcode, Commercial Name, or other description.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "BagDescriptor"
+                },
+                {
+                    "name": "kilos",
+                    "desc": "The maximum number of kilos all the free baggage together may weigh.",
                     "type": "int32"
                 }
             ]
@@ -197,24 +317,69 @@
             ]
         },
         {
-            "name": "TaxData",
-            "desc": "Tax data.",
+            "name": "SegmentPricing",
+            "desc": "The price of this segment.",
             "type": "object",
             "fields": [
                 {
+                    "name": "fareId",
+                    "desc": "A segment identifier unique within a single solution. It is used to refer to different parts of the same solution.",
+                    "type": "string"
+                },
+                {
+                    "name": "freeBaggageOption",
+                    "desc": "Details of the free baggage allowance on this segment.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "FreeBaggageAllowance"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Identifies this as a segment pricing object, representing the price of this segment. Value: the fixed string qpxexpress#segmentPricing.",
+                    "type": "string",
+                    "default": "qpxexpress#segmentPricing"
+                },
+                {
+                    "name": "segmentId",
+                    "desc": "Unique identifier in the response of this segment.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "TaxInfo",
+            "desc": "Tax information.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "chargeType",
+                    "desc": "Whether this is a government charge or a carrier surcharge.",
+                    "type": "string"
+                },
+                {
+                    "name": "code",
+                    "desc": "The code to enter in the ticket's tax box.",
+                    "type": "string"
+                },
+                {
+                    "name": "country",
+                    "desc": "For government charges, the country levying the charge.",
+                    "type": "string"
+                },
+                {
                     "name": "id",
-                    "desc": "An identifier uniquely identifying a tax in a response.",
+                    "desc": "Identifier uniquely identifying this tax in a response. Not present for unnamed carrier surcharges.",
                     "type": "string"
                 },
                 {
                     "name": "kind",
-                    "desc": "Identifies this as a tax data object, representing some tax. Value: the fixed string qpxexpress#taxData.",
+                    "desc": "Identifies this as a tax information object. Value: the fixed string qpxexpress#taxInfo.",
                     "type": "string",
-                    "default": "qpxexpress#taxData"
+                    "default": "qpxexpress#taxInfo"
                 },
                 {
-                    "name": "name",
-                    "desc": "The name of a tax.",
+                    "name": "salePrice",
+                    "desc": "The price of the tax in the sales or equivalent currency.",
                     "type": "string"
                 }
             ]
@@ -225,11 +390,6 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "earliestTime",
-                    "desc": "The earliest time of day in HH:MM format.",
-                    "type": "string"
-                },
-                {
                     "name": "kind",
                     "desc": "Identifies this as a time of day range object, representing two times in a single day defining a time range. Value: the fixed string qpxexpress#timeOfDayRange.",
                     "type": "string",
@@ -239,155 +399,56 @@
                     "name": "latestTime",
                     "desc": "The latest time of day in HH:MM format.",
                     "type": "string"
+                },
+                {
+                    "name": "earliestTime",
+                    "desc": "The earliest time of day in HH:MM format.",
+                    "type": "string"
                 }
             ]
         },
         {
-            "name": "LegInfo",
-            "desc": "Information about a leg. (A leg is the smallest unit of travel, in the case of a flight a takeoff immediately followed by a landing at two set points on a particular carrier with a particular flight number.)",
+            "name": "TripOptionsRequest",
+            "desc": "A QPX Express search request, which will yield one or more solutions.",
             "type": "object",
             "fields": [
                 {
-                    "name": "aircraft",
-                    "desc": "The aircraft (or bus, ferry, railcar, etc) travelling between the two points of this leg.",
-                    "type": "string"
-                },
-                {
-                    "name": "arrivalTime",
-                    "desc": "The scheduled time of arrival at the destination of the leg, local to the point of arrival.",
-                    "type": "string"
-                },
-                {
-                    "name": "connectionDuration",
-                    "desc": "Duration of a connection following this leg, in minutes.",
+                    "name": "solutions",
+                    "desc": "The number of solutions to return, maximum 500.",
                     "type": "int32"
                 },
                 {
-                    "name": "destinationTerminal",
-                    "desc": "The terminal the flight is scheduled to arrive at.",
+                    "name": "ticketingCountry",
+                    "desc": "IATA country code representing the point of ticketing.",
                     "type": "string"
                 },
                 {
-                    "name": "id",
-                    "desc": "An identifier that uniquely identifies this leg in the solution.",
+                    "name": "maxPrice",
+                    "desc": "Do not return solutions that cost more than this price. The alphabetical part of the price is in ISO 4217. The format, in regex, is [A-Z]{3}\\d+(\\.\\d+)? Example: $102.07",
                     "type": "string"
                 },
                 {
-                    "name": "originTerminal",
-                    "desc": "The terminal the flight is scheduled to depart from.",
-                    "type": "string"
-                },
-                {
-                    "name": "duration",
-                    "desc": "The scheduled travelling time from the origin to the destination.",
-                    "type": "int32"
-                },
-                {
-                    "name": "meal",
-                    "desc": "A simple, general description of the meal(s) served on the flight, for example: \"Hot meal\".",
-                    "type": "string"
-                },
-                {
-                    "name": "onTimePerformance",
-                    "desc": "In percent, the published on time performance on this leg.",
-                    "type": "int32"
-                },
-                {
-                    "name": "operatingDisclosure",
-                    "desc": "Department of Transportation disclosure information on the actual operator of a flight in a code share. (A code share refers to a marketing agreement between two carriers, where one carrier will list in its schedules (and take bookings for) flights that are actually operated by another carrier.)",
-                    "type": "string"
-                },
-                {
-                    "name": "origin",
-                    "desc": "The leg origin as a city and airport.",
-                    "type": "string"
-                },
-                {
-                    "name": "secure",
-                    "desc": "Whether passenger information must be furnished to the United States Transportation Security Administration (TSA) prior to departure.",
-                    "type": "bool"
-                },
-                {
-                    "name": "departureTime",
-                    "desc": "The scheduled departure time of the leg, local to the point of departure.",
-                    "type": "string"
-                },
-                {
-                    "name": "mileage",
-                    "desc": "The number of miles in this leg.",
-                    "type": "int32"
-                },
-                {
-                    "name": "changePlane",
-                    "desc": "Whether you have to change planes following this leg. Only applies to the next leg.",
-                    "type": "bool"
-                },
-                {
-                    "name": "destination",
-                    "desc": "The leg destination as a city and airport.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies this as a leg object. A leg is the smallest unit of travel, in the case of a flight a takeoff immediately followed by a landing at two set points on a particular carrier with a particular flight number. Value: the fixed string qpxexpress#legInfo.",
-                    "type": "string",
-                    "default": "qpxexpress#legInfo"
-                }
-            ]
-        },
-        {
-            "name": "TripOption",
-            "desc": "Trip information.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "id",
-                    "desc": "Identifier uniquely identifying this trip in a response.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies this as a trip information object. Value: the fixed string qpxexpress#tripOption.",
-                    "type": "string",
-                    "default": "qpxexpress#tripOption"
-                },
-                {
-                    "name": "pricing",
-                    "desc": "Per passenger pricing information.",
-                    "collection": "array",
+                    "name": "passengers",
+                    "desc": "Counts for each passenger type in the request.",
                     "type": "ref",
-                    "refType": "PricingInfo"
+                    "refType": "PassengerCounts"
                 },
                 {
-                    "name": "saleTotal",
-                    "desc": "The total price for all passengers on the trip, in the form of a currency followed by an amount, e.g. USD253.35.",
+                    "name": "refundable",
+                    "desc": "Return only solutions with refundable fares.",
+                    "type": "bool"
+                },
+                {
+                    "name": "saleCountry",
+                    "desc": "IATA country code representing the point of sale. This determines the \"equivalent amount paid\" currency for the ticket.",
                     "type": "string"
                 },
                 {
                     "name": "slice",
-                    "desc": "The slices that make up this trip's itinerary.",
+                    "desc": "The slices that make up the itinerary of this trip. A slice represents a traveler's intent, the portion of a low-fare search corresponding to a traveler's request to get between two points. One-way journeys are generally expressed using one slice, round-trips using two. An example of a one slice trip with three segments might be BOS-SYD, SYD-LAX, LAX-BOS if the traveler only stopped in SYD and LAX just long enough to change planes.",
                     "collection": "array",
                     "type": "ref",
-                    "refType": "SliceInfo"
-                }
-            ]
-        },
-        {
-            "name": "TripsSearchResponse",
-            "desc": "A QPX Express search response.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "kind",
-                    "desc": "Identifies this as a QPX Express API search response resource. Value: the fixed string qpxExpress#tripsSearch.",
-                    "type": "string",
-                    "default": "qpxExpress#tripsSearch"
-                },
-                {
-                    "name": "trips",
-                    "desc": "All possible solutions to the QPX Express search request.",
-                    "type": "ref",
-                    "refType": "TripOptionsResponse"
+                    "refType": "SliceInput"
                 }
             ]
         },
@@ -396,6 +457,11 @@
             "desc": "The make, model, and type of an aircraft.",
             "type": "object",
             "fields": [
+                {
+                    "name": "name",
+                    "desc": "The name of an aircraft, for example Boeing 777.",
+                    "type": "string"
+                },
                 {
                     "name": "code",
                     "desc": "The aircraft code. For example, for a Boeing 777 the code would be 777.",
@@ -406,39 +472,6 @@
                     "desc": "Identifies this as an aircraftData object. Value: the fixed string qpxexpress#aircraftData",
                     "type": "string",
                     "default": "qpxexpress#aircraftData"
-                },
-                {
-                    "name": "name",
-                    "desc": "The name of an aircraft, for example Boeing 777.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "AirportData",
-            "desc": "An airport.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "city",
-                    "desc": "The city code an airport is located in. For example, for JFK airport, this is NYC.",
-                    "type": "string"
-                },
-                {
-                    "name": "code",
-                    "desc": "An airport's code. For example, for Boston Logan airport, this is BOS.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies this as an airport object. Value: the fixed string qpxexpress#airportData.",
-                    "type": "string",
-                    "default": "qpxexpress#airportData"
-                },
-                {
-                    "name": "name",
-                    "desc": "The name of an airport. For example, for airport BOS the name is \"Boston Logan International\".",
-                    "type": "string"
                 }
             ]
         },
@@ -494,43 +527,67 @@
             ]
         },
         {
-            "name": "FareInfo",
-            "desc": "Complete information about a fare used in the solution to a low-fare search query. In the airline industry a fare is a price an airline charges for one-way travel between two points. A fare typically contains a carrier code, two city codes, a price, and a fare basis. (A fare basis is a one-to-eight character alphanumeric code used to identify a fare.)",
+            "name": "SegmentInfo",
+            "desc": "Details of a segment of a flight; a segment is one or more consecutive legs on the same flight. For example a hypothetical flight ZZ001, from DFW to OGG, would have one segment with two legs: DFW to HNL (leg 1), HNL to OGG (leg 2), and DFW to OGG (legs 1 and 2).",
             "type": "object",
             "fields": [
                 {
-                    "name": "carrier",
-                    "desc": "The carrier of the aircraft or other vehicle commuting between two points.",
-                    "type": "string"
+                    "name": "bookingCodeCount",
+                    "desc": "The number of seats available in this booking code on this segment.",
+                    "type": "int32"
                 },
                 {
-                    "name": "destination",
-                    "desc": "The city code of the city the trip ends at.",
-                    "type": "string"
+                    "name": "duration",
+                    "desc": "The duration of the flight segment in minutes.",
+                    "type": "int32"
+                },
+                {
+                    "name": "flight",
+                    "desc": "The flight this is a segment of.",
+                    "type": "ref",
+                    "refType": "FlightInfo"
                 },
                 {
                     "name": "id",
-                    "desc": "A unique identifier of the fare.",
+                    "desc": "An id uniquely identifying the segment in the solution.",
                     "type": "string"
                 },
                 {
-                    "name": "kind",
-                    "desc": "Identifies this as a fare object. Value: the fixed string qpxexpress#fareInfo.",
-                    "type": "string",
-                    "default": "qpxexpress#fareInfo"
+                    "name": "leg",
+                    "desc": "The legs composing this segment.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "LegInfo"
                 },
                 {
-                    "name": "origin",
-                    "desc": "The city code of the city the trip begins at.",
-                    "type": "string"
-                },
-                {
-                    "name": "private",
-                    "desc": "Whether this is a private fare, for example one offered only to select customers rather than the general public.",
+                    "name": "subjectToGovernmentApproval",
+                    "desc": "Whether the operation of this segment remains subject to government approval.",
                     "type": "bool"
                 },
                 {
-                    "name": "basisCode",
+                    "name": "bookingCode",
+                    "desc": "The booking code or class for this segment.",
+                    "type": "string"
+                },
+                {
+                    "name": "cabin",
+                    "desc": "The cabin booked for this segment.",
+                    "type": "string"
+                },
+                {
+                    "name": "connectionDuration",
+                    "desc": "In minutes, the duration of the connection following this segment.",
+                    "type": "int32"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Identifies this as a segment object. A segment is one or more consecutive legs on the same flight. For example a hypothetical flight ZZ001, from DFW to OGG, could have one segment with two legs: DFW to HNL (leg 1), HNL to OGG (leg 2). Value: the fixed string qpxexpress#segmentInfo.",
+                    "type": "string",
+                    "default": "qpxexpress#segmentInfo"
+                },
+                {
+                    "name": "marriedSegmentGroup",
+                    "desc": "The solution-based index of a segment in a married segment group. Married segments can only be booked together. For example, an airline might report a certain booking code as sold out from Boston to Pittsburgh, but as available as part of two married segments Boston to Chicago connecting through Pittsburgh. For example content of this field, consider the round-trip flight ZZ1 PHX-PHL ZZ2 PHL-CLT ZZ3 CLT-PHX. This has three segments, with the two outbound ones (ZZ1 ZZ2) married. In this case, the two outbound segments belong to married segment group 0, and the return segment belongs to married segment group 1.",
                     "type": "string"
                 }
             ]
@@ -540,6 +597,12 @@
             "desc": "A QPX Express search response.",
             "type": "object",
             "fields": [
+                {
+                    "name": "kind",
+                    "desc": "Identifies this as a QPX Express trip response object, which consists of zero or more solutions. Value: the fixed string qpxexpress#tripOptions.",
+                    "type": "string",
+                    "default": "qpxexpress#tripOptions"
+                },
                 {
                     "name": "requestId",
                     "desc": "An identifier uniquely identifying this response.",
@@ -557,12 +620,106 @@
                     "desc": "Informational data global to list of solutions.",
                     "type": "ref",
                     "refType": "Data"
-                },
+                }
+            ]
+        },
+        {
+            "name": "AirportData",
+            "desc": "An airport.",
+            "type": "object",
+            "fields": [
                 {
                     "name": "kind",
-                    "desc": "Identifies this as a QPX Express trip response object, which consists of zero or more solutions. Value: the fixed string qpxexpress#tripOptions.",
+                    "desc": "Identifies this as an airport object. Value: the fixed string qpxexpress#airportData.",
                     "type": "string",
-                    "default": "qpxexpress#tripOptions"
+                    "default": "qpxexpress#airportData"
+                },
+                {
+                    "name": "name",
+                    "desc": "The name of an airport. For example, for airport BOS the name is \"Boston Logan International\".",
+                    "type": "string"
+                },
+                {
+                    "name": "city",
+                    "desc": "The city code an airport is located in. For example, for JFK airport, this is NYC.",
+                    "type": "string"
+                },
+                {
+                    "name": "code",
+                    "desc": "An airport's code. For example, for Boston Logan airport, this is BOS.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "BagDescriptor",
+            "desc": "Information about an item of baggage.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "Identifies this as a baggage object. Value: the fixed string qpxexpress#bagDescriptor.",
+                    "type": "string",
+                    "default": "qpxexpress#bagDescriptor"
+                },
+                {
+                    "name": "subcode",
+                    "desc": "The standard IATA subcode used to identify this optional service.",
+                    "type": "string"
+                },
+                {
+                    "name": "commercialName",
+                    "desc": "Provides the commercial name for an optional service.",
+                    "type": "string"
+                },
+                {
+                    "name": "count",
+                    "desc": "How many of this type of bag will be checked on this flight.",
+                    "type": "int32"
+                },
+                {
+                    "name": "description",
+                    "desc": "A description of the baggage.",
+                    "collection": "array",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "SliceInfo",
+            "desc": "Information about a slice. A slice represents a traveller's intent, the portion of a low-fare search corresponding to a traveler's request to get between two points. One-way journeys are generally expressed using 1 slice, round-trips using 2. For example, if a traveler specifies the following trip in a user interface:\n| Origin | Destination | Departure Date | | BOS | LAX | March 10, 2007 | | LAX | SYD | March 17, 2007 | | SYD | BOS | March 22, 2007 |\nthen this is a three slice trip.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "kind",
+                    "desc": "Identifies this as a slice object. A slice represents a traveller's intent, the portion of a low-fare search corresponding to a traveler's request to get between two points. One-way journeys are generally expressed using 1 slice, round-trips using 2. Value: the fixed string qpxexpress#sliceInfo.",
+                    "type": "string",
+                    "default": "qpxexpress#sliceInfo"
+                },
+                {
+                    "name": "segment",
+                    "desc": "The segment(s) constituting the slice.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "SegmentInfo"
+                },
+                {
+                    "name": "duration",
+                    "desc": "The duration of the slice in minutes.",
+                    "type": "int32"
+                }
+            ]
+        },
+        {
+            "name": "TripsSearchRequest",
+            "desc": "A QPX Express search request.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "request",
+                    "desc": "A QPX Express search request. Required values are at least one adult or senior passenger, an origin, a destination, and a date.",
+                    "type": "ref",
+                    "refType": "TripOptionsRequest"
                 }
             ]
         },
@@ -571,12 +728,6 @@
             "desc": "Detailed information about components found in the solutions of this response, including a trip's airport, city, taxes, airline, and aircraft.",
             "type": "object",
             "fields": [
-                {
-                    "name": "kind",
-                    "desc": "Identifies this as QPX Express response resource, including a trip's airport, city, taxes, airline, and aircraft. Value: the fixed string qpxexpress#data.",
-                    "type": "string",
-                    "default": "qpxexpress#data"
-                },
                 {
                     "name": "tax",
                     "desc": "The taxes due for flying between an origin and a destination.",
@@ -611,181 +762,104 @@
                     "collection": "array",
                     "type": "ref",
                     "refType": "CityData"
-                }
-            ]
-        },
-        {
-            "name": "PricingInfo",
-            "desc": "The price of one or more travel segments. The currency used to purchase tickets is usually determined by the sale/ticketing city or the sale/ticketing country, unless none are specified, in which case it defaults to that of the journey origin country.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "tax",
-                    "desc": "The taxes used to calculate the tax total per ticket.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "TaxInfo"
-                },
-                {
-                    "name": "fare",
-                    "desc": "The fare used to price one or more segments.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "FareInfo"
                 },
                 {
                     "name": "kind",
-                    "desc": "Identifies this as a pricing object, representing the price of one or more travel segments. Value: the fixed string qpxexpress#pricingInfo.",
+                    "desc": "Identifies this as QPX Express response resource, including a trip's airport, city, taxes, airline, and aircraft. Value: the fixed string qpxexpress#data.",
                     "type": "string",
-                    "default": "qpxexpress#pricingInfo"
-                },
-                {
-                    "name": "latestTicketingTime",
-                    "desc": "The latest ticketing time for this pricing assuming the reservation occurs at ticketing time and there is no change in fares/rules. The time is local to the point of sale (POS).",
-                    "type": "string"
-                },
-                {
-                    "name": "segmentPricing",
-                    "desc": "The per-segment price and baggage information.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "SegmentPricing"
-                },
-                {
-                    "name": "refundable",
-                    "desc": "Whether the fares on this pricing are refundable.",
-                    "type": "bool"
-                },
-                {
-                    "name": "saleFareTotal",
-                    "desc": "The total fare in the sale or equivalent currency.",
-                    "type": "string"
-                },
-                {
-                    "name": "saleTaxTotal",
-                    "desc": "The taxes in the sale or equivalent currency.",
-                    "type": "string"
-                },
-                {
-                    "name": "saleTotal",
-                    "desc": "Total per-passenger price (fare and tax) in the sale or equivalent currency.",
-                    "type": "string"
-                },
-                {
-                    "name": "baseFareTotal",
-                    "desc": "The total fare in the base fare currency (the currency of the country of origin). This element is only present when the sales currency and the currency of the country of commencement are different.",
-                    "type": "string"
-                },
-                {
-                    "name": "fareCalculation",
-                    "desc": "The horizontal fare calculation. This is a field on a ticket that displays all of the relevant items that go into the calculation of the fare.",
-                    "type": "string"
-                },
-                {
-                    "name": "passengers",
-                    "desc": "The number of passengers to which this price applies.",
-                    "type": "ref",
-                    "refType": "PassengerCounts"
-                },
-                {
-                    "name": "ptc",
-                    "desc": "The passenger type code for this pricing. An alphanumeric code used by a carrier to restrict fares to certain categories of passenger. For instance, a fare might be valid only for senior citizens.",
-                    "type": "string"
+                    "default": "qpxexpress#data"
                 }
             ]
         },
         {
-            "name": "SegmentInfo",
-            "desc": "Details of a segment of a flight; a segment is one or more consecutive legs on the same flight. For example a hypothetical flight ZZ001, from DFW to OGG, would have one segment with two legs: DFW to HNL (leg 1), HNL to OGG (leg 2), and DFW to OGG (legs 1 and 2).",
+            "name": "LegInfo",
+            "desc": "Information about a leg. (A leg is the smallest unit of travel, in the case of a flight a takeoff immediately followed by a landing at two set points on a particular carrier with a particular flight number.)",
             "type": "object",
             "fields": [
                 {
-                    "name": "bookingCode",
-                    "desc": "The booking code or class for this segment.",
+                    "name": "departureTime",
+                    "desc": "The scheduled departure time of the leg, local to the point of departure.",
                     "type": "string"
                 },
                 {
-                    "name": "duration",
-                    "desc": "The duration of the flight segment in minutes.",
+                    "name": "onTimePerformance",
+                    "desc": "In percent, the published on time performance on this leg.",
                     "type": "int32"
                 },
                 {
-                    "name": "flight",
-                    "desc": "The flight this is a segment of.",
-                    "type": "ref",
-                    "refType": "FlightInfo"
+                    "name": "operatingDisclosure",
+                    "desc": "Department of Transportation disclosure information on the actual operator of a flight in a code share. (A code share refers to a marketing agreement between two carriers, where one carrier will list in its schedules (and take bookings for) flights that are actually operated by another carrier.)",
+                    "type": "string"
                 },
                 {
-                    "name": "subjectToGovernmentApproval",
-                    "desc": "Whether the operation of this segment remains subject to government approval.",
+                    "name": "aircraft",
+                    "desc": "The aircraft (or bus, ferry, railcar, etc) travelling between the two points of this leg.",
+                    "type": "string"
+                },
+                {
+                    "name": "meal",
+                    "desc": "A simple, general description of the meal(s) served on the flight, for example: \"Hot meal\".",
+                    "type": "string"
+                },
+                {
+                    "name": "secure",
+                    "desc": "Whether passenger information must be furnished to the United States Transportation Security Administration (TSA) prior to departure.",
                     "type": "bool"
                 },
                 {
-                    "name": "bookingCodeCount",
-                    "desc": "The number of seats available in this booking code on this segment.",
+                    "name": "connectionDuration",
+                    "desc": "Duration of a connection following this leg, in minutes.",
                     "type": "int32"
                 },
                 {
-                    "name": "cabin",
-                    "desc": "The cabin booked for this segment.",
+                    "name": "destinationTerminal",
+                    "desc": "The terminal the flight is scheduled to arrive at.",
                     "type": "string"
                 },
                 {
-                    "name": "connectionDuration",
-                    "desc": "In minutes, the duration of the connection following this segment.",
+                    "name": "kind",
+                    "desc": "Identifies this as a leg object. A leg is the smallest unit of travel, in the case of a flight a takeoff immediately followed by a landing at two set points on a particular carrier with a particular flight number. Value: the fixed string qpxexpress#legInfo.",
+                    "type": "string",
+                    "default": "qpxexpress#legInfo"
+                },
+                {
+                    "name": "mileage",
+                    "desc": "The number of miles in this leg.",
+                    "type": "int32"
+                },
+                {
+                    "name": "originTerminal",
+                    "desc": "The terminal the flight is scheduled to depart from.",
+                    "type": "string"
+                },
+                {
+                    "name": "destination",
+                    "desc": "The leg destination as a city and airport.",
+                    "type": "string"
+                },
+                {
+                    "name": "changePlane",
+                    "desc": "Whether you have to change planes following this leg. Only applies to the next leg.",
+                    "type": "bool"
+                },
+                {
+                    "name": "duration",
+                    "desc": "The scheduled travelling time from the origin to the destination.",
                     "type": "int32"
                 },
                 {
                     "name": "id",
-                    "desc": "An id uniquely identifying the segment in the solution.",
+                    "desc": "An identifier that uniquely identifies this leg in the solution.",
                     "type": "string"
                 },
                 {
-                    "name": "kind",
-                    "desc": "Identifies this as a segment object. A segment is one or more consecutive legs on the same flight. For example a hypothetical flight ZZ001, from DFW to OGG, could have one segment with two legs: DFW to HNL (leg 1), HNL to OGG (leg 2). Value: the fixed string qpxexpress#segmentInfo.",
-                    "type": "string",
-                    "default": "qpxexpress#segmentInfo"
-                },
-                {
-                    "name": "leg",
-                    "desc": "The legs composing this segment.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "LegInfo"
-                },
-                {
-                    "name": "marriedSegmentGroup",
-                    "desc": "The solution-based index of a segment in a married segment group. Married segments can only be booked together. For example, an airline might report a certain booking code as sold out from Boston to Pittsburgh, but as available as part of two married segments Boston to Chicago connecting through Pittsburgh. For example content of this field, consider the round-trip flight ZZ1 PHX-PHL ZZ2 PHL-CLT ZZ3 CLT-PHX. This has three segments, with the two outbound ones (ZZ1 ZZ2) married. In this case, the two outbound segments belong to married segment group 0, and the return segment belongs to married segment group 1.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "SegmentPricing",
-            "desc": "The price of this segment.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "freeBaggageOption",
-                    "desc": "Details of the free baggage allowance on this segment.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "FreeBaggageAllowance"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies this as a segment pricing object, representing the price of this segment. Value: the fixed string qpxexpress#segmentPricing.",
-                    "type": "string",
-                    "default": "qpxexpress#segmentPricing"
-                },
-                {
-                    "name": "segmentId",
-                    "desc": "Unique identifier in the response of this segment.",
+                    "name": "origin",
+                    "desc": "The leg origin as a city and airport.",
                     "type": "string"
                 },
                 {
-                    "name": "fareId",
-                    "desc": "A segment identifier unique within a single solution. It is used to refer to different parts of the same solution.",
+                    "name": "arrivalTime",
+                    "desc": "The scheduled time of arrival at the destination of the leg, local to the point of arrival.",
                     "type": "string"
                 }
             ]
@@ -796,31 +870,8 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "kind",
-                    "desc": "Identifies this as a slice input object, representing the criteria a desired slice must satisfy. Value: the fixed string qpxexpress#sliceInput.",
-                    "type": "string",
-                    "default": "qpxexpress#sliceInput"
-                },
-                {
-                    "name": "origin",
-                    "desc": "Airport or city IATA designator of the origin.",
-                    "type": "string"
-                },
-                {
                     "name": "preferredCabin",
                     "desc": "Prefer solutions that book in this cabin for this slice. Allowed values are COACH, PREMIUM_COACH, BUSINESS, and FIRST.",
-                    "type": "string"
-                },
-                {
-                    "name": "permittedDepartureTime",
-                    "desc": "Slices must depart in this time of day range, local to the point of departure.",
-                    "type": "ref",
-                    "refType": "TimeOfDayRange"
-                },
-                {
-                    "name": "prohibitedCarrier",
-                    "desc": "A list of 2-letter IATA airline designators. Exclude slices that use these carriers.",
-                    "collection": "array",
                     "type": "string"
                 },
                 {
@@ -834,18 +885,8 @@
                     "type": "string"
                 },
                 {
-                    "name": "destination",
-                    "desc": "Airport or city IATA designator of the destination.",
-                    "type": "string"
-                },
-                {
                     "name": "maxConnectionDuration",
                     "desc": "The longest connection between two legs, in minutes, you are willing to accept.",
-                    "type": "int32"
-                },
-                {
-                    "name": "maxStops",
-                    "desc": "The maximum number of stops you are willing to accept in this slice.",
                     "type": "int32"
                 },
                 {
@@ -853,116 +894,76 @@
                     "desc": "A list of 2-letter IATA airline designators. Slices with only these carriers should be returned.",
                     "collection": "array",
                     "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "BagDescriptor",
-            "desc": "Information about an item of baggage.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "commercialName",
-                    "desc": "Provides the commercial name for an optional service.",
-                    "type": "string"
                 },
                 {
-                    "name": "count",
-                    "desc": "How many of this type of bag will be checked on this flight.",
-                    "type": "int32"
+                    "name": "permittedDepartureTime",
+                    "desc": "Slices must depart in this time of day range, local to the point of departure.",
+                    "type": "ref",
+                    "refType": "TimeOfDayRange"
                 },
                 {
-                    "name": "description",
-                    "desc": "A description of the baggage.",
-                    "collection": "array",
+                    "name": "destination",
+                    "desc": "Airport or city IATA designator of the destination.",
                     "type": "string"
                 },
                 {
                     "name": "kind",
-                    "desc": "Identifies this as a baggage object. Value: the fixed string qpxexpress#bagDescriptor.",
+                    "desc": "Identifies this as a slice input object, representing the criteria a desired slice must satisfy. Value: the fixed string qpxexpress#sliceInput.",
                     "type": "string",
-                    "default": "qpxexpress#bagDescriptor"
+                    "default": "qpxexpress#sliceInput"
                 },
                 {
-                    "name": "subcode",
-                    "desc": "The standard IATA subcode used to identify this optional service.",
+                    "name": "maxStops",
+                    "desc": "The maximum number of stops you are willing to accept in this slice.",
+                    "type": "int32"
+                },
+                {
+                    "name": "origin",
+                    "desc": "Airport or city IATA designator of the origin.",
+                    "type": "string"
+                },
+                {
+                    "name": "prohibitedCarrier",
+                    "desc": "A list of 2-letter IATA airline designators. Exclude slices that use these carriers.",
+                    "collection": "array",
                     "type": "string"
                 }
             ]
         },
         {
-            "name": "SliceInfo",
-            "desc": "Information about a slice. A slice represents a traveller's intent, the portion of a low-fare search corresponding to a traveler's request to get between two points. One-way journeys are generally expressed using 1 slice, round-trips using 2. For example, if a traveler specifies the following trip in a user interface:\n| Origin | Destination | Departure Date | | BOS | LAX | March 10, 2007 | | LAX | SYD | March 17, 2007 | | SYD | BOS | March 22, 2007 |\nthen this is a three slice trip.",
+            "name": "TripOption",
+            "desc": "Trip information.",
             "type": "object",
             "fields": [
                 {
-                    "name": "segment",
-                    "desc": "The segment(s) constituting the slice.",
+                    "name": "slice",
+                    "desc": "The slices that make up this trip's itinerary.",
                     "collection": "array",
                     "type": "ref",
-                    "refType": "SegmentInfo"
-                },
-                {
-                    "name": "duration",
-                    "desc": "The duration of the slice in minutes.",
-                    "type": "int32"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies this as a slice object. A slice represents a traveller's intent, the portion of a low-fare search corresponding to a traveler's request to get between two points. One-way journeys are generally expressed using 1 slice, round-trips using 2. Value: the fixed string qpxexpress#sliceInfo.",
-                    "type": "string",
-                    "default": "qpxexpress#sliceInfo"
-                }
-            ]
-        },
-        {
-            "name": "TaxInfo",
-            "desc": "Tax information.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "kind",
-                    "desc": "Identifies this as a tax information object. Value: the fixed string qpxexpress#taxInfo.",
-                    "type": "string",
-                    "default": "qpxexpress#taxInfo"
-                },
-                {
-                    "name": "salePrice",
-                    "desc": "The price of the tax in the sales or equivalent currency.",
-                    "type": "string"
-                },
-                {
-                    "name": "chargeType",
-                    "desc": "Whether this is a government charge or a carrier surcharge.",
-                    "type": "string"
-                },
-                {
-                    "name": "code",
-                    "desc": "The code to enter in the ticket's tax box.",
-                    "type": "string"
-                },
-                {
-                    "name": "country",
-                    "desc": "For government charges, the country levying the charge.",
-                    "type": "string"
+                    "refType": "SliceInfo"
                 },
                 {
                     "name": "id",
-                    "desc": "Identifier uniquely identifying this tax in a response. Not present for unnamed carrier surcharges.",
+                    "desc": "Identifier uniquely identifying this trip in a response.",
                     "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "TripsSearchRequest",
-            "desc": "A QPX Express search request.",
-            "type": "object",
-            "fields": [
+                },
                 {
-                    "name": "request",
-                    "desc": "A QPX Express search request. Required values are at least one adult or senior passenger, an origin, a destination, and a date.",
+                    "name": "kind",
+                    "desc": "Identifies this as a trip information object. Value: the fixed string qpxexpress#tripOption.",
+                    "type": "string",
+                    "default": "qpxexpress#tripOption"
+                },
+                {
+                    "name": "pricing",
+                    "desc": "Per passenger pricing information.",
+                    "collection": "array",
                     "type": "ref",
-                    "refType": "TripOptionsRequest"
+                    "refType": "PricingInfo"
+                },
+                {
+                    "name": "saleTotal",
+                    "desc": "The total price for all passengers on the trip, in the form of a currency followed by an amount, e.g. USD253.35.",
+                    "type": "string"
                 }
             ]
         }
@@ -972,10 +973,10 @@
             "name": "trips",
             "methods": [
                 {
-                    "name": "search",
-                    "desc": "Returns a list of flights.",
                     "path": "search",
                     "httpMethod": "POST",
+                    "name": "search",
+                    "desc": "Returns a list of flights.",
                     "request": "TripsSearchRequest",
                     "response": "TripsSearchResponse"
                 }

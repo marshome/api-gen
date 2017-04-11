@@ -1,8 +1,8 @@
-package marsapi
+package genlib
 
 import (
 	"net/http"
-	"github.com/marshome/mux"
+	"github.com/marshome/3p-mux"
 	"encoding/json"
 	"net/url"
 )
@@ -19,15 +19,15 @@ type Context struct {
 	ServiceError       error
 }
 
-type MethodOptions struct{
-	Scopes                []string
+type MethodOptions struct {
+	Scopes []string
 }
 
-type CommonOptions struct{
+type CommonOptions struct {
 
 }
 
-func ParseCommonOptions(values url.Values)(opts *CommonOptions,err error) {
+func ParseCommonOptions(values url.Values) (opts *CommonOptions, err error) {
 	opts = &CommonOptions{}
 
 	return opts, nil
@@ -45,7 +45,7 @@ type muxRouter struct {
 	postProcessor func(ctx*Context)
 }
 
-func (r *muxRouter)Handle(httpMethod string, httpPath string,handlerFunc func(ctx *Context),methodOptions *MethodOptions) {
+func (r *muxRouter)Handle(httpMethod string, httpPath string, handlerFunc func(ctx *Context), methodOptions *MethodOptions) {
 	r.router.HandleFunc(httpPath, func(w http.ResponseWriter, req *http.Request) {
 		ctx := &Context{
 			HttpResponseWriter:w,
@@ -78,23 +78,27 @@ func (r *muxRouter)Handle(httpMethod string, httpPath string,handlerFunc func(ct
 			return
 		}
 
-		if ctx.ServiceResponse!=nil{
-			data,err:=json.MarshalIndent(ctx.ServiceResponse,"","    ")
-			if err!=nil{
+		if ctx.ServiceResponse != nil {
+			data, err := json.MarshalIndent(ctx.ServiceResponse, "", "    ")
+			if err != nil {
 				w.Write([]byte(err.Error()))
 				return
 			}
 			w.Write(data)
+		}else{
+			w.Write([]byte("ok"))
 		}
 	}).Methods(httpMethod)
 }
 
-func (r *muxRouter)ServeHTTP(w http.ResponseWriter,req *http.Request) {
+func (r *muxRouter)ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	r.router.ServeHTTP(w, req)
 }
 
 func NewRouter() Router {
-	return &muxRouter{
+	r:= &muxRouter{
 		router:mux.NewRouter(),
 	}
+
+	return r
 }

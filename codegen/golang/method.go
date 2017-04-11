@@ -1,18 +1,19 @@
 package codegen
 
 import (
-	"github.com/marshome/apis/spec"
+	"github.com/marshome/i-api/spec"
 	"fmt"
 	"strings"
+	"time"
 )
 
 type Method struct {
-	c      *Context
+	c        *Context
 	Resource *Resource
 	Spec     *spec.Method
 }
 
-func NewMethod(c *Context,r *Resource,spec *spec.Method)*Method {
+func NewMethod(c *Context, r *Resource, spec *spec.Method) *Method {
 	m := &Method{
 		c:c,
 		Resource:r,
@@ -22,7 +23,7 @@ func NewMethod(c *Context,r *Resource,spec *spec.Method)*Method {
 	return m
 }
 
-func (m *Method)OptionalParamName()string {
+func (m *Method)OptionalParamName() string {
 	return GoName(m.Resource.Name, true) + "_" + GoName(m.Spec.Name, true) + "Params"
 }
 
@@ -32,26 +33,24 @@ func (m *Method)GenerateComments() {
 	}
 
 	if m.Spec.PathParams != nil&&len(m.Spec.PathParams) > 0 {
-		m.c.Comment("-PATH PARAMS:")
 		for _, p := range m.Spec.PathParams {
 			m.c.Comment(fmt.Sprintf("   @%s :%s", GoName(p.Name, false), p.Desc))
 		}
 	}
 
 	if m.Spec.RequiredQueryParams != nil&&len(m.Spec.RequiredQueryParams) > 0 {
-		m.c.Comment("-REQUIRED QUERY PARAMS:")
 		for _, p := range m.Spec.RequiredQueryParams {
 			m.c.Comment(fmt.Sprintf("   @%s :%s", GoName(p.Name, false), p.Desc))
 		}
 	}
 }
 
-func (m *Method)GenerateSignature()string {
+func (m *Method)GenerateSignature() string {
 	//name
 	sig := GoName(m.Spec.Name, true)
 
 	//ctx
-	sig += "(_ctx *marsapi.Context"
+	sig += "(_ctx *genlib.Context"
 
 	//path params
 	for _, p := range m.Spec.PathParams {
@@ -101,6 +100,63 @@ func (m *Method)GenerateOptionalParams() {
 	m.c.Pn("}")
 	m.c.Pn("")
 
+	//get funcs
+	for _, p := range m.Spec.OptionalQueryParams {
+		m.c.Pn("func (_opts *%s)Get%s()%s{", m.OptionalParamName(), GoName(p.Name, true), GoType(p, "", false))
+		m.c.Pn("if _opts.%s!=nil{", GoName(p.Name, true))
+		m.c.Pn("    return *_opts.%s", GoName(p.Name, true))
+		m.c.Pn("}")
+		m.c.Pn("")
+		if p.Default == "" {
+			if p.Collection == spec.COLLECTION_NONE {
+				if p.Type == spec.TYPE_STRING {
+					m.c.Pn("return \"\"")
+				} else if p.Type == spec.TYPE_BOOL {
+					m.c.Pn("return false")
+				} else if p.Type == spec.TYPE_BYTE ||
+					p.Type == spec.TYPE_INT32 || p.Type == spec.TYPE_UINT32 ||
+					p.Type == spec.TYPE_INT64 || p.Type == spec.TYPE_UINT64 ||
+					p.Type == spec.TYPE_FLOAT32 || p.Type == spec.TYPE_FLOAT64 {
+					m.c.Pn("return 0")
+				} else if p.Type == spec.TYPE_DATE || p.Type == spec.TYPE_DATETIME {
+					m.c.Pn("return time.Unix(0,0)")
+				} else {
+					panic("not impl")
+				}
+			} else {
+				panic("not impl")
+			}
+		} else {
+			if p.Collection == spec.COLLECTION_NONE {
+				if p.Type == spec.TYPE_STRING {
+					m.c.Pn("return \"%s\"", p.Default)
+				} else if p.Type == spec.TYPE_DATE || p.Type == spec.TYPE_DATETIME {
+					_, err := time.Parse(time.RFC3339, p.Default)
+					if err != nil {
+						panic("invalid default time format " + p.Default)
+					}
+					m.c.Pn("t%s,_err:=time.Parse(time.RFC3339,%s)", GoName(p.Name, true), p.Default)
+					m.c.Pn("if _err!=nil{")
+					m.c.Pn("    panic(\"invalid default time format %s\")", p.Default)
+					m.c.Pn("")
+					m.c.Pn("return t%s", GoName(p.Name, true))
+				} else {
+					m.c.Pn("return %s", p.Default)
+				}
+			} else {
+				panic("not impl")
+			}
+		}
+		m.c.Pn("}")
+		m.c.Pn("")
+	}
+
+	//validate
+	m.c.Pn("func (_opts *%s)validate_()error{",m.OptionalParamName())
+	m.c.Pn("    return nil")
+	m.c.Pn("}")
+	m.c.Pn("")
+
 	//parse func
 	m.c.Pn("func Parse%s(values url.Values)(_opts *%s,_err error){", m.OptionalParamName(), m.OptionalParamName())
 	m.c.Pn("    _opts=&%s{}", m.OptionalParamName())
@@ -116,17 +172,16 @@ func (m *Method)GenerateOptionalParams() {
 		}
 
 		goName := GoName(p.Name, true)
-		m.c.Pn("/* param:%s */", p.Name)
 		m.c.Pn("_s=values.Get(\"%s\")", p.Name)
 		m.c.Pn("if _s!=\"\"{")
 		if p.Collection == spec.COLLECTION_NONE {
 			if p.Type == spec.TYPE_STRING {
-				m.c.Pn("_opts.%s=marsapi.String(_s)", goName)
+				m.c.Pn("_opts.%s=genlib.String(_s)", goName)
 				m.c.Pn("")
 			} else if p.Type == spec.TYPE_BOOL {
 				m.c.Pn("_p,_err:=strconv.ParseBool(_s)")
 				onError()
-				m.c.Pn("_opts.%s=marsapi.Bool(_p)", goName)
+				m.c.Pn("_opts.%s=genlib.Bool(_p)", goName)
 				m.c.Pn("")
 			} else if p.Type == spec.TYPE_BYTE {
 				m.c.Pn("_p_int64,_err:=strconv.ParseInt(_s,10,64)")
@@ -135,36 +190,36 @@ func (m *Method)GenerateOptionalParams() {
 				m.c.Pn("    _ctx.ServiceError=errors.New(\"byte out of range:%s\")", p.Name)
 				m.c.Pn("    return")
 				m.c.Pn("}")
-				m.c.Pn("_opts.%s=marsapi.Byte(byte(_p_int64))", goName)
+				m.c.Pn("_opts.%s=genlib.Byte(byte(_p_int64))", goName)
 			} else if p.Type == spec.TYPE_INT32 {
 				m.c.Pn("_p,_err:=strconv.ParseInt(_s,10,32)")
 				onError()
-				m.c.Pn("_opts.%s=marsapi.Int32(int32(_p))", goName)
+				m.c.Pn("_opts.%s=genlib.Int32(int32(_p))", goName)
 				m.c.Pn("")
 			} else if p.Type == spec.TYPE_UINT32 {
 				m.c.Pn("_p,_err:=strconv.ParseUint(_s,10,32)")
 				onError()
-				m.c.Pn("_opts.%s=marsapi.Uint32(uint32(_p))", goName)
+				m.c.Pn("_opts.%s=genlib.Uint32(uint32(_p))", goName)
 				m.c.Pn("")
 			} else if p.Type == spec.TYPE_INT64 {
 				m.c.Pn("_p,_err:=strconv.ParseInt(_s,10,64)")
 				onError()
-				m.c.Pn("_opts.%s=marsapi.Int64(_p)", goName)
+				m.c.Pn("_opts.%s=genlib.Int64(_p)", goName)
 				m.c.Pn("")
 			} else if p.Type == spec.TYPE_UINT64 {
 				m.c.Pn("_p,_err:=strconv.ParseUint(_s,10,64)")
 				onError()
-				m.c.Pn("_opts.%s=marsapi.Uint64(_p)", goName)
+				m.c.Pn("_opts.%s=genlib.Uint64(_p)", goName)
 				m.c.Pn("")
 			} else if p.Type == spec.TYPE_FLOAT32 {
 				m.c.Pn("_p,_err:=strconv.ParseFloat(_s,32)")
 				onError()
-				m.c.Pn("_opts.%s=marsapi.Float32(float32(_p))", goName)
+				m.c.Pn("_opts.%s=genlib.Float32(float32(_p))", goName)
 				m.c.Pn("")
 			} else if p.Type == spec.TYPE_FLOAT64 {
 				m.c.Pn("_p,_err:=strconv.ParseFloat(_s,64)")
 				onError()
-				m.c.Pn("_opts.%s=marsapi.Float64(_p)", goName)
+				m.c.Pn("_opts.%s=genlib.Float64(_p)", goName)
 				m.c.Pn("")
 			} else if p.Type == spec.TYPE_DATE {
 				m.c.Pn("_p,_err:=time.Parse(time.RFC3339,_s)")
@@ -182,7 +237,7 @@ func (m *Method)GenerateOptionalParams() {
 			}
 		} else if p.Collection == spec.COLLECTION_ARRAY {
 			if p.Type == spec.TYPE_STRING {
-				m.c.Pn("_p,_err:=marsapi.ParseStringList(_s)")
+				m.c.Pn("_p,_err:=genlib.ParseStringList(_s)")
 				onError()
 			} else if p.Type == spec.TYPE_INT32 {
 				panic("1")
@@ -207,6 +262,11 @@ func (m *Method)GenerateOptionalParams() {
 		m.c.Pn("    }")
 		m.c.Pn("")
 	}
+	m.c.Pn("    _err=_opts.validate_()")
+	m.c.Pn("    if _err!=nil{")
+	m.c.Pn("        return nil,_err")
+	m.c.Pn("    }")
+	m.c.Pn("")
 	m.c.Pn("    return _opts,nil")
 	m.c.Pn("}")
 	m.c.Pn("")
@@ -221,7 +281,7 @@ func (m *Method)GenerateRouter() {
 	}
 
 	//handle func
-	m.c.Pn("    _r.Handle(\"%s\",\"%s\", func(_ctx *marsapi.Context) {", m.Spec.HttpMethod, m.Spec.Path)
+	m.c.Pn("    _r.Handle(\"%s\",\"%s\", func(_ctx *genlib.Context) {", m.Spec.HttpMethod, m.c.spec.ServicePath + m.Spec.Path)
 	m.c.Pn("    var _err error")
 	m.c.Pn("")
 	if len(m.Spec.PathParams) > 0 || len(m.Spec.RequiredQueryParams) > 0 {
@@ -231,9 +291,7 @@ func (m *Method)GenerateRouter() {
 
 	//path params
 	if m.Spec.PathParams != nil&&len(m.Spec.PathParams) > 0 {
-		m.c.Pn("/****** path params ******/")
 		for _, p := range m.Spec.PathParams {
-			m.c.Pn("/* path param:%s */", p.Name)
 			m.c.Pn("_s=_ctx.PathParamMap[\"%s\"]", p.Name)
 			m.c.Pn("if _s==\"\"{")
 			m.c.Pn("    _ctx.ServiceError=errors.New(\"Missing:%s\")", p.Name)
@@ -281,9 +339,7 @@ func (m *Method)GenerateRouter() {
 
 	//required query params
 	if m.Spec.RequiredQueryParams != nil&&len(m.Spec.RequiredQueryParams) > 0 {
-		m.c.Pn("/****** required query params ******/")
 		for _, p := range m.Spec.RequiredQueryParams {
-			m.c.Pn("/* required query param:%s */", p.Name)
 			m.c.Pn("_s=_ctx.HttpRequest.URL.Query().Get(\"%s\")", p.Name)
 			m.c.Pn("if _s==\"\"{")
 			m.c.Pn("    _ctx.ServiceError=errors.New(\"Missing:%s\")", p.Name)
@@ -338,7 +394,7 @@ func (m *Method)GenerateRouter() {
 				}
 			} else if p.Collection == spec.COLLECTION_ARRAY {
 				if p.Type == spec.TYPE_STRING {
-					m.c.Pn("_q_%s,_err:=marsapi.ParseStringList(_s)", goName)
+					m.c.Pn("_q_%s,_err:=genlib.ParseStringList(_s)", goName)
 					onError()
 				} else if p.Type == spec.TYPE_INT32 {
 					panic("1")
@@ -367,7 +423,6 @@ func (m *Method)GenerateRouter() {
 
 	//request body
 	if m.Spec.Request != "" {
-		m.c.Pn("/****** request body ******/")
 		m.c.Pn("    body,_err:= ioutil.ReadAll(_ctx.HttpRequest.Body)")
 		onError()
 		m.c.Pn("    _req:=%s{}", m.Spec.Request)
@@ -378,14 +433,12 @@ func (m *Method)GenerateRouter() {
 
 	//optional query params
 	if len(m.Spec.OptionalQueryParams) > 0 {
-		m.c.Pn("/****** optional query params ******/")
 		m.c.Pn("    _opts,_err:=Parse%s(_ctx.HttpRequest.URL.Query())", m.OptionalParamName())
 		onError()
 		m.c.Pn("")
 	}
 
 	//call handler
-	m.c.Pn("/****** call handler ******/")
 	call := ""
 	if m.Spec.Response != "" {
 		call += "        _resp,_err:="
@@ -408,13 +461,12 @@ func (m *Method)GenerateRouter() {
 	call += ")"
 	m.c.Pn(call)
 	m.c.Pn("")
-	m.c.Pn("/****** result ******/")
 	if m.Spec.Response != "" {
 		m.c.Pn("    _ctx.ServiceResponse=_resp")
 	}
 	m.c.Pn("    _ctx.ServiceError=_err")
 	//method options
-	m.c.Pn("    },&marsapi.MethodOptions{})")
+	m.c.Pn("    },&genlib.MethodOptions{})")
 	m.c.Pn("")
 }
 
@@ -423,7 +475,7 @@ func (m *Method)GenerateClientCall() {
 
 	//def
 	m.c.Pn("type %s struct{", callName)
-	m.c.Pn("    marsapi.ApiCall")
+	m.c.Pn("    genlib.ApiCall")
 	m.c.Pn("")
 	m.c.Pn("    s *Service_")
 	m.c.Pn("}")
@@ -445,27 +497,27 @@ func (m *Method)GenerateClientCall() {
 		sig += fmt.Sprintf("req_ *%s", GoName(m.Spec.Request, true))
 	}
 	m.c.Pn("func (r *%sService)%s(%s)*%s{", GoName(m.Resource.Name, true), GoName(m.Spec.Name, true), sig, callName)
-	m.c.Pn("c:=&%s{",callName)
+	m.c.Pn("c:=&%s{", callName)
 	m.c.Pn("    s:r.s,")
-	m.c.Pn("    ApiCall:*marsapi.NewApiCall(r.s.client,RootUrl,\"%s\"),", m.Spec.Path)
+	m.c.Pn("    ApiCall:*genlib.NewApiCall(r.s.client,RootUrl,\"%s\"),", m.Spec.Path)
 	m.c.Pn("    }")
 	m.c.Pn("")
-	m.c.Pn("    c.HttpMethod_=\"%s\"",strings.ToUpper(m.Spec.HttpMethod))
+	m.c.Pn("    c.HttpMethod_=\"%s\"", strings.ToUpper(m.Spec.HttpMethod))
 	if m.Spec.PathParams != nil&&len(m.Spec.PathParams) > 0 {
 		m.c.Pn("c.PathParams_=make(map[string]string)")
 		for _, p := range m.Spec.PathParams {
-			if GoType(p,"",false)=="string"{
+			if GoType(p, "", false) == "string" {
 				m.c.Pn("c.PathParams_[\"%s\"]=%s", GoName(p.Name, false), GoName(p.Name, false))
-			}else{
+			} else {
 				m.c.Pn("c.PathParams_[\"%s\"]=fmt.Sprint(%s)", GoName(p.Name, false), GoName(p.Name, false))
 			}
 		}
 	}
 	if m.Spec.RequiredQueryParams != nil {
 		for _, p := range m.Spec.RequiredQueryParams {
-			if GoType(p,"",false)=="string" {
+			if GoType(p, "", false) == "string" {
 				m.c.Pn("c.QueryParams_.Set(\"%s\",%s)", GoName(p.Name, false), GoName(p.Name, false))
-			}else{
+			} else {
 				m.c.Pn("c.QueryParams_.Set(\"%s\",fmt.Sprint(%s))", GoName(p.Name, false), GoName(p.Name, false))
 			}
 		}

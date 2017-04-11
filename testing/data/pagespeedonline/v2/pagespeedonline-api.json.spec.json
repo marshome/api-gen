@@ -10,6 +10,7 @@
     "documentationLink": "https://developers.google.com/speed/docs/insights/v2/getting-started",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "pagespeedonline/v2/",
     "auth": {},
     "parameters": [
         {
@@ -215,27 +216,11 @@
                     "type": "object",
                     "fields": [
                         {
-                            "name": "locale",
-                            "desc": "The locale of the formattedResults, e.g. \"en_US\".",
-                            "type": "string"
-                        },
-                        {
                             "name": "ruleResults",
                             "desc": "Dictionary of formatted rule results, with one entry for each PageSpeed rule instantiated and run by the server.",
                             "collection": "map",
                             "type": "object",
                             "fields": [
-                                {
-                                    "name": "groups",
-                                    "desc": "List of rule groups that this rule belongs to. Each entry in the list is one of \"SPEED\" or \"USABILITY\".",
-                                    "collection": "array",
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "localizedRuleName",
-                                    "desc": "Localized name of the rule, intended for presentation to a user.",
-                                    "type": "string"
-                                },
                                 {
                                     "name": "ruleImpact",
                                     "desc": "The impact (unbounded floating point value) that implementing the suggestions for this rule would have on making the page faster. Impact is comparable between rules to determine which rule's suggestions would have a higher or lower impact on making a page faster. For instance, if enabling compression would save 1MB, while optimizing images would save 500kB, the enable compression rule would have 2x the impact of the image optimization rule, all other things being equal.",
@@ -281,22 +266,52 @@
                                             ]
                                         }
                                     ]
+                                },
+                                {
+                                    "name": "groups",
+                                    "desc": "List of rule groups that this rule belongs to. Each entry in the list is one of \"SPEED\" or \"USABILITY\".",
+                                    "collection": "array",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "localizedRuleName",
+                                    "desc": "Localized name of the rule, intended for presentation to a user.",
+                                    "type": "string"
                                 }
                             ]
+                        },
+                        {
+                            "name": "locale",
+                            "desc": "The locale of the formattedResults, e.g. \"en_US\".",
+                            "type": "string"
                         }
                     ]
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of result.",
-                    "type": "string",
-                    "default": "pagespeedonline#result"
                 },
                 {
                     "name": "pageStats",
                     "desc": "Summary statistics for the page, such as number of JavaScript bytes, number of HTML bytes, etc.",
                     "type": "object",
                     "fields": [
+                        {
+                            "name": "htmlResponseBytes",
+                            "desc": "Number of uncompressed response bytes for the main HTML document and all iframes on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "numberHosts",
+                            "desc": "Number of unique hosts referenced by the page.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "numberJsResources",
+                            "desc": "Number of JavaScript resources referenced by the page.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "totalRequestBytes",
+                            "desc": "Total size of all request bytes sent by the page.",
+                            "type": "int64"
+                        },
                         {
                             "name": "otherResponseBytes",
                             "desc": "Number of response bytes for other resources on the page.",
@@ -313,24 +328,9 @@
                             "type": "int64"
                         },
                         {
-                            "name": "htmlResponseBytes",
-                            "desc": "Number of uncompressed response bytes for the main HTML document and all iframes on the page.",
-                            "type": "int64"
-                        },
-                        {
                             "name": "imageResponseBytes",
                             "desc": "Number of response bytes for image resources on the page.",
                             "type": "int64"
-                        },
-                        {
-                            "name": "numberResources",
-                            "desc": "Number of HTTP resources loaded by the page.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "numberStaticResources",
-                            "desc": "Number of static (i.e. cacheable) resources on the page.",
-                            "type": "int32"
                         },
                         {
                             "name": "javascriptResponseBytes",
@@ -343,26 +343,65 @@
                             "type": "int32"
                         },
                         {
-                            "name": "numberHosts",
-                            "desc": "Number of unique hosts referenced by the page.",
+                            "name": "numberResources",
+                            "desc": "Number of HTTP resources loaded by the page.",
                             "type": "int32"
                         },
                         {
-                            "name": "numberJsResources",
-                            "desc": "Number of JavaScript resources referenced by the page.",
+                            "name": "numberStaticResources",
+                            "desc": "Number of static (i.e. cacheable) resources on the page.",
                             "type": "int32"
                         },
                         {
                             "name": "textResponseBytes",
                             "desc": "Number of uncompressed response bytes for text resources not covered by other statistics (i.e non-HTML, non-script, non-CSS resources) on the page.",
                             "type": "int64"
-                        },
-                        {
-                            "name": "totalRequestBytes",
-                            "desc": "Total size of all request bytes sent by the page.",
-                            "type": "int64"
                         }
                     ]
+                },
+                {
+                    "name": "responseCode",
+                    "desc": "Response code for the document. 200 indicates a normal page load. 4xx/5xx indicates an error.",
+                    "type": "int32"
+                },
+                {
+                    "name": "title",
+                    "desc": "Title of the page, as displayed in the browser's title bar.",
+                    "type": "string"
+                },
+                {
+                    "name": "version",
+                    "desc": "The version of PageSpeed used to generate these results.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "major",
+                            "desc": "The major version number of PageSpeed used to generate these results.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "minor",
+                            "desc": "The minor version number of PageSpeed used to generate these results.",
+                            "type": "int32"
+                        }
+                    ]
+                },
+                {
+                    "name": "id",
+                    "desc": "Canonicalized and final URL for the document, after following page redirects (if any).",
+                    "type": "string"
+                },
+                {
+                    "name": "invalidRules",
+                    "desc": "List of rules that were specified in the request, but which the server did not know how to instantiate.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of result.",
+                    "type": "string",
+                    "default": "pagespeedonline#result"
                 },
                 {
                     "name": "ruleGroups",
@@ -378,48 +417,10 @@
                     ]
                 },
                 {
-                    "name": "title",
-                    "desc": "Title of the page, as displayed in the browser's title bar.",
-                    "type": "string"
-                },
-                {
-                    "name": "id",
-                    "desc": "Canonicalized and final URL for the document, after following page redirects (if any).",
-                    "type": "string"
-                },
-                {
-                    "name": "invalidRules",
-                    "desc": "List of rules that were specified in the request, but which the server did not know how to instantiate.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "responseCode",
-                    "desc": "Response code for the document. 200 indicates a normal page load. 4xx/5xx indicates an error.",
-                    "type": "int32"
-                },
-                {
                     "name": "screenshot",
                     "desc": "Base64-encoded screenshot of the page that was analyzed.",
                     "type": "ref",
                     "refType": "PagespeedApiImageV2"
-                },
-                {
-                    "name": "version",
-                    "desc": "The version of PageSpeed used to generate these results.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "minor",
-                            "desc": "The minor version number of PageSpeed used to generate these results.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "major",
-                            "desc": "The major version number of PageSpeed used to generate these results.",
-                            "type": "int32"
-                        }
-                    ]
                 }
             ]
         }
@@ -429,10 +430,10 @@
             "name": "pagespeedapi",
             "methods": [
                 {
-                    "name": "runpagespeed",
-                    "desc": "Runs PageSpeed analysis on the page at the specified URL, and returns PageSpeed scores, a list of suggestions to make that page faster, and other information.",
                     "path": "runPagespeed",
                     "httpMethod": "GET",
+                    "name": "runpagespeed",
+                    "desc": "Runs PageSpeed analysis on the page at the specified URL, and returns PageSpeed scores, a list of suggestions to make that page faster, and other information.",
                     "requiredQueryParams": [
                         {
                             "name": "url",
@@ -442,7 +443,13 @@
                             "pattern": "(?i)http(s)?://.*"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
+                        {
+                            "name": "filter_third_party_resources",
+                            "desc": "Indicates if third party resources should be filtered out before PageSpeed analysis.",
+                            "type": "bool",
+                            "default": "false"
+                        },
                         {
                             "name": "locale",
                             "desc": "The locale used to localize formatted results",
@@ -475,12 +482,6 @@
                                     "desc": "Fetch and analyze the URL for mobile devices"
                                 }
                             ]
-                        },
-                        {
-                            "name": "filter_third_party_resources",
-                            "desc": "Indicates if third party resources should be filtered out before PageSpeed analysis.",
-                            "type": "bool",
-                            "default": "false"
                         }
                     ],
                     "response": "Result"

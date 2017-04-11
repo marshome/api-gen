@@ -2,12 +2,12 @@ package codegen
 
 import (
 	"bytes"
-	"github.com/marshome/apis/spec"
+	"github.com/marshome/i-api/spec"
 	"fmt"
 	"sort"
 )
 
-var go_tokens=map[string]int{
+var go_tokens = map[string]int{
 	"break":1,
 	"case":1,
 	"chan":1,
@@ -36,8 +36,6 @@ var go_tokens=map[string]int{
 }
 
 type Context struct {
-	Namespace string
-
 	spec      spec.Document
 	Code      *bytes.Buffer
 
@@ -61,7 +59,7 @@ func (c *Context)GenerateServerImports() {
 	c.Pn("import \"net/url\"")
 	c.Pn("import \"strconv\"")
 	c.Pn("import \"time\"")
-	c.Pn("import \"github.com/marshome/apis/marsapi\"")
+	c.Pn("import \"github.com/marshome/i-api/genlib\"")
 	c.Pn("")
 
 	c.Pn("var _=errors.New(\"\")")
@@ -70,7 +68,7 @@ func (c *Context)GenerateServerImports() {
 	c.Pn("var _=strconv.ErrRange")
 	c.Pn("var _=ioutil.Discard")
 	c.Pn("var _=json.InvalidUTF8Error{}")
-	c.Pn("var _=marsapi.Bool(false)")
+	c.Pn("var _=genlib.Bool(false)")
 	c.Pn("var _=time.RFC3339")
 	c.Pn("")
 }
@@ -87,7 +85,7 @@ func (c *Context)GenerateClientImports() {
 	c.Pn("import \"fmt\"")
 	c.Pn("import \"context\"")
 	c.Pn("import \"io\"")
-	c.Pn("import \"github.com/marshome/apis/marsapi\"")
+	c.Pn("import \"github.com/marshome/i-api/genlib\"")
 	c.Pn("")
 
 	c.Pn("var _=errors.New(\"\")")
@@ -97,7 +95,7 @@ func (c *Context)GenerateClientImports() {
 	c.Pn("var _=strconv.ErrRange")
 	c.Pn("var _=ioutil.Discard")
 	c.Pn("var _=json.InvalidUTF8Error{}")
-	c.Pn("var _=marsapi.Bool(false)")
+	c.Pn("var _=genlib.Bool(false)")
 	c.Pn("var _=time.RFC3339")
 	c.Pn("var _=context.Canceled")
 	c.Pn("var _=io.EOF")
@@ -106,7 +104,7 @@ func (c *Context)GenerateClientImports() {
 
 }
 
-func (c *Context)parseAllSchemas(s *spec.Object,name string,top bool) {
+func (c *Context)parseAllSchemas(s *spec.Object, name string, top bool) {
 	if top && s.Collection != spec.COLLECTION_NONE {
 		//top collection
 		c.Schemas[name] = NewSchema(c, s, name, true)

@@ -2,7 +2,7 @@ package codegen
 
 import (
 	"strings"
-	"github.com/marshome/apis/spec"
+	"github.com/marshome/i-api/spec"
 	"regexp"
 	"fmt"
 	"bytes"
@@ -15,7 +15,7 @@ func Comment(pfx, c string) string {
 	var buf bytes.Buffer
 	const maxLen = 70
 	r := strings.NewReplacer(
-		"\n", "\n"+pfx+"// ",
+		"\n", "\n" + pfx + "// ",
 		"`\"", `"`,
 		"\"`", `"`,
 	)
@@ -79,7 +79,7 @@ func GoName(name string, initialCap bool) string {
 	return goName
 }
 
-func GoType(obj * spec.Object,parentName string,topCollectionItem bool)string {
+func GoType(obj *spec.Object, parentName string, topCollectionItem bool) string {
 	typ := ""
 	switch obj.Type {
 	case "":
@@ -116,4 +116,8 @@ func GoType(obj * spec.Object,parentName string,topCollectionItem bool)string {
 	} else {
 		return typ
 	}
+}
+
+func Namespace(name string,version string)string {
+	return strings.Replace(name + "_" + version, ".", "_", -1)
 }

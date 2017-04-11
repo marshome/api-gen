@@ -1,4 +1,4 @@
-package marsapi
+package genlib
 
 import (
 	"net/http"
@@ -11,49 +11,26 @@ import (
 	"context"
 )
 
-// CloseBody is used to close res.Body.
-// Prior to calling Close, it also tries to Read a small amount to see an EOF.
-// Not seeing an EOF can prevent HTTP Transports from reusing connections.
-func CloseBody(res *http.Response) {
-	if res == nil || res.Body == nil {
-		return
-	}
-	// Justification for 3 byte reads: two for up to "\r\n" after
-	// a JSON/XML document, and then 1 to see EOF if we haven't yet.
-	// TODO(bradfitz): detect Go 1.3+ and skip these reads.
-	// See https://codereview.appspot.com/58240043
-	// and https://codereview.appspot.com/49570044
-	buf := make([]byte, 1)
-	for i := 0; i < 3; i++ {
-		_, err := res.Body.Read(buf)
-		if err != nil {
-			break
-		}
-	}
-	res.Body.Close()
-
-}
-
 // Error contains an error response from the server.
 type Error struct {
 	// Code is the HTTP response status code and will always be populated.
-	Code int `json:"code"`
+	Code    int `json:"code"`
 	// Message is the server response message and is only populated when
 	// explicitly referenced by the JSON server response.
 	Message string `json:"message"`
 	// Body is the raw response returned by the server.
 	// It is often but not always JSON, depending on how the request fails.
-	Body string
+	Body    string
 	// Header contains the response header fields from the server.
-	Header http.Header
+	Header  http.Header
 
-	Errors []ErrorItem
+	Errors  []ErrorItem
 }
 
 // ErrorItem is a detailed error code & message from the Google API frontend.
 type ErrorItem struct {
 	// Reason is the typed error code. For example: "some_example".
-	Reason string `json:"reason"`
+	Reason  string `json:"reason"`
 	// Message is the human-readable description of the error.
 	Message string `json:"message"`
 }
@@ -83,6 +60,29 @@ func (e *Error) Error() string {
 
 type errorReply struct {
 	Error *Error `json:"error"`
+}
+
+// CloseBody is used to close res.Body.
+// Prior to calling Close, it also tries to Read a small amount to see an EOF.
+// Not seeing an EOF can prevent HTTP Transports from reusing connections.
+func CloseBody(res *http.Response) {
+	if res == nil || res.Body == nil {
+		return
+	}
+	// Justification for 3 byte reads: two for up to "\r\n" after
+	// a JSON/XML document, and then 1 to see EOF if we haven't yet.
+	// TODO(bradfitz): detect Go 1.3+ and skip these reads.
+	// See https://codereview.appspot.com/58240043
+	// and https://codereview.appspot.com/49570044
+	buf := make([]byte, 1)
+	for i := 0; i < 3; i++ {
+		_, err := res.Body.Read(buf)
+		if err != nil {
+			break
+		}
+	}
+	res.Body.Close()
+
 }
 
 // CheckResponse returns an error (of type *Error) if the response
@@ -126,7 +126,7 @@ type ApiCall struct {
 	ResponseData_       interface{}
 }
 
-func NewApiCall(client *http.Client, rootUrl string,servicePath string)*ApiCall {
+func NewApiCall(client *http.Client, rootUrl string, servicePath string) *ApiCall {
 	c := &ApiCall{}
 	c.Client_ = client
 	c.RootUrl_ = rootUrl
@@ -137,7 +137,7 @@ func NewApiCall(client *http.Client, rootUrl string,servicePath string)*ApiCall 
 	return c
 }
 
-func (c *ApiCall)SendRequest_()(err error) {
+func (c *ApiCall)SendRequest_() (err error) {
 	urls := c.RootUrl_ + "/" + c.ServicePath_
 	queryString := c.QueryParams_.Encode()
 	if queryString != "" {

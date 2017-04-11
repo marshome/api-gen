@@ -10,36 +10,16 @@
     "documentationLink": "https://developers.google.com/cloud-dns",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "dns/v1/projects/",
     "auth": {
         "oauth2": [
-            "https://www.googleapis.com/auth/ndev.clouddns.readonly",
-            "https://www.googleapis.com/auth/ndev.clouddns.readwrite",
             "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloud-platform.read-only"
+            "https://www.googleapis.com/auth/cloud-platform.read-only",
+            "https://www.googleapis.com/auth/ndev.clouddns.readonly",
+            "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
         ]
     },
     "parameters": [
-        {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
-            "type": "string"
-        },
-        {
-            "name": "userIp",
-            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
-            "type": "string"
-        },
         {
             "name": "alt",
             "desc": "Data format for the response.",
@@ -61,6 +41,27 @@
             "name": "key",
             "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
             "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
         }
     ],
     "schemas": [
@@ -69,6 +70,11 @@
             "desc": "The response to a request to enumerate Changes to a ResourceRecordSets collection.",
             "type": "object",
             "fields": [
+                {
+                    "name": "nextPageToken",
+                    "desc": "The presence of this field indicates that there exist more results following your last page of results in pagination order. To fetch them, make another list request using this value as your pagination token.\n\nIn this way you can retrieve the complete contents of even very large collections one page at a time. However, if the contents of the collection change between the first and last paginated list request, the set of all elements returned will be an inconsistent view of the collection. There is no way to retrieve a \"snapshot\" of collections larger than the maximum page size.",
+                    "type": "string"
+                },
                 {
                     "name": "changes",
                     "desc": "The requested changes.",
@@ -81,11 +87,6 @@
                     "desc": "Type of resource.",
                     "type": "string",
                     "default": "dns#changesListResponse"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "The presence of this field indicates that there exist more results following your last page of results in pagination order. To fetch them, make another list request using this value as your pagination token.\n\nIn this way you can retrieve the complete contents of even very large collections one page at a time. However, if the contents of the collection change between the first and last paginated list request, the set of all elements returned will be an inconsistent view of the collection. There is no way to retrieve a \"snapshot\" of collections larger than the maximum page size.",
-                    "type": "string"
                 }
             ]
         },
@@ -94,6 +95,12 @@
             "desc": "A zone is a subtree of the DNS namespace under one administrative responsibility. A ManagedZone is a resource that represents a DNS zone hosted by the Cloud DNS service.",
             "type": "object",
             "fields": [
+                {
+                    "name": "kind",
+                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"dns#managedZone\".",
+                    "type": "string",
+                    "default": "dns#managedZone"
+                },
                 {
                     "name": "name",
                     "desc": "User assigned name for this resource. Must be unique within the project. The name must be 1-63 characters long, must begin with a letter, end with a letter or digit, and only contain lowercase letters, digits or dashes.",
@@ -129,12 +136,6 @@
                     "name": "id",
                     "desc": "Unique identifier for the resource; defined by the server (output only)",
                     "type": "uint64"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"dns#managedZone\".",
-                    "type": "string",
-                    "default": "dns#managedZone"
                 }
             ]
         },
@@ -168,6 +169,12 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "kind",
+                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"dns#project\".",
+                    "type": "string",
+                    "default": "dns#project"
+                },
+                {
                     "name": "number",
                     "desc": "Unique numeric identifier for the resource; defined by the server (output only).",
                     "type": "uint64"
@@ -182,12 +189,6 @@
                     "name": "id",
                     "desc": "User assigned unique identifier for the resource (output only).",
                     "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"dns#project\".",
-                    "type": "string",
-                    "default": "dns#project"
                 }
             ]
         },
@@ -196,6 +197,11 @@
             "desc": "Limits associated with a Project.",
             "type": "object",
             "fields": [
+                {
+                    "name": "resourceRecordsPerRrset",
+                    "desc": "Maximum allowed number of ResourceRecords per ResourceRecordSet.",
+                    "type": "int32"
+                },
                 {
                     "name": "rrsetAdditionsPerChange",
                     "desc": "Maximum allowed number of ResourceRecordSets to add per ChangesCreateRequest.",
@@ -226,11 +232,6 @@
                     "name": "managedZones",
                     "desc": "Maximum allowed number of managed zones in the project.",
                     "type": "int32"
-                },
-                {
-                    "name": "resourceRecordsPerRrset",
-                    "desc": "Maximum allowed number of ResourceRecords per ResourceRecordSet.",
-                    "type": "int32"
                 }
             ]
         },
@@ -239,6 +240,17 @@
             "desc": "A unit of data that will be returned by the DNS servers.",
             "type": "object",
             "fields": [
+                {
+                    "name": "type",
+                    "desc": "The identifier of a supported record type, for example, A, AAAA, MX, TXT, and so on.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"dns#resourceRecordSet\".",
+                    "type": "string",
+                    "default": "dns#resourceRecordSet"
+                },
                 {
                     "name": "name",
                     "desc": "For example, www.example.com.",
@@ -254,17 +266,6 @@
                     "name": "ttl",
                     "desc": "Number of seconds that this ResourceRecordSet can be cached by resolvers.",
                     "type": "int32"
-                },
-                {
-                    "name": "type",
-                    "desc": "The identifier of a supported record type, for example, A, AAAA, MX, TXT, and so on.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Identifies what kind of resource this is. Value: the fixed string \"dns#resourceRecordSet\".",
-                    "type": "string",
-                    "default": "dns#resourceRecordSet"
                 }
             ]
         },
@@ -272,13 +273,6 @@
             "name": "ResourceRecordSetsListResponse",
             "type": "object",
             "fields": [
-                {
-                    "name": "rrsets",
-                    "desc": "The resource record set resources.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ResourceRecordSet"
-                },
                 {
                     "name": "kind",
                     "desc": "Type of resource.",
@@ -289,6 +283,13 @@
                     "name": "nextPageToken",
                     "desc": "The presence of this field indicates that there exist more results following your last page of results in pagination order. To fetch them, make another list request using this value as your pagination token.\n\nIn this way you can retrieve the complete contents of even very large collections one page at a time. However, if the contents of the collection change between the first and last paginated list request, the set of all elements returned will be an inconsistent view of the collection. There is no way to retrieve a consistent snapshot of a collection larger than the maximum page size.",
                     "type": "string"
+                },
+                {
+                    "name": "rrsets",
+                    "desc": "The resource record set resources.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ResourceRecordSet"
                 }
             ]
         },
@@ -297,6 +298,25 @@
             "desc": "An atomic update to a collection of ResourceRecordSets.",
             "type": "object",
             "fields": [
+                {
+                    "name": "additions",
+                    "desc": "Which ResourceRecordSets to add?",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ResourceRecordSet"
+                },
+                {
+                    "name": "deletions",
+                    "desc": "Which ResourceRecordSets to remove? Must match existing data exactly.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ResourceRecordSet"
+                },
+                {
+                    "name": "id",
+                    "desc": "Unique identifier for the resource; defined by the server (output only).",
+                    "type": "string"
+                },
                 {
                     "name": "kind",
                     "desc": "Identifies what kind of resource this is. Value: the fixed string \"dns#change\".",
@@ -320,232 +340,19 @@
                             "name": "pending"
                         }
                     ]
-                },
-                {
-                    "name": "additions",
-                    "desc": "Which ResourceRecordSets to add?",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ResourceRecordSet"
-                },
-                {
-                    "name": "deletions",
-                    "desc": "Which ResourceRecordSets to remove? Must match existing data exactly.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ResourceRecordSet"
-                },
-                {
-                    "name": "id",
-                    "desc": "Unique identifier for the resource; defined by the server (output only).",
-                    "type": "string"
                 }
             ]
         }
     ],
     "resources": [
         {
-            "name": "managedZones",
-            "methods": [
-                {
-                    "name": "create",
-                    "desc": "Create a new ManagedZone.",
-                    "path": "{project}/managedZones",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform",
-                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "project",
-                            "desc": "Identifies the project addressed by this request.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "request": "ManagedZone",
-                    "response": "ManagedZone"
-                },
-                {
-                    "name": "delete",
-                    "desc": "Delete a previously created ManagedZone.",
-                    "path": "{project}/managedZones/{managedZone}",
-                    "httpMethod": "DELETE",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform",
-                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "project",
-                            "desc": "Identifies the project addressed by this request.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "managedZone",
-                            "desc": "Identifies the managed zone addressed by this request. Can be the managed zone name or id.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "get",
-                    "desc": "Fetch the representation of an existing ManagedZone.",
-                    "path": "{project}/managedZones/{managedZone}",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform",
-                        "https://www.googleapis.com/auth/cloud-platform.read-only",
-                        "https://www.googleapis.com/auth/ndev.clouddns.readonly",
-                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "project",
-                            "desc": "Identifies the project addressed by this request.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "managedZone",
-                            "desc": "Identifies the managed zone addressed by this request. Can be the managed zone name or id.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "response": "ManagedZone"
-                },
-                {
-                    "name": "list",
-                    "desc": "Enumerate ManagedZones that have been created but not yet deleted.",
-                    "path": "{project}/managedZones",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform",
-                        "https://www.googleapis.com/auth/cloud-platform.read-only",
-                        "https://www.googleapis.com/auth/ndev.clouddns.readonly",
-                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "project",
-                            "desc": "Identifies the project addressed by this request.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "dnsName",
-                            "desc": "Restricts the list to return only zones with this domain name.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "maxResults",
-                            "desc": "Optional. Maximum number of results to be returned. If unspecified, the server will decide how many results to return.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "Optional. A tag returned by a previous list request that was truncated. Use this parameter to continue a previous list request.",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "ManagedZonesListResponse"
-                }
-            ]
-        },
-        {
-            "name": "projects",
-            "methods": [
-                {
-                    "name": "get",
-                    "desc": "Fetch the representation of an existing Project.",
-                    "path": "{project}",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform",
-                        "https://www.googleapis.com/auth/cloud-platform.read-only",
-                        "https://www.googleapis.com/auth/ndev.clouddns.readonly",
-                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "project",
-                            "desc": "Identifies the project addressed by this request.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "response": "Project"
-                }
-            ]
-        },
-        {
-            "name": "resourceRecordSets",
-            "methods": [
-                {
-                    "name": "list",
-                    "desc": "Enumerate ResourceRecordSets that have been created but not yet deleted.",
-                    "path": "{project}/managedZones/{managedZone}/rrsets",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform",
-                        "https://www.googleapis.com/auth/cloud-platform.read-only",
-                        "https://www.googleapis.com/auth/ndev.clouddns.readonly",
-                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "project",
-                            "desc": "Identifies the project addressed by this request.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "managedZone",
-                            "desc": "Identifies the managed zone addressed by this request. Can be the managed zone name or id.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "maxResults",
-                            "desc": "Optional. Maximum number of results to be returned. If unspecified, the server will decide how many results to return.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "name",
-                            "desc": "Restricts the list to return only records with this fully qualified domain name.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "Optional. A tag returned by a previous list request that was truncated. Use this parameter to continue a previous list request.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "type",
-                            "desc": "Restricts the list to return only records of this type. If present, the \"name\" parameter must also be present.",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "ResourceRecordSetsListResponse"
-                }
-            ]
-        },
-        {
             "name": "changes",
             "methods": [
                 {
-                    "name": "create",
-                    "desc": "Atomically update the ResourceRecordSet collection.",
                     "path": "{project}/managedZones/{managedZone}/changes",
                     "httpMethod": "POST",
+                    "name": "create",
+                    "desc": "Atomically update the ResourceRecordSet collection.",
                     "scopes": [
                         "https://www.googleapis.com/auth/cloud-platform",
                         "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
@@ -568,10 +375,10 @@
                     "response": "Change"
                 },
                 {
-                    "name": "get",
-                    "desc": "Fetch the representation of an existing Change.",
                     "path": "{project}/managedZones/{managedZone}/changes/{changeId}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Fetch the representation of an existing Change.",
                     "scopes": [
                         "https://www.googleapis.com/auth/cloud-platform",
                         "https://www.googleapis.com/auth/cloud-platform.read-only",
@@ -601,10 +408,10 @@
                     "response": "Change"
                 },
                 {
-                    "name": "list",
-                    "desc": "Enumerate Changes to a ResourceRecordSet collection.",
                     "path": "{project}/managedZones/{managedZone}/changes",
                     "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "Enumerate Changes to a ResourceRecordSet collection.",
                     "scopes": [
                         "https://www.googleapis.com/auth/cloud-platform",
                         "https://www.googleapis.com/auth/cloud-platform.read-only",
@@ -625,18 +432,7 @@
                             "type": "string"
                         }
                     ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "sortBy",
-                            "desc": "Sorting criterion. The only supported value is change sequence.",
-                            "type": "string",
-                            "default": "changeSequence",
-                            "enum": [
-                                {
-                                    "name": "changeSequence"
-                                }
-                            ]
-                        },
+                    "optionalQueryParams": [
                         {
                             "name": "sortOrder",
                             "desc": "Sorting order direction: 'ascending' or 'descending'.",
@@ -651,9 +447,214 @@
                             "name": "pageToken",
                             "desc": "Optional. A tag returned by a previous list request that was truncated. Use this parameter to continue a previous list request.",
                             "type": "string"
+                        },
+                        {
+                            "name": "sortBy",
+                            "desc": "Sorting criterion. The only supported value is change sequence.",
+                            "type": "string",
+                            "default": "changeSequence",
+                            "enum": [
+                                {
+                                    "name": "changeSequence"
+                                }
+                            ]
                         }
                     ],
                     "response": "ChangesListResponse"
+                }
+            ]
+        },
+        {
+            "name": "managedZones",
+            "methods": [
+                {
+                    "path": "{project}/managedZones",
+                    "httpMethod": "POST",
+                    "name": "create",
+                    "desc": "Create a new ManagedZone.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "project",
+                            "desc": "Identifies the project addressed by this request.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "ManagedZone",
+                    "response": "ManagedZone"
+                },
+                {
+                    "path": "{project}/managedZones/{managedZone}",
+                    "httpMethod": "DELETE",
+                    "name": "delete",
+                    "desc": "Delete a previously created ManagedZone.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "project",
+                            "desc": "Identifies the project addressed by this request.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "managedZone",
+                            "desc": "Identifies the managed zone addressed by this request. Can be the managed zone name or id.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "path": "{project}/managedZones/{managedZone}",
+                    "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Fetch the representation of an existing ManagedZone.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/cloud-platform.read-only",
+                        "https://www.googleapis.com/auth/ndev.clouddns.readonly",
+                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "project",
+                            "desc": "Identifies the project addressed by this request.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "managedZone",
+                            "desc": "Identifies the managed zone addressed by this request. Can be the managed zone name or id.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "ManagedZone"
+                },
+                {
+                    "path": "{project}/managedZones",
+                    "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "Enumerate ManagedZones that have been created but not yet deleted.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/cloud-platform.read-only",
+                        "https://www.googleapis.com/auth/ndev.clouddns.readonly",
+                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "project",
+                            "desc": "Identifies the project addressed by this request.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optionalQueryParams": [
+                        {
+                            "name": "dnsName",
+                            "desc": "Restricts the list to return only zones with this domain name.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "maxResults",
+                            "desc": "Optional. Maximum number of results to be returned. If unspecified, the server will decide how many results to return.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "Optional. A tag returned by a previous list request that was truncated. Use this parameter to continue a previous list request.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "ManagedZonesListResponse"
+                }
+            ]
+        },
+        {
+            "name": "projects",
+            "methods": [
+                {
+                    "path": "{project}",
+                    "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Fetch the representation of an existing Project.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/cloud-platform.read-only",
+                        "https://www.googleapis.com/auth/ndev.clouddns.readonly",
+                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "project",
+                            "desc": "Identifies the project addressed by this request.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "Project"
+                }
+            ]
+        },
+        {
+            "name": "resourceRecordSets",
+            "methods": [
+                {
+                    "path": "{project}/managedZones/{managedZone}/rrsets",
+                    "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "Enumerate ResourceRecordSets that have been created but not yet deleted.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform",
+                        "https://www.googleapis.com/auth/cloud-platform.read-only",
+                        "https://www.googleapis.com/auth/ndev.clouddns.readonly",
+                        "https://www.googleapis.com/auth/ndev.clouddns.readwrite"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "project",
+                            "desc": "Identifies the project addressed by this request.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "managedZone",
+                            "desc": "Identifies the managed zone addressed by this request. Can be the managed zone name or id.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "optionalQueryParams": [
+                        {
+                            "name": "maxResults",
+                            "desc": "Optional. Maximum number of results to be returned. If unspecified, the server will decide how many results to return.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "name",
+                            "desc": "Restricts the list to return only records with this fully qualified domain name.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "Optional. A tag returned by a previous list request that was truncated. Use this parameter to continue a previous list request.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "type",
+                            "desc": "Restricts the list to return only records of this type. If present, the \"name\" parameter must also be present.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "ResourceRecordSetsListResponse"
                 }
             ]
         }

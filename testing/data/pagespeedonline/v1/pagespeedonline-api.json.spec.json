@@ -10,25 +10,9 @@
     "documentationLink": "https://developers.google.com/speed/docs/insights/v1/getting_started",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "pagespeedonline/v1/",
     "auth": {},
     "parameters": [
-        {
-            "name": "alt",
-            "desc": "Data format for the response.",
-            "type": "string",
-            "default": "json",
-            "enum": [
-                {
-                    "name": "json",
-                    "desc": "Responses with Content-Type of application/json"
-                }
-            ]
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
-        },
         {
             "name": "key",
             "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
@@ -54,6 +38,23 @@
             "name": "userIp",
             "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
             "type": "string"
+        },
+        {
+            "name": "alt",
+            "desc": "Data format for the response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                }
+            ]
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
         }
     ],
     "schemas": [
@@ -62,16 +63,152 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "screenshot",
+                    "desc": "Base64-encoded screenshot of the page that was analyzed.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "data",
+                            "desc": "Image data base64 encoded.",
+                            "type": "byte"
+                        },
+                        {
+                            "name": "height",
+                            "desc": "Height of screenshot in pixels.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "mime_type",
+                            "desc": "Mime type of image data. E.g. \"image/jpeg\".",
+                            "type": "string"
+                        },
+                        {
+                            "name": "width",
+                            "desc": "Width of screenshot in pixels.",
+                            "type": "int32"
+                        }
+                    ]
+                },
+                {
+                    "name": "title",
+                    "desc": "Title of the page, as displayed in the browser's title bar.",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "Canonicalized and final URL for the document, after following page redirects (if any).",
+                    "type": "string"
+                },
+                {
+                    "name": "invalidRules",
+                    "desc": "List of rules that were specified in the request, but which the server did not know how to instantiate.",
+                    "collection": "array",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Kind of result.",
+                    "type": "string",
+                    "default": "pagespeedonline#result"
+                },
+                {
+                    "name": "pageStats",
+                    "desc": "Summary statistics for the page, such as number of JavaScript bytes, number of HTML bytes, etc.",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "cssResponseBytes",
+                            "desc": "Number of uncompressed response bytes for CSS resources on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "htmlResponseBytes",
+                            "desc": "Number of uncompressed response bytes for the main HTML document and all iframes on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "numberHosts",
+                            "desc": "Number of unique hosts referenced by the page.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "otherResponseBytes",
+                            "desc": "Number of response bytes for other resources on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "flashResponseBytes",
+                            "desc": "Number of response bytes for flash resources on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "imageResponseBytes",
+                            "desc": "Number of response bytes for image resources on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "javascriptResponseBytes",
+                            "desc": "Number of uncompressed response bytes for JS resources on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "numberCssResources",
+                            "desc": "Number of CSS resources referenced by the page.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "numberJsResources",
+                            "desc": "Number of JavaScript resources referenced by the page.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "numberResources",
+                            "desc": "Number of HTTP resources loaded by the page.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "numberStaticResources",
+                            "desc": "Number of static (i.e. cacheable) resources on the page.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "textResponseBytes",
+                            "desc": "Number of uncompressed response bytes for text resources not covered by other statistics (i.e non-HTML, non-script, non-CSS resources) on the page.",
+                            "type": "int64"
+                        },
+                        {
+                            "name": "totalRequestBytes",
+                            "desc": "Total size of all request bytes sent by the page.",
+                            "type": "int64"
+                        }
+                    ]
+                },
+                {
                     "name": "formattedResults",
                     "desc": "Localized PageSpeed results. Contains a ruleResults entry for each PageSpeed rule instantiated and run by the server.",
                     "type": "object",
                     "fields": [
+                        {
+                            "name": "locale",
+                            "desc": "The locale of the formattedResults, e.g. \"en_US\".",
+                            "type": "string"
+                        },
                         {
                             "name": "ruleResults",
                             "desc": "Dictionary of formatted rule results, with one entry for each PageSpeed rule instantiated and run by the server.",
                             "collection": "map",
                             "type": "object",
                             "fields": [
+                                {
+                                    "name": "localizedRuleName",
+                                    "desc": "Localized name of the rule, intended for presentation to a user.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "ruleImpact",
+                                    "desc": "The impact (unbounded floating point value) that implementing the suggestions for this rule would have on making the page faster. Impact is comparable between rules to determine which rule's suggestions would have a higher or lower impact on making a page faster. For instance, if enabling compression would save 1MB, while optimizing images would save 500kB, the enable compression rule would have 2x the impact of the image optimization rule, all other things being equal.",
+                                    "type": "float64"
+                                },
                                 {
                                     "name": "urlBlocks",
                                     "desc": "List of blocks of URLs. Each block may contain a heading and a list of URLs. Each URL may optionally include additional details.",
@@ -127,13 +264,13 @@
                                                             "type": "object",
                                                             "fields": [
                                                                 {
-                                                                    "name": "type",
-                                                                    "desc": "Type of argument. One of URL, STRING_LITERAL, INT_LITERAL, BYTES, or DURATION.",
+                                                                    "name": "value",
+                                                                    "desc": "Argument value, as a localized string.",
                                                                     "type": "string"
                                                                 },
                                                                 {
-                                                                    "name": "value",
-                                                                    "desc": "Argument value, as a localized string.",
+                                                                    "name": "type",
+                                                                    "desc": "Type of argument. One of URL, STRING_LITERAL, INT_LITERAL, BYTES, or DURATION.",
                                                                     "type": "string"
                                                                 }
                                                             ]
@@ -178,119 +315,10 @@
                                             ]
                                         }
                                     ]
-                                },
-                                {
-                                    "name": "localizedRuleName",
-                                    "desc": "Localized name of the rule, intended for presentation to a user.",
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "ruleImpact",
-                                    "desc": "The impact (unbounded floating point value) that implementing the suggestions for this rule would have on making the page faster. Impact is comparable between rules to determine which rule's suggestions would have a higher or lower impact on making a page faster. For instance, if enabling compression would save 1MB, while optimizing images would save 500kB, the enable compression rule would have 2x the impact of the image optimization rule, all other things being equal.",
-                                    "type": "float64"
                                 }
                             ]
-                        },
-                        {
-                            "name": "locale",
-                            "desc": "The locale of the formattedResults, e.g. \"en_US\".",
-                            "type": "string"
                         }
                     ]
-                },
-                {
-                    "name": "id",
-                    "desc": "Canonicalized and final URL for the document, after following page redirects (if any).",
-                    "type": "string"
-                },
-                {
-                    "name": "pageStats",
-                    "desc": "Summary statistics for the page, such as number of JavaScript bytes, number of HTML bytes, etc.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "flashResponseBytes",
-                            "desc": "Number of response bytes for flash resources on the page.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "javascriptResponseBytes",
-                            "desc": "Number of uncompressed response bytes for JS resources on the page.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "numberJsResources",
-                            "desc": "Number of JavaScript resources referenced by the page.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "numberResources",
-                            "desc": "Number of HTTP resources loaded by the page.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "numberStaticResources",
-                            "desc": "Number of static (i.e. cacheable) resources on the page.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "otherResponseBytes",
-                            "desc": "Number of response bytes for other resources on the page.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "textResponseBytes",
-                            "desc": "Number of uncompressed response bytes for text resources not covered by other statistics (i.e non-HTML, non-script, non-CSS resources) on the page.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "cssResponseBytes",
-                            "desc": "Number of uncompressed response bytes for CSS resources on the page.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "htmlResponseBytes",
-                            "desc": "Number of uncompressed response bytes for the main HTML document and all iframes on the page.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "imageResponseBytes",
-                            "desc": "Number of response bytes for image resources on the page.",
-                            "type": "int64"
-                        },
-                        {
-                            "name": "numberCssResources",
-                            "desc": "Number of CSS resources referenced by the page.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "numberHosts",
-                            "desc": "Number of unique hosts referenced by the page.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "totalRequestBytes",
-                            "desc": "Total size of all request bytes sent by the page.",
-                            "type": "int64"
-                        }
-                    ]
-                },
-                {
-                    "name": "title",
-                    "desc": "Title of the page, as displayed in the browser's title bar.",
-                    "type": "string"
-                },
-                {
-                    "name": "invalidRules",
-                    "desc": "List of rules that were specified in the request, but which the server did not know how to instantiate.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Kind of result.",
-                    "type": "string",
-                    "default": "pagespeedonline#result"
                 },
                 {
                     "name": "responseCode",
@@ -301,33 +329,6 @@
                     "name": "score",
                     "desc": "The PageSpeed Score (0-100), which indicates how much faster a page could be. A high score indicates little room for improvement, while a lower score indicates more room for improvement.",
                     "type": "int32"
-                },
-                {
-                    "name": "screenshot",
-                    "desc": "Base64-encoded screenshot of the page that was analyzed.",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "data",
-                            "desc": "Image data base64 encoded.",
-                            "type": "byte"
-                        },
-                        {
-                            "name": "height",
-                            "desc": "Height of screenshot in pixels.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "mime_type",
-                            "desc": "Mime type of image data. E.g. \"image/jpeg\".",
-                            "type": "string"
-                        },
-                        {
-                            "name": "width",
-                            "desc": "Width of screenshot in pixels.",
-                            "type": "int32"
-                        }
-                    ]
                 },
                 {
                     "name": "version",
@@ -354,10 +355,10 @@
             "name": "pagespeedapi",
             "methods": [
                 {
-                    "name": "runpagespeed",
-                    "desc": "Runs PageSpeed analysis on the page at the specified URL, and returns a PageSpeed score, a list of suggestions to make that page faster, and other information.",
                     "path": "runPagespeed",
                     "httpMethod": "GET",
+                    "name": "runpagespeed",
+                    "desc": "Runs PageSpeed analysis on the page at the specified URL, and returns a PageSpeed score, a list of suggestions to make that page faster, and other information.",
                     "requiredQueryParams": [
                         {
                             "name": "url",
@@ -367,7 +368,22 @@
                             "pattern": "(?i)http(s)?://.*"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
+                        {
+                            "name": "strategy",
+                            "desc": "The analysis strategy to use",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "desktop",
+                                    "desc": "Fetch and analyze the URL for desktop browsers"
+                                },
+                                {
+                                    "name": "mobile",
+                                    "desc": "Fetch and analyze the URL for mobile devices"
+                                }
+                            ]
+                        },
                         {
                             "name": "filter_third_party_resources",
                             "desc": "Indicates if third party resources should be filtered out before PageSpeed analysis.",
@@ -391,21 +407,6 @@
                             "desc": "Indicates if binary data containing a screenshot should be included",
                             "type": "bool",
                             "default": "false"
-                        },
-                        {
-                            "name": "strategy",
-                            "desc": "The analysis strategy to use",
-                            "type": "string",
-                            "enum": [
-                                {
-                                    "name": "desktop",
-                                    "desc": "Fetch and analyze the URL for desktop browsers"
-                                },
-                                {
-                                    "name": "mobile",
-                                    "desc": "Fetch and analyze the URL for mobile devices"
-                                }
-                            ]
                         }
                     ],
                     "response": "Result"

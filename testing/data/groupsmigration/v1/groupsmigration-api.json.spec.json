@@ -10,17 +10,13 @@
     "documentationLink": "https://developers.google.com/google-apps/groups-migration/",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "groups/v1/groups/",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/apps.groups.migration"
         ]
     },
     "parameters": [
-        {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
         {
             "name": "prettyPrint",
             "desc": "Returns response with indentations and line breaks.",
@@ -58,6 +54,11 @@
             "name": "key",
             "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
             "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
         }
     ],
     "schemas": [
@@ -85,10 +86,10 @@
             "name": "archive",
             "methods": [
                 {
-                    "name": "insert",
-                    "desc": "Inserts a new mail into the archive of the Google group.",
                     "path": "{groupId}/archive",
                     "httpMethod": "POST",
+                    "name": "insert",
+                    "desc": "Inserts a new mail into the archive of the Google group.",
                     "scopes": [
                         "https://www.googleapis.com/auth/apps.groups.migration"
                     ],

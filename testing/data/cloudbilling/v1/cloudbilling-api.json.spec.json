@@ -10,58 +10,13 @@
     "documentationLink": "https://cloud.google.com/billing/",
     "protocol": "rest",
     "rootUrl": "https://cloudbilling.googleapis.com/",
+    "servicePath": "",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/cloud-platform"
         ]
     },
     "parameters": [
-        {
-            "name": "key",
-            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
-            "type": "string"
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
-        },
-        {
-            "name": "callback",
-            "desc": "JSONP",
-            "type": "string"
-        },
-        {
-            "name": "uploadType",
-            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
-            "type": "string"
-        },
-        {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
-        {
-            "name": "bearer_token",
-            "desc": "OAuth bearer token.",
-            "type": "string"
-        },
-        {
-            "name": "access_token",
-            "desc": "OAuth access token.",
-            "type": "string"
-        },
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
-            "type": "string"
-        },
         {
             "name": "pp",
             "desc": "Pretty-print response.",
@@ -89,6 +44,47 @@
             ]
         },
         {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
+        {
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+            "type": "string"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
+        {
             "name": "$.xgafv",
             "desc": "V1 error format.",
             "type": "string",
@@ -104,8 +100,13 @@
             ]
         },
         {
-            "name": "upload_protocol",
-            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        },
+        {
+            "name": "uploadType",
+            "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
             "type": "string"
         }
     ],
@@ -116,16 +117,6 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "projectId",
-                    "desc": "The ID of the project that this `ProjectBillingInfo` represents, such as\n`tokyo-rain-123`. This is a convenience field so that you don't need to\nparse the `name` field to obtain a project ID. This field is read-only.",
-                    "type": "string"
-                },
-                {
-                    "name": "billingAccountName",
-                    "desc": "The resource name of the billing account associated with the project, if\nany. For example, `billingAccounts/012345-567890-ABCDEF`.",
-                    "type": "string"
-                },
-                {
                     "name": "billingEnabled",
                     "desc": "True if the project is associated with an open billing account, to which\nusage on the project is charged. False if the project is associated with a\nclosed billing account, or no billing account at all, and therefore cannot\nuse paid services. This field is read-only.",
                     "type": "bool"
@@ -133,6 +124,16 @@
                 {
                     "name": "name",
                     "desc": "The resource name for the `ProjectBillingInfo`; has the form\n`projects/{project_id}/billingInfo`. For example, the resource name for the\nbilling information for project `tokyo-rain-123` would be\n`projects/tokyo-rain-123/billingInfo`. This field is read-only.",
+                    "type": "string"
+                },
+                {
+                    "name": "projectId",
+                    "desc": "The ID of the project that this `ProjectBillingInfo` represents, such as\n`tokyo-rain-123`. This is a convenience field so that you don't need to\nparse the `name` field to obtain a project ID. This field is read-only.",
+                    "type": "string"
+                },
+                {
+                    "name": "billingAccountName",
+                    "desc": "The resource name of the billing account associated with the project, if\nany. For example, `billingAccounts/012345-567890-ABCDEF`.",
                     "type": "string"
                 }
             ]
@@ -203,10 +204,10 @@
             "name": "projects",
             "methods": [
                 {
-                    "name": "updateBillingInfo",
-                    "desc": "Sets or updates the billing account associated with a project. You specify\nthe new billing account by setting the `billing_account_name` in the\n`ProjectBillingInfo` resource to the resource name of a billing account.\nAssociating a project with an open billing account enables billing on the\nproject and allows charges for resource usage. If the project already had a\nbilling account, this method changes the billing account used for resource\nusage charges.\n\n*Note:* Incurred charges that have not yet been reported in the transaction\nhistory of the Google Cloud Console may be billed to the new billing\naccount, even if the charge occurred before the new billing account was\nassigned to the project.\n\nThe current authenticated user must have ownership privileges for both the\n[project](https://cloud.google.com/docs/permissions-overview#h.bgs0oxofvnoo\n) and the [billing\naccount](https://support.google.com/cloud/answer/4430947).\n\nYou can disable billing on the project by setting the\n`billing_account_name` field to empty. This action disassociates the\ncurrent billing account from the project. Any billable activity of your\nin-use services will stop, and your application could stop functioning as\nexpected. Any unbilled charges to date will be billed to the previously\nassociated account. The current authenticated user must be either an owner\nof the project or an owner of the billing account for the project.\n\nNote that associating a project with a *closed* billing account will have\nmuch the same effect as disabling billing on the project: any paid\nresources used by the project will be shut down. Thus, unless you wish to\ndisable billing, you should always call this method with the name of an\n*open* billing account.",
                     "path": "v1/{+name}/billingInfo",
                     "httpMethod": "PUT",
+                    "name": "updateBillingInfo",
+                    "desc": "Sets or updates the billing account associated with a project. You specify\nthe new billing account by setting the `billing_account_name` in the\n`ProjectBillingInfo` resource to the resource name of a billing account.\nAssociating a project with an open billing account enables billing on the\nproject and allows charges for resource usage. If the project already had a\nbilling account, this method changes the billing account used for resource\nusage charges.\n\n*Note:* Incurred charges that have not yet been reported in the transaction\nhistory of the Google Cloud Console may be billed to the new billing\naccount, even if the charge occurred before the new billing account was\nassigned to the project.\n\nThe current authenticated user must have ownership privileges for both the\n[project](https://cloud.google.com/docs/permissions-overview#h.bgs0oxofvnoo\n) and the [billing\naccount](https://support.google.com/cloud/answer/4430947).\n\nYou can disable billing on the project by setting the\n`billing_account_name` field to empty. This action disassociates the\ncurrent billing account from the project. Any billable activity of your\nin-use services will stop, and your application could stop functioning as\nexpected. Any unbilled charges to date will be billed to the previously\nassociated account. The current authenticated user must be either an owner\nof the project or an owner of the billing account for the project.\n\nNote that associating a project with a *closed* billing account will have\nmuch the same effect as disabling billing on the project: any paid\nresources used by the project will be shut down. Thus, unless you wish to\ndisable billing, you should always call this method with the name of an\n*open* billing account.",
                     "scopes": [
                         "https://www.googleapis.com/auth/cloud-platform"
                     ],
@@ -223,10 +224,10 @@
                     "response": "ProjectBillingInfo"
                 },
                 {
-                    "name": "getBillingInfo",
-                    "desc": "Gets the billing information for a project. The current authenticated user\nmust have [permission to view the\nproject](https://cloud.google.com/docs/permissions-overview#h.bgs0oxofvnoo\n).",
                     "path": "v1/{+name}/billingInfo",
                     "httpMethod": "GET",
+                    "name": "getBillingInfo",
+                    "desc": "Gets the billing information for a project. The current authenticated user\nmust have [permission to view the\nproject](https://cloud.google.com/docs/permissions-overview#h.bgs0oxofvnoo\n).",
                     "scopes": [
                         "https://www.googleapis.com/auth/cloud-platform"
                     ],
@@ -247,10 +248,32 @@
             "name": "billingAccounts",
             "methods": [
                 {
-                    "name": "get",
-                    "desc": "Gets information about a billing account. The current authenticated user\nmust be an [owner of the billing\naccount](https://support.google.com/cloud/answer/4430947).",
+                    "path": "v1/billingAccounts",
+                    "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "Lists the billing accounts that the current authenticated user\n[owns](https://support.google.com/cloud/answer/4430947).",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "optionalQueryParams": [
+                        {
+                            "name": "pageSize",
+                            "desc": "Requested page size. The maximum page size is 100; this is also the\ndefault.",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "A token identifying a page of results to return. This should be a\n`next_page_token` value returned from a previous `ListBillingAccounts`\ncall. If unspecified, the first page of results is returned.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "ListBillingAccountsResponse"
+                },
+                {
                     "path": "v1/{+name}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Gets information about a billing account. The current authenticated user\nmust be an [owner of the billing\naccount](https://support.google.com/cloud/answer/4430947).",
                     "scopes": [
                         "https://www.googleapis.com/auth/cloud-platform"
                     ],
@@ -264,28 +287,6 @@
                         }
                     ],
                     "response": "BillingAccount"
-                },
-                {
-                    "name": "list",
-                    "desc": "Lists the billing accounts that the current authenticated user\n[owns](https://support.google.com/cloud/answer/4430947).",
-                    "path": "v1/billingAccounts",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform"
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "pageSize",
-                            "desc": "Requested page size. The maximum page size is 100; this is also the\ndefault.",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "A token identifying a page of results to return. This should be a\n`next_page_token` value returned from a previous `ListBillingAccounts`\ncall. If unspecified, the first page of results is returned.",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "ListBillingAccountsResponse"
                 }
             ],
             "resources": [
@@ -293,10 +294,10 @@
                     "name": "projects",
                     "methods": [
                         {
-                            "name": "list",
-                            "desc": "Lists the projects associated with a billing account. The current\nauthenticated user must be an [owner of the billing\naccount](https://support.google.com/cloud/answer/4430947).",
                             "path": "v1/{+name}/projects",
                             "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "Lists the projects associated with a billing account. The current\nauthenticated user must be an [owner of the billing\naccount](https://support.google.com/cloud/answer/4430947).",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform"
                             ],
@@ -309,7 +310,7 @@
                                     "pattern": "^billingAccounts/[^/]+$"
                                 }
                             ],
-                            "optinalQueryParams": [
+                            "optionalQueryParams": [
                                 {
                                     "name": "pageSize",
                                     "desc": "Requested page size. The maximum page size is 100; this is also the\ndefault.",

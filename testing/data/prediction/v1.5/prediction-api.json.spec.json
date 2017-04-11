@@ -10,15 +10,21 @@
     "documentationLink": "https://developers.google.com/prediction/docs/developer-guide",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "prediction/v1.5/",
     "auth": {
         "oauth2": [
-            "https://www.googleapis.com/auth/prediction",
             "https://www.googleapis.com/auth/devstorage.full_control",
             "https://www.googleapis.com/auth/devstorage.read_only",
-            "https://www.googleapis.com/auth/devstorage.read_write"
+            "https://www.googleapis.com/auth/devstorage.read_write",
+            "https://www.googleapis.com/auth/prediction"
         ]
     },
     "parameters": [
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
         {
             "name": "userIp",
             "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
@@ -56,21 +62,95 @@
             "desc": "Returns response with indentations and line breaks.",
             "type": "bool",
             "default": "true"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
-            "type": "string"
         }
     ],
     "schemas": [
+        {
+            "name": "List",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "items",
+                    "desc": "List of models.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Training"
+                },
+                {
+                    "name": "kind",
+                    "desc": "What kind of resource this is.",
+                    "type": "string",
+                    "default": "prediction#list"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Pagination token to fetch the next page, if one exists.",
+                    "type": "string"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "A URL to re-request this resource.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Output",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "id",
+                    "desc": "The unique name for the predictive model.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "What kind of resource this is.",
+                    "type": "string",
+                    "default": "prediction#output"
+                },
+                {
+                    "name": "outputLabel",
+                    "desc": "The most likely class label [Categorical models only].",
+                    "type": "string"
+                },
+                {
+                    "name": "outputMulti",
+                    "desc": "A list of class labels with their estimated probabilities [Categorical models only].",
+                    "collection": "array",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "label",
+                            "desc": "The class label.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "score",
+                            "desc": "The probability of the class label.",
+                            "type": "float64"
+                        }
+                    ]
+                },
+                {
+                    "name": "outputValue",
+                    "desc": "The estimated regression value [Regression models only].",
+                    "type": "float64"
+                },
+                {
+                    "name": "selfLink",
+                    "desc": "A URL to re-request this resource.",
+                    "type": "string"
+                }
+            ]
+        },
         {
             "name": "Training",
             "type": "object",
             "fields": [
                 {
-                    "name": "storagePMMLModelLocation",
-                    "desc": "Google storage location of the pmml model file.",
+                    "name": "storagePMMLLocation",
+                    "desc": "Google storage location of the preprocessing pmml file.",
                     "type": "string"
                 },
                 {
@@ -79,9 +159,15 @@
                     "type": "datetime"
                 },
                 {
-                    "name": "trainingStatus",
-                    "desc": "The current status of the training job. This can be one of following: RUNNING; DONE; ERROR; ERROR: TRAINING JOB NOT FOUND",
-                    "type": "string"
+                    "name": "created",
+                    "desc": "Insert time of the model (as a RFC 3339 timestamp).",
+                    "type": "datetime"
+                },
+                {
+                    "name": "kind",
+                    "desc": "What kind of resource this is.",
+                    "type": "string",
+                    "default": "prediction#training"
                 },
                 {
                     "name": "modelInfo",
@@ -121,6 +207,11 @@
                     ]
                 },
                 {
+                    "name": "modelType",
+                    "desc": "Type of predictive model (classification or regression)",
+                    "type": "string"
+                },
+                {
                     "name": "selfLink",
                     "desc": "A URL to re-request this resource.",
                     "type": "string"
@@ -131,8 +222,18 @@
                     "type": "string"
                 },
                 {
-                    "name": "storagePMMLLocation",
-                    "desc": "Google storage location of the preprocessing pmml file.",
+                    "name": "trainingStatus",
+                    "desc": "The current status of the training job. This can be one of following: RUNNING; DONE; ERROR; ERROR: TRAINING JOB NOT FOUND",
+                    "type": "string"
+                },
+                {
+                    "name": "id",
+                    "desc": "The unique name for the predictive model.",
+                    "type": "string"
+                },
+                {
+                    "name": "storagePMMLModelLocation",
+                    "desc": "Google storage location of the pmml model file.",
                     "type": "string"
                 },
                 {
@@ -142,15 +243,15 @@
                     "type": "object",
                     "fields": [
                         {
-                            "name": "output",
-                            "desc": "The generic output value - could be regression or class label",
-                            "type": "string"
-                        },
-                        {
                             "name": "csvInstance",
                             "desc": "The input features for this instance",
                             "collection": "array",
                             "type": "any"
+                        },
+                        {
+                            "name": "output",
+                            "desc": "The generic output value - could be regression or class label",
+                            "type": "string"
                         }
                     ]
                 },
@@ -163,27 +264,6 @@
                         "collection": "map",
                         "type": "float64"
                     }
-                },
-                {
-                    "name": "created",
-                    "desc": "Insert time of the model (as a RFC 3339 timestamp).",
-                    "type": "datetime"
-                },
-                {
-                    "name": "id",
-                    "desc": "The unique name for the predictive model.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "What kind of resource this is.",
-                    "type": "string",
-                    "default": "prediction#training"
-                },
-                {
-                    "name": "modelType",
-                    "desc": "Type of predictive model (classification or regression)",
-                    "type": "string"
                 }
             ]
         },
@@ -191,11 +271,6 @@
             "name": "Update",
             "type": "object",
             "fields": [
-                {
-                    "name": "output",
-                    "desc": "The generic output value - could be regression value or class label",
-                    "type": "string"
-                },
                 {
                     "name": "csvInstance",
                     "desc": "The input features for this instance",
@@ -205,6 +280,11 @@
                 {
                     "name": "label",
                     "desc": "The class label of this instance",
+                    "type": "string"
+                },
+                {
+                    "name": "output",
+                    "desc": "The generic output value - could be regression value or class label",
                     "type": "string"
                 }
             ]
@@ -257,6 +337,18 @@
                             "collection": "array",
                             "type": "object",
                             "fields": [
+                                {
+                                    "name": "text",
+                                    "desc": "Description of multiple-word text values of this feature.",
+                                    "type": "object",
+                                    "fields": [
+                                        {
+                                            "name": "count",
+                                            "desc": "Number of multiple-word text values for this feature.",
+                                            "type": "int64"
+                                        }
+                                    ]
+                                },
                                 {
                                     "name": "categorical",
                                     "desc": "Description of the categorical values of this feature.",
@@ -313,18 +405,6 @@
                                             "type": "float64"
                                         }
                                     ]
-                                },
-                                {
-                                    "name": "text",
-                                    "desc": "Description of multiple-word text values of this feature.",
-                                    "type": "object",
-                                    "fields": [
-                                        {
-                                            "name": "count",
-                                            "desc": "Number of multiple-word text values for this feature.",
-                                            "type": "int64"
-                                        }
-                                    ]
                                 }
                             ]
                         },
@@ -339,11 +419,6 @@
                                     "type": "object",
                                     "fields": [
                                         {
-                                            "name": "count",
-                                            "desc": "Number of numeric output values in the data set.",
-                                            "type": "int64"
-                                        },
-                                        {
                                             "name": "mean",
                                             "desc": "Mean of the output values in the data set.",
                                             "type": "float64"
@@ -352,6 +427,11 @@
                                             "name": "variance",
                                             "desc": "Variance of the output values in the data set.",
                                             "type": "float64"
+                                        },
+                                        {
+                                            "name": "count",
+                                            "desc": "Number of numeric output values in the data set.",
+                                            "type": "int64"
                                         }
                                     ]
                                 },
@@ -417,85 +497,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "name": "List",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "selfLink",
-                    "desc": "A URL to re-request this resource.",
-                    "type": "string"
-                },
-                {
-                    "name": "items",
-                    "desc": "List of models.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Training"
-                },
-                {
-                    "name": "kind",
-                    "desc": "What kind of resource this is.",
-                    "type": "string",
-                    "default": "prediction#list"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "Pagination token to fetch the next page, if one exists.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Output",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "id",
-                    "desc": "The unique name for the predictive model.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "What kind of resource this is.",
-                    "type": "string",
-                    "default": "prediction#output"
-                },
-                {
-                    "name": "outputLabel",
-                    "desc": "The most likely class label [Categorical models only].",
-                    "type": "string"
-                },
-                {
-                    "name": "outputMulti",
-                    "desc": "A list of class labels with their estimated probabilities [Categorical models only].",
-                    "collection": "array",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "label",
-                            "desc": "The class label.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "score",
-                            "desc": "The probability of the class label.",
-                            "type": "float64"
-                        }
-                    ]
-                },
-                {
-                    "name": "outputValue",
-                    "desc": "The estimated regression value [Regression models only].",
-                    "type": "float64"
-                },
-                {
-                    "name": "selfLink",
-                    "desc": "A URL to re-request this resource.",
-                    "type": "string"
-                }
-            ]
         }
     ],
     "resources": [
@@ -503,10 +504,10 @@
             "name": "hostedmodels",
             "methods": [
                 {
-                    "name": "predict",
-                    "desc": "Submit input and request an output against a hosted model.",
                     "path": "hostedmodels/{hostedModelName}/predict",
                     "httpMethod": "POST",
+                    "name": "predict",
+                    "desc": "Submit input and request an output against a hosted model.",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
@@ -527,52 +528,10 @@
             "name": "trainedmodels",
             "methods": [
                 {
-                    "name": "list",
-                    "desc": "List available models.",
-                    "path": "trainedmodels/list",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/prediction"
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "maxResults",
-                            "desc": "Maximum number of results to return",
-                            "type": "uint32",
-                            "min": "0"
-                        },
-                        {
-                            "name": "pageToken",
-                            "desc": "Pagination token",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "List"
-                },
-                {
-                    "name": "predict",
-                    "desc": "Submit model id and request a prediction.",
-                    "path": "trainedmodels/{id}/predict",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/prediction"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "id",
-                            "desc": "The unique name for the predictive model.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "request": "Input",
-                    "response": "Output"
-                },
-                {
-                    "name": "update",
-                    "desc": "Add new data to a trained model.",
                     "path": "trainedmodels/{id}",
                     "httpMethod": "PUT",
+                    "name": "update",
+                    "desc": "Add new data to a trained model.",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
@@ -588,10 +547,10 @@
                     "response": "Training"
                 },
                 {
-                    "name": "analyze",
-                    "desc": "Get analysis of the model and the data the model was trained on.",
                     "path": "trainedmodels/{id}/analyze",
                     "httpMethod": "GET",
+                    "name": "analyze",
+                    "desc": "Get analysis of the model and the data the model was trained on.",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
@@ -606,10 +565,10 @@
                     "response": "Analyze"
                 },
                 {
-                    "name": "delete",
-                    "desc": "Delete a trained model.",
                     "path": "trainedmodels/{id}",
                     "httpMethod": "DELETE",
+                    "name": "delete",
+                    "desc": "Delete a trained model.",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
@@ -623,10 +582,10 @@
                     ]
                 },
                 {
-                    "name": "get",
-                    "desc": "Check training status of your model.",
                     "path": "trainedmodels/{id}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Check training status of your model.",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
@@ -641,10 +600,10 @@
                     "response": "Training"
                 },
                 {
-                    "name": "insert",
-                    "desc": "Begin training your model.",
                     "path": "trainedmodels",
                     "httpMethod": "POST",
+                    "name": "insert",
+                    "desc": "Begin training your model.",
                     "scopes": [
                         "https://www.googleapis.com/auth/devstorage.full_control",
                         "https://www.googleapis.com/auth/devstorage.read_only",
@@ -653,6 +612,48 @@
                     ],
                     "request": "Training",
                     "response": "Training"
+                },
+                {
+                    "path": "trainedmodels/list",
+                    "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "List available models.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/prediction"
+                    ],
+                    "optionalQueryParams": [
+                        {
+                            "name": "maxResults",
+                            "desc": "Maximum number of results to return",
+                            "type": "uint32",
+                            "min": "0"
+                        },
+                        {
+                            "name": "pageToken",
+                            "desc": "Pagination token",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "List"
+                },
+                {
+                    "path": "trainedmodels/{id}/predict",
+                    "httpMethod": "POST",
+                    "name": "predict",
+                    "desc": "Submit model id and request a prediction.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/prediction"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "id",
+                            "desc": "The unique name for the predictive model.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "request": "Input",
+                    "response": "Output"
                 }
             ]
         }

@@ -10,6 +10,7 @@
     "documentationLink": "https://firebase.google.com/docs/storage/security",
     "protocol": "rest",
     "rootUrl": "https://firebaserules.googleapis.com/",
+    "servicePath": "",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/cloud-platform",
@@ -19,8 +20,18 @@
     },
     "parameters": [
         {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
             "name": "bearer_token",
             "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
+            "name": "upload_protocol",
+            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
             "type": "string"
         },
         {
@@ -32,32 +43,6 @@
         {
             "name": "fields",
             "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
-        },
-        {
-            "name": "callback",
-            "desc": "JSONP",
-            "type": "string"
-        },
-        {
-            "name": "key",
-            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
-            "type": "string"
-        },
-        {
-            "name": "access_token",
-            "desc": "OAuth access token.",
-            "type": "string"
-        },
-        {
-            "name": "pp",
-            "desc": "Pretty-print response.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "upload_protocol",
-            "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
             "type": "string"
         },
         {
@@ -81,6 +66,11 @@
             ]
         },
         {
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        },
+        {
             "name": "alt",
             "desc": "Data format for response.",
             "type": "string",
@@ -101,9 +91,20 @@
             ]
         },
         {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "name": "key",
+            "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
             "type": "string"
+        },
+        {
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
+        },
+        {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
         },
         {
             "name": "oauth_token",
@@ -113,50 +114,9 @@
     ],
     "schemas": [
         {
-            "name": "ListReleasesResponse",
-            "desc": "The response for FirebaseRulesService.ListReleases.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "releases",
-                    "desc": "List of `Release` instances.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Release"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "The pagination token to retrieve the next page of results. If the value is\nempty, no further results remain.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Release",
-            "desc": "`Release` is a named reference to a `Ruleset`. Once a `Release` refers to a\n`Ruleset`, rules-enabled services will be able to enforce the `Ruleset`.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "createTime",
-                    "desc": "Time the release was created.\n@OutputOnly",
-                    "type": "datetime"
-                },
-                {
-                    "name": "updateTime",
-                    "desc": "Time the release was updated.\n@OutputOnly",
-                    "type": "datetime"
-                },
-                {
-                    "name": "name",
-                    "desc": "Resource name for the `Release`.\n\n`Release` names may be structured `app1/prod/v2` or flat `app1_prod_v2`\nwhich affords developers a great deal of flexibility in mapping the name\nto the style that best fits their existing development practices. For\nexample, a name could refer to an environment, an app, a version, or some\ncombination of three.\n\nIn the table below, for the project name `projects/foo`, the following\nrelative release paths show how flat and structured names might be chosen\nto match a desired development / deployment strategy.\n\nUse Case     | Flat Name           | Structured Name\n-------------|---------------------|----------------\nEnvironments | releases/qa         | releases/qa\nApps         | releases/app1_qa    | releases/app1/qa\nVersions     | releases/app1_v2_qa | releases/app1/v2/qa\n\nThe delimiter between the release name path elements can be almost anything\nand it should work equally well with the release name list filter, but in\nmany ways the structured paths provide a clearer picture of the\nrelationship between `Release` instances.\n\nFormat: `projects/{project_id}/releases/{release_id}`",
-                    "type": "string"
-                },
-                {
-                    "name": "rulesetName",
-                    "desc": "Name of the `Ruleset` referred to by this `Release`. The `Ruleset` must\nexist the `Release` to be created.",
-                    "type": "string"
-                }
-            ]
+            "name": "Empty",
+            "desc": "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
+            "type": "object"
         },
         {
             "name": "TestRulesetResponse",
@@ -173,25 +133,6 @@
             ]
         },
         {
-            "name": "ListRulesetsResponse",
-            "desc": "The response for FirebaseRulesService.ListRulesets",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "nextPageToken",
-                    "desc": "The pagination token to retrieve the next page of results. If the value is\nempty, no further results remain.",
-                    "type": "string"
-                },
-                {
-                    "name": "rulesets",
-                    "desc": "List of `Ruleset` instances.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Ruleset"
-                }
-            ]
-        },
-        {
             "name": "Source",
             "desc": "`Source` is one or more `File` messages comprising a logical set of rules.",
             "type": "object",
@@ -202,56 +143,6 @@
                     "collection": "array",
                     "type": "ref",
                     "refType": "File"
-                }
-            ]
-        },
-        {
-            "name": "Ruleset",
-            "desc": "`Ruleset` is an immutable copy of `Source` with a globally unique identifier\nand a creation time.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "createTime",
-                    "desc": "Time the `Ruleset` was created.\n@OutputOnly",
-                    "type": "datetime"
-                },
-                {
-                    "name": "name",
-                    "desc": "Name of the `Ruleset`. The ruleset_id is auto generated by the service.\nFormat: `projects/{project_id}/rulesets/{ruleset_id}`\n@OutputOnly",
-                    "type": "string"
-                },
-                {
-                    "name": "source",
-                    "desc": "`Source` for the `Ruleset`.",
-                    "type": "ref",
-                    "refType": "Source"
-                }
-            ]
-        },
-        {
-            "name": "Empty",
-            "desc": "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
-            "type": "object"
-        },
-        {
-            "name": "File",
-            "desc": "`File` containing source content.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "content",
-                    "desc": "Textual Content.",
-                    "type": "string"
-                },
-                {
-                    "name": "fingerprint",
-                    "desc": "Fingerprint (e.g. github sha) associated with the `File`.",
-                    "type": "byte"
-                },
-                {
-                    "name": "name",
-                    "desc": "File name.",
-                    "type": "string"
                 }
             ]
         },
@@ -278,10 +169,115 @@
             ]
         },
         {
+            "name": "TestRulesetRequest",
+            "desc": "The request for FirebaseRulesService.TestRuleset.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "source",
+                    "desc": "`Source` to be checked for correctness.",
+                    "type": "ref",
+                    "refType": "Source"
+                }
+            ]
+        },
+        {
+            "name": "ListReleasesResponse",
+            "desc": "The response for FirebaseRulesService.ListReleases.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "releases",
+                    "desc": "List of `Release` instances.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Release"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "The pagination token to retrieve the next page of results. If the value is\nempty, no further results remain.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "File",
+            "desc": "`File` containing source content.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "content",
+                    "desc": "Textual Content.",
+                    "type": "string"
+                },
+                {
+                    "name": "fingerprint",
+                    "desc": "Fingerprint (e.g. github sha) associated with the `File`.",
+                    "type": "byte"
+                },
+                {
+                    "name": "name",
+                    "desc": "File name.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Release",
+            "desc": "`Release` is a named reference to a `Ruleset`. Once a `Release` refers to a\n`Ruleset`, rules-enabled services will be able to enforce the `Ruleset`.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "updateTime",
+                    "desc": "Time the release was updated.\n@OutputOnly",
+                    "type": "datetime"
+                },
+                {
+                    "name": "name",
+                    "desc": "Resource name for the `Release`.\n\n`Release` names may be structured `app1/prod/v2` or flat `app1_prod_v2`\nwhich affords developers a great deal of flexibility in mapping the name\nto the style that best fits their existing development practices. For\nexample, a name could refer to an environment, an app, a version, or some\ncombination of three.\n\nIn the table below, for the project name `projects/foo`, the following\nrelative release paths show how flat and structured names might be chosen\nto match a desired development / deployment strategy.\n\nUse Case     | Flat Name           | Structured Name\n-------------|---------------------|----------------\nEnvironments | releases/qa         | releases/qa\nApps         | releases/app1_qa    | releases/app1/qa\nVersions     | releases/app1_v2_qa | releases/app1/v2/qa\n\nThe delimiter between the release name path elements can be almost anything\nand it should work equally well with the release name list filter, but in\nmany ways the structured paths provide a clearer picture of the\nrelationship between `Release` instances.\n\nFormat: `projects/{project_id}/releases/{release_id}`",
+                    "type": "string"
+                },
+                {
+                    "name": "rulesetName",
+                    "desc": "Name of the `Ruleset` referred to by this `Release`. The `Ruleset` must\nexist the `Release` to be created.",
+                    "type": "string"
+                },
+                {
+                    "name": "createTime",
+                    "desc": "Time the release was created.\n@OutputOnly",
+                    "type": "datetime"
+                }
+            ]
+        },
+        {
+            "name": "ListRulesetsResponse",
+            "desc": "The response for FirebaseRulesService.ListRulesets",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "nextPageToken",
+                    "desc": "The pagination token to retrieve the next page of results. If the value is\nempty, no further results remain.",
+                    "type": "string"
+                },
+                {
+                    "name": "rulesets",
+                    "desc": "List of `Ruleset` instances.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Ruleset"
+                }
+            ]
+        },
+        {
             "name": "Issue",
             "desc": "Issues include warnings, errors, and deprecation notices.",
             "type": "object",
             "fields": [
+                {
+                    "name": "description",
+                    "desc": "Short error description.",
+                    "type": "string"
+                },
                 {
                     "name": "sourcePosition",
                     "desc": "Position of the issue in the `Source`.",
@@ -310,22 +306,27 @@
                             "desc": "Errors such as: unmatched curly braces or variable redefinition."
                         }
                     ]
-                },
-                {
-                    "name": "description",
-                    "desc": "Short error description.",
-                    "type": "string"
                 }
             ]
         },
         {
-            "name": "TestRulesetRequest",
-            "desc": "The request for FirebaseRulesService.TestRuleset.",
+            "name": "Ruleset",
+            "desc": "`Ruleset` is an immutable copy of `Source` with a globally unique identifier\nand a creation time.",
             "type": "object",
             "fields": [
                 {
+                    "name": "createTime",
+                    "desc": "Time the `Ruleset` was created.\n@OutputOnly",
+                    "type": "datetime"
+                },
+                {
+                    "name": "name",
+                    "desc": "Name of the `Ruleset`. The ruleset_id is auto generated by the service.\nFormat: `projects/{project_id}/rulesets/{ruleset_id}`\n@OutputOnly",
+                    "type": "string"
+                },
+                {
                     "name": "source",
-                    "desc": "`Source` to be checked for correctness.",
+                    "desc": "`Source` for the `Ruleset`.",
                     "type": "ref",
                     "refType": "Source"
                 }
@@ -337,10 +338,10 @@
             "name": "projects",
             "methods": [
                 {
-                    "name": "test",
-                    "desc": "Test `Source` for syntactic and semantic correctness. Issues present in the\nrules, if any, will be returned to the caller with a description, severity,\nand source location.\n\nThe test method will typically be executed with a developer provided\n`Source`, but if regression testing is desired, this method may be\nexecuted against a `Ruleset` resource name and the `Source` will be\nretrieved from the persisted `Ruleset`.\n\nThe following is an example of `Source` that permits users to upload images\nto a bucket bearing their user id and matching the correct metadata:\n\n_*Example*_\n\n    // Users are allowed to subscribe and unsubscribe to the blog.\n    service firebase.storage {\n      match /users/{userId}/images/{imageName} {\n          allow write: if userId == request.userId\n              \u0026\u0026 (imageName.endsWith('.png') || imageName.endsWith('.jpg'))\n              \u0026\u0026 resource.mimeType.startsWith('image/')\n      }\n    }",
                     "path": "v1/{+name}:test",
                     "httpMethod": "POST",
+                    "name": "test",
+                    "desc": "Test `Source` for syntactic and semantic correctness. Issues present in the\nrules, if any, will be returned to the caller with a description, severity,\nand source location.\n\nThe test method will typically be executed with a developer provided\n`Source`, but if regression testing is desired, this method may be\nexecuted against a `Ruleset` resource name and the `Source` will be\nretrieved from the persisted `Ruleset`.\n\nThe following is an example of `Source` that permits users to upload images\nto a bucket bearing their user id and matching the correct metadata:\n\n_*Example*_\n\n    // Users are allowed to subscribe and unsubscribe to the blog.\n    service firebase.storage {\n      match /users/{userId}/images/{imageName} {\n          allow write: if userId == request.userId\n              \u0026\u0026 (imageName.endsWith('.png') || imageName.endsWith('.jpg'))\n              \u0026\u0026 resource.mimeType.startsWith('image/')\n      }\n    }",
                     "scopes": [
                         "https://www.googleapis.com/auth/cloud-platform",
                         "https://www.googleapis.com/auth/firebase",
@@ -364,30 +365,10 @@
                     "name": "rulesets",
                     "methods": [
                         {
-                            "name": "delete",
-                            "desc": "Delete a `Ruleset` by resource name.\n\nIf the `Ruleset` is referenced by a `Release` the operation will fail.",
-                            "path": "v1/{+name}",
-                            "httpMethod": "DELETE",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/cloud-platform",
-                                "https://www.googleapis.com/auth/firebase"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "name",
-                                    "desc": "Resource name for the ruleset to delete.\n\nFormat: `projects/{project_id}/rulesets/{ruleset_id}`",
-                                    "required": true,
-                                    "type": "string",
-                                    "pattern": "^projects/[^/]+/rulesets/[^/]+$"
-                                }
-                            ],
-                            "response": "Empty"
-                        },
-                        {
-                            "name": "get",
-                            "desc": "Get a `Ruleset` by name including the full `Source` contents.",
                             "path": "v1/{+name}",
                             "httpMethod": "GET",
+                            "name": "get",
+                            "desc": "Get a `Ruleset` by name including the full `Source` contents.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform",
                                 "https://www.googleapis.com/auth/firebase",
@@ -405,10 +386,10 @@
                             "response": "Ruleset"
                         },
                         {
-                            "name": "list",
-                            "desc": "List `Ruleset` metadata only and optionally filter the results by Ruleset\nname.\n\nThe full `Source` contents of a `Ruleset` may be retrieved with\nGetRuleset.",
                             "path": "v1/{+name}/rulesets",
                             "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "List `Ruleset` metadata only and optionally filter the results by Ruleset\nname.\n\nThe full `Source` contents of a `Ruleset` may be retrieved with\nGetRuleset.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform",
                                 "https://www.googleapis.com/auth/firebase",
@@ -423,25 +404,25 @@
                                     "pattern": "^projects/[^/]+$"
                                 }
                             ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "pageToken",
-                                    "desc": "Next page token for loading the next batch of `Ruleset` instances.",
-                                    "type": "string"
-                                },
+                            "optionalQueryParams": [
                                 {
                                     "name": "pageSize",
                                     "desc": "Page size to load. Maximum of 100. Defaults to 10.\nNote: `page_size` is just a hint and the service may choose to load less\nthan `page_size` due to the size of the output. To traverse all of the\nreleases, caller should iterate until the `page_token` is empty.",
                                     "type": "int32"
+                                },
+                                {
+                                    "name": "pageToken",
+                                    "desc": "Next page token for loading the next batch of `Ruleset` instances.",
+                                    "type": "string"
                                 }
                             ],
                             "response": "ListRulesetsResponse"
                         },
                         {
-                            "name": "create",
-                            "desc": "Create a `Ruleset` from `Source`.\n\nThe `Ruleset` is given a unique generated name which is returned to the\ncaller. `Source` containing syntactic or semantics errors will result in an\nerror response indicating the first error encountered. For a detailed view\nof `Source` issues, use TestRuleset.",
                             "path": "v1/{+name}/rulesets",
                             "httpMethod": "POST",
+                            "name": "create",
+                            "desc": "Create a `Ruleset` from `Source`.\n\nThe `Ruleset` is given a unique generated name which is returned to the\ncaller. `Source` containing syntactic or semantics errors will result in an\nerror response indicating the first error encountered. For a detailed view\nof `Source` issues, use TestRuleset.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform",
                                 "https://www.googleapis.com/auth/firebase"
@@ -457,17 +438,12 @@
                             ],
                             "request": "Ruleset",
                             "response": "Ruleset"
-                        }
-                    ]
-                },
-                {
-                    "name": "releases",
-                    "methods": [
+                        },
                         {
-                            "name": "create",
-                            "desc": "Create a `Release`.\n\nRelease names should reflect the developer's deployment practices. For\nexample, the release name may include the environment name, application\nname, application version, or any other name meaningful to the developer.\nOnce a `Release` refers to a `Ruleset`, the rules can be enforced by\nFirebase Rules-enabled services.\n\nMore than one `Release` may be 'live' concurrently. Consider the following\nthree `Release` names for `projects/foo` and the `Ruleset` to which they\nrefer.\n\nRelease Name                    | Ruleset Name\n--------------------------------|-------------\nprojects/foo/releases/prod      | projects/foo/rulesets/uuid123\nprojects/foo/releases/prod/beta | projects/foo/rulesets/uuid123\nprojects/foo/releases/prod/v23  | projects/foo/rulesets/uuid456\n\nThe table reflects the `Ruleset` rollout in progress. The `prod` and\n`prod/beta` releases refer to the same `Ruleset`. However, `prod/v23`\nrefers to a new `Ruleset`. The `Ruleset` reference for a `Release` may be\nupdated using the UpdateRelease method, and the custom `Release` name\nmay be referenced by specifying the `X-Firebase-Rules-Release-Name` header.",
-                            "path": "v1/{+name}/releases",
-                            "httpMethod": "POST",
+                            "path": "v1/{+name}",
+                            "httpMethod": "DELETE",
+                            "name": "delete",
+                            "desc": "Delete a `Ruleset` by resource name.\n\nIf the `Ruleset` is referenced by a `Release` the operation will fail.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform",
                                 "https://www.googleapis.com/auth/firebase"
@@ -475,20 +451,24 @@
                             "pathParams": [
                                 {
                                     "name": "name",
-                                    "desc": "Resource name for the project which owns this `Release`.\n\nFormat: `projects/{project_id}`",
+                                    "desc": "Resource name for the ruleset to delete.\n\nFormat: `projects/{project_id}/rulesets/{ruleset_id}`",
                                     "required": true,
                                     "type": "string",
-                                    "pattern": "^projects/[^/]+$"
+                                    "pattern": "^projects/[^/]+/rulesets/[^/]+$"
                                 }
                             ],
-                            "request": "Release",
-                            "response": "Release"
-                        },
+                            "response": "Empty"
+                        }
+                    ]
+                },
+                {
+                    "name": "releases",
+                    "methods": [
                         {
-                            "name": "delete",
-                            "desc": "Delete a `Release` by resource name.",
                             "path": "v1/{+name}",
                             "httpMethod": "DELETE",
+                            "name": "delete",
+                            "desc": "Delete a `Release` by resource name.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform",
                                 "https://www.googleapis.com/auth/firebase"
@@ -505,10 +485,10 @@
                             "response": "Empty"
                         },
                         {
-                            "name": "get",
-                            "desc": "Get a `Release` by name.",
                             "path": "v1/{+name}",
                             "httpMethod": "GET",
+                            "name": "get",
+                            "desc": "Get a `Release` by name.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform",
                                 "https://www.googleapis.com/auth/firebase",
@@ -526,10 +506,10 @@
                             "response": "Release"
                         },
                         {
-                            "name": "list",
-                            "desc": "List the `Release` values for a project. This list may optionally be\nfiltered by `Release` name or `Ruleset` id or both.",
                             "path": "v1/{+name}/releases",
                             "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "List the `Release` values for a project. This list may optionally be\nfiltered by `Release` name or `Ruleset` id or both.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform",
                                 "https://www.googleapis.com/auth/firebase",
@@ -544,7 +524,7 @@
                                     "pattern": "^projects/[^/]+$"
                                 }
                             ],
-                            "optinalQueryParams": [
+                            "optionalQueryParams": [
                                 {
                                     "name": "filter",
                                     "desc": "`Release` filter. The list method supports filters with restrictions on the\n`Release` `name` and also on the `Ruleset` `ruleset_name`.\n\nExample 1) A filter of 'name=prod*' might return `Release`s with names\nwithin 'projects/foo' prefixed with 'prod':\n\nName                          | Ruleset Name\n------------------------------|-------------\nprojects/foo/releases/prod    | projects/foo/rulesets/uuid1234\nprojects/foo/releases/prod/v1 | projects/foo/rulesets/uuid1234\nprojects/foo/releases/prod/v2 | projects/foo/rulesets/uuid8888\n\nExample 2) A filter of `name=prod* ruleset_name=uuid1234` would return only\n`Release` instances for 'projects/foo' with names prefixed with 'prod'\nreferring to the same `Ruleset` name of 'uuid1234':\n\nName                          | Ruleset Name\n------------------------------|-------------\nprojects/foo/releases/prod    | projects/foo/rulesets/1234\nprojects/foo/releases/prod/v1 | projects/foo/rulesets/1234\n\nIn the examples, the filter parameters refer to the search filters for\nrelease and ruleset names are relative to the project releases and rulesets\ncollections. Fully qualified prefixed may also be used. e.g.\n`name=projects/foo/releases/prod* ruleset_name=projects/foo/rulesets/uuid1`",
@@ -564,10 +544,10 @@
                             "response": "ListReleasesResponse"
                         },
                         {
-                            "name": "update",
-                            "desc": "Update a `Release`.\n\nOnly updates to the `ruleset_name` field will be honored. `Release` rename\nis not supported. To create a `Release` use the CreateRelease method\ninstead.",
                             "path": "v1/{+name}",
                             "httpMethod": "PUT",
+                            "name": "update",
+                            "desc": "Update a `Release`.\n\nOnly updates to the `ruleset_name` field will be honored. `Release` rename\nis not supported. To create a `Release` use the CreateRelease method\ninstead.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform",
                                 "https://www.googleapis.com/auth/firebase"
@@ -579,6 +559,27 @@
                                     "required": true,
                                     "type": "string",
                                     "pattern": "^projects/[^/]+/releases/.+$"
+                                }
+                            ],
+                            "request": "Release",
+                            "response": "Release"
+                        },
+                        {
+                            "path": "v1/{+name}/releases",
+                            "httpMethod": "POST",
+                            "name": "create",
+                            "desc": "Create a `Release`.\n\nRelease names should reflect the developer's deployment practices. For\nexample, the release name may include the environment name, application\nname, application version, or any other name meaningful to the developer.\nOnce a `Release` refers to a `Ruleset`, the rules can be enforced by\nFirebase Rules-enabled services.\n\nMore than one `Release` may be 'live' concurrently. Consider the following\nthree `Release` names for `projects/foo` and the `Ruleset` to which they\nrefer.\n\nRelease Name                    | Ruleset Name\n--------------------------------|-------------\nprojects/foo/releases/prod      | projects/foo/rulesets/uuid123\nprojects/foo/releases/prod/beta | projects/foo/rulesets/uuid123\nprojects/foo/releases/prod/v23  | projects/foo/rulesets/uuid456\n\nThe table reflects the `Ruleset` rollout in progress. The `prod` and\n`prod/beta` releases refer to the same `Ruleset`. However, `prod/v23`\nrefers to a new `Ruleset`. The `Ruleset` reference for a `Release` may be\nupdated using the UpdateRelease method, and the custom `Release` name\nmay be referenced by specifying the `X-Firebase-Rules-Release-Name` header.",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/cloud-platform",
+                                "https://www.googleapis.com/auth/firebase"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "name",
+                                    "desc": "Resource name for the project which owns this `Release`.\n\nFormat: `projects/{project_id}`",
+                                    "required": true,
+                                    "type": "string",
+                                    "pattern": "^projects/[^/]+$"
                                 }
                             ],
                             "request": "Release",

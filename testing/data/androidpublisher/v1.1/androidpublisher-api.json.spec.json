@@ -10,12 +10,19 @@
     "documentationLink": "https://developers.google.com/android-publisher",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "androidpublisher/v1.1/applications/",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/androidpublisher"
         ]
     },
     "parameters": [
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
         {
             "name": "quotaUser",
             "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
@@ -52,12 +59,6 @@
             "name": "oauth_token",
             "desc": "OAuth 2.0 token for the current user.",
             "type": "string"
-        },
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
         }
     ],
     "schemas": [
@@ -66,6 +67,11 @@
             "desc": "An InappPurchase resource indicates the status of a user's inapp product purchase.",
             "type": "object",
             "fields": [
+                {
+                    "name": "consumptionState",
+                    "desc": "The consumption state of the inapp product. Possible values are:  \n- Yet to be consumed \n- Consumed",
+                    "type": "int32"
+                },
                 {
                     "name": "developerPayload",
                     "desc": "A developer-specified string that contains supplemental information about an order.",
@@ -86,11 +92,6 @@
                     "name": "purchaseTime",
                     "desc": "The time the product was purchased, in milliseconds since the epoch (Jan 1, 1970).",
                     "type": "int64"
-                },
-                {
-                    "name": "consumptionState",
-                    "desc": "The consumption state of the inapp product. Possible values are:  \n- Yet to be consumed \n- Consumed",
-                    "type": "int32"
                 }
             ]
         },
@@ -99,6 +100,16 @@
             "desc": "A SubscriptionPurchase resource indicates the status of a user's subscription purchase.",
             "type": "object",
             "fields": [
+                {
+                    "name": "autoRenewing",
+                    "desc": "Whether the subscription will automatically be renewed when it reaches its current expiry time.",
+                    "type": "bool"
+                },
+                {
+                    "name": "initiationTimestampMsec",
+                    "desc": "Time at which the subscription was granted, in milliseconds since the Epoch.",
+                    "type": "int64"
+                },
                 {
                     "name": "kind",
                     "desc": "This kind represents a subscriptionPurchase object in the androidpublisher service.",
@@ -109,16 +120,6 @@
                     "name": "validUntilTimestampMsec",
                     "desc": "Time at which the subscription will expire, in milliseconds since the Epoch.",
                     "type": "int64"
-                },
-                {
-                    "name": "autoRenewing",
-                    "desc": "Whether the subscription will automatically be renewed when it reaches its current expiry time.",
-                    "type": "bool"
-                },
-                {
-                    "name": "initiationTimestampMsec",
-                    "desc": "Time at which the subscription was granted, in milliseconds since the Epoch.",
-                    "type": "int64"
                 }
             ]
         }
@@ -128,10 +129,10 @@
             "name": "inapppurchases",
             "methods": [
                 {
-                    "name": "get",
-                    "desc": "Checks the purchase and consumption status of an inapp item.",
                     "path": "{packageName}/inapp/{productId}/purchases/{token}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Checks the purchase and consumption status of an inapp item.",
                     "scopes": [
                         "https://www.googleapis.com/auth/androidpublisher"
                     ],
@@ -163,39 +164,10 @@
             "name": "purchases",
             "methods": [
                 {
-                    "name": "cancel",
-                    "desc": "Cancels a user's subscription purchase. The subscription remains valid until its expiration time.",
-                    "path": "{packageName}/subscriptions/{subscriptionId}/purchases/{token}/cancel",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/androidpublisher"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "packageName",
-                            "desc": "The package name of the application for which this subscription was purchased (for example, 'com.some.thing').",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "subscriptionId",
-                            "desc": "The purchased subscription ID (for example, 'monthly001').",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "token",
-                            "desc": "The token provided to the user's device when the subscription was purchased.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "get",
-                    "desc": "Checks whether a user's subscription purchase is valid and returns its expiry time.",
                     "path": "{packageName}/subscriptions/{subscriptionId}/purchases/{token}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Checks whether a user's subscription purchase is valid and returns its expiry time.",
                     "scopes": [
                         "https://www.googleapis.com/auth/androidpublisher"
                     ],
@@ -220,6 +192,35 @@
                         }
                     ],
                     "response": "SubscriptionPurchase"
+                },
+                {
+                    "path": "{packageName}/subscriptions/{subscriptionId}/purchases/{token}/cancel",
+                    "httpMethod": "POST",
+                    "name": "cancel",
+                    "desc": "Cancels a user's subscription purchase. The subscription remains valid until its expiration time.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/androidpublisher"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "packageName",
+                            "desc": "The package name of the application for which this subscription was purchased (for example, 'com.some.thing').",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "subscriptionId",
+                            "desc": "The purchased subscription ID (for example, 'monthly001').",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "token",
+                            "desc": "The token provided to the user's device when the subscription was purchased.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ]
                 }
             ]
         }

@@ -10,6 +10,7 @@
     "documentationLink": "https://developers.google.com/admin-sdk/data-transfer/",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "admin/datatransfer/v1/",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/admin.datatransfer",
@@ -68,17 +69,6 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "kind",
-                    "desc": "Identifies the resource as a collection of data transfer requests.",
-                    "type": "string",
-                    "default": "admin#datatransfer#dataTransfersList"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "Continuation token which will be used to specify next page in list API.",
-                    "type": "string"
-                },
-                {
                     "name": "dataTransfers",
                     "desc": "List of data transfer requests.",
                     "collection": "array",
@@ -89,6 +79,17 @@
                     "name": "etag",
                     "desc": "ETag of the resource.",
                     "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Identifies the resource as a collection of data transfer requests.",
+                    "type": "string",
+                    "default": "admin#datatransfer#dataTransfersList"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "Continuation token which will be used to specify next page in list API.",
+                    "type": "string"
                 }
             ]
         },
@@ -97,18 +98,6 @@
             "desc": "The JSON template for an Application resource.",
             "type": "object",
             "fields": [
-                {
-                    "name": "name",
-                    "desc": "The application's name.",
-                    "type": "string"
-                },
-                {
-                    "name": "transferParams",
-                    "desc": "The list of all possible transfer parameters for this application. These parameters can be used to select the data of the user in this application to be transfered.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ApplicationTransferParam"
-                },
                 {
                     "name": "etag",
                     "desc": "Etag of the resource.",
@@ -124,6 +113,18 @@
                     "desc": "Identifies the resource as a DataTransfer Application Resource.",
                     "type": "string",
                     "default": "admin#datatransfer#ApplicationResource"
+                },
+                {
+                    "name": "name",
+                    "desc": "The application's name.",
+                    "type": "string"
+                },
+                {
+                    "name": "transferParams",
+                    "desc": "The list of all possible transfer parameters for this application. These parameters can be used to select the data of the user in this application to be transfered.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ApplicationTransferParam"
                 }
             ]
         },
@@ -133,13 +134,6 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "applicationTransferParams",
-                    "desc": "The transfer parameters for the application. These parameters are used to select the data which will get transfered in context of this application.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ApplicationTransferParam"
-                },
-                {
                     "name": "applicationTransferStatus",
                     "desc": "Current status of transfer for this application. (Read-only)",
                     "type": "string"
@@ -148,6 +142,13 @@
                     "name": "applicationId",
                     "desc": "The application's ID.",
                     "type": "int64"
+                },
+                {
+                    "name": "applicationTransferParams",
+                    "desc": "The transfer parameters for the application. These parameters are used to select the data which will get transfered in context of this application.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ApplicationTransferParam"
                 }
             ]
         },
@@ -175,13 +176,6 @@
             "type": "object",
             "fields": [
                 {
-                    "name": "applications",
-                    "desc": "List of applications that support data transfer and are also installed for the customer.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Application"
-                },
-                {
                     "name": "etag",
                     "desc": "ETag of the resource.",
                     "type": "string"
@@ -196,6 +190,13 @@
                     "name": "nextPageToken",
                     "desc": "Continuation token which will be used to specify next page in list API.",
                     "type": "string"
+                },
+                {
+                    "name": "applications",
+                    "desc": "List of applications that support data transfer and are also installed for the customer.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Application"
                 }
             ]
         },
@@ -204,23 +205,6 @@
             "desc": "The JSON template for a DataTransfer resource.",
             "type": "object",
             "fields": [
-                {
-                    "name": "requestTime",
-                    "desc": "The time at which the data transfer was requested (Read-only).",
-                    "type": "datetime"
-                },
-                {
-                    "name": "applicationDataTransfers",
-                    "desc": "List of per application data transfer resources. It contains data transfer details of the applications associated with this transfer resource. Note that this list is also used to specify the applications for which data transfer has to be done at the time of the transfer resource creation.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ApplicationDataTransfer"
-                },
-                {
-                    "name": "etag",
-                    "desc": "ETag of the resource.",
-                    "type": "string"
-                },
                 {
                     "name": "id",
                     "desc": "The transfer's ID (Read-only).",
@@ -246,6 +230,23 @@
                     "name": "overallTransferStatusCode",
                     "desc": "Overall transfer status (Read-only).",
                     "type": "string"
+                },
+                {
+                    "name": "requestTime",
+                    "desc": "The time at which the data transfer was requested (Read-only).",
+                    "type": "datetime"
+                },
+                {
+                    "name": "applicationDataTransfers",
+                    "desc": "List of per application data transfer resources. It contains data transfer details of the applications associated with this transfer resource. Note that this list is also used to specify the applications for which data transfer has to be done at the time of the transfer resource creation.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ApplicationDataTransfer"
+                },
+                {
+                    "name": "etag",
+                    "desc": "ETag of the resource.",
+                    "type": "string"
                 }
             ]
         }
@@ -255,10 +256,10 @@
             "name": "applications",
             "methods": [
                 {
-                    "name": "get",
-                    "desc": "Retrieves information about an application for the given application ID.",
                     "path": "applications/{applicationId}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Retrieves information about an application for the given application ID.",
                     "scopes": [
                         "https://www.googleapis.com/auth/admin.datatransfer",
                         "https://www.googleapis.com/auth/admin.datatransfer.readonly"
@@ -274,15 +275,15 @@
                     "response": "Application"
                 },
                 {
-                    "name": "list",
-                    "desc": "Lists the applications available for data transfer for a customer.",
                     "path": "applications",
                     "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "Lists the applications available for data transfer for a customer.",
                     "scopes": [
                         "https://www.googleapis.com/auth/admin.datatransfer",
                         "https://www.googleapis.com/auth/admin.datatransfer.readonly"
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
                         {
                             "name": "customerId",
                             "desc": "Immutable ID of the Google Apps account.",
@@ -309,15 +310,57 @@
             "name": "transfers",
             "methods": [
                 {
-                    "name": "list",
-                    "desc": "Lists the transfers for a customer by source user, destination user, or status.",
-                    "path": "transfers",
+                    "path": "transfers/{dataTransferId}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Retrieves a data transfer request by its resource ID.",
                     "scopes": [
                         "https://www.googleapis.com/auth/admin.datatransfer",
                         "https://www.googleapis.com/auth/admin.datatransfer.readonly"
                     ],
-                    "optinalQueryParams": [
+                    "pathParams": [
+                        {
+                            "name": "dataTransferId",
+                            "desc": "ID of the resource to be retrieved. This is returned in the response from the insert method.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "DataTransfer"
+                },
+                {
+                    "path": "transfers",
+                    "httpMethod": "POST",
+                    "name": "insert",
+                    "desc": "Inserts a data transfer request.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/admin.datatransfer"
+                    ],
+                    "request": "DataTransfer",
+                    "response": "DataTransfer"
+                },
+                {
+                    "path": "transfers",
+                    "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "Lists the transfers for a customer by source user, destination user, or status.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/admin.datatransfer",
+                        "https://www.googleapis.com/auth/admin.datatransfer.readonly"
+                    ],
+                    "optionalQueryParams": [
+                        {
+                            "name": "maxResults",
+                            "desc": "Maximum number of results to return. Default is 100.",
+                            "type": "int32",
+                            "min": "1",
+                            "max": "500"
+                        },
+                        {
+                            "name": "newOwnerUserId",
+                            "desc": "Destination user's profile ID.",
+                            "type": "string"
+                        },
                         {
                             "name": "oldOwnerUserId",
                             "desc": "Source user's profile ID.",
@@ -337,51 +380,9 @@
                             "name": "customerId",
                             "desc": "Immutable ID of the Google Apps account.",
                             "type": "string"
-                        },
-                        {
-                            "name": "maxResults",
-                            "desc": "Maximum number of results to return. Default is 100.",
-                            "type": "int32",
-                            "min": "1",
-                            "max": "500"
-                        },
-                        {
-                            "name": "newOwnerUserId",
-                            "desc": "Destination user's profile ID.",
-                            "type": "string"
                         }
                     ],
                     "response": "DataTransfersListResponse"
-                },
-                {
-                    "name": "get",
-                    "desc": "Retrieves a data transfer request by its resource ID.",
-                    "path": "transfers/{dataTransferId}",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/admin.datatransfer",
-                        "https://www.googleapis.com/auth/admin.datatransfer.readonly"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "dataTransferId",
-                            "desc": "ID of the resource to be retrieved. This is returned in the response from the insert method.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "response": "DataTransfer"
-                },
-                {
-                    "name": "insert",
-                    "desc": "Inserts a data transfer request.",
-                    "path": "transfers",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/admin.datatransfer"
-                    ],
-                    "request": "DataTransfer",
-                    "response": "DataTransfer"
                 }
             ]
         }

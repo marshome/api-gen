@@ -1,19 +1,19 @@
 package codegen
 
 import (
-	"github.com/marshome/apis/spec"
+	"github.com/marshome/i-api/spec"
 )
 
 type Resource struct {
-	c  *Context
-	Spec *spec.Resource
-	Name string
+	c            *Context
+	Spec         *spec.Resource
+	Name         string
 
-	Methods []*Method
+	Methods      []*Method
 	SubResources []*Resource
 }
 
-func NewResource(c *Context,spec *spec.Resource,name string)*Resource {
+func NewResource(c *Context, spec *spec.Resource, name string) *Resource {
 	r := &Resource{
 		c:c,
 		Spec:spec,
@@ -23,7 +23,7 @@ func NewResource(c *Context,spec *spec.Resource,name string)*Resource {
 	if spec.Methods != nil {
 		r.Methods = make([]*Method, 0)
 		for _, m := range spec.Methods {
-			r.Methods = append(r.Methods, NewMethod(c,r, m))
+			r.Methods = append(r.Methods, NewMethod(c, r, m))
 		}
 	}
 
@@ -48,6 +48,7 @@ func (r *Resource)GenerateService() {
 	for _, m := range r.Methods {
 		m.GenerateComments()
 		r.c.Pn(m.GenerateSignature())
+		r.c.Pn("")
 	}
 	r.c.Pn("}")
 	r.c.Pn("")
@@ -58,9 +59,9 @@ func (r *Resource)GenerateService() {
 	r.c.Pn("")
 	for _, m := range r.Methods {
 		r.c.Pn("func (s *Default%s_) %s{", serviceName, m.GenerateSignature())
-		if m.Spec.Response==""{
+		if m.Spec.Response == "" {
 			r.c.Pn("    return nil")
-		}else{
+		} else {
 			r.c.Pn("    return nil,nil")
 		}
 		r.c.Pn("}")
@@ -73,7 +74,7 @@ func (r *Resource)GenerateService() {
 	}
 
 	//router
-	r.c.Pn("func Handle%s(_r marsapi.Router,_service %s)(err error){", serviceName, serviceName)
+	r.c.Pn("func Handle%s(_r genlib.Router,_service %s)(err error){", serviceName, serviceName)
 	for _, m := range r.Methods {
 		m.GenerateRouter()
 	}

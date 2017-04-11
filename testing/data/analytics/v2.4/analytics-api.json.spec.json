@@ -10,6 +10,7 @@
     "documentationLink": "https://developers.google.com/analytics/",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "analytics/v2.4/",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/analytics",
@@ -17,16 +18,6 @@
         ]
     },
     "parameters": [
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
-            "type": "string"
-        },
-        {
-            "name": "userIp",
-            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
-            "type": "string"
-        },
         {
             "name": "alt",
             "desc": "Data format for the response.",
@@ -59,17 +50,214 @@
             "desc": "Returns response with indentations and line breaks.",
             "type": "bool",
             "default": "false"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
         }
     ],
     "resources": [
         {
+            "name": "management",
+            "resources": [
+                {
+                    "name": "profiles",
+                    "methods": [
+                        {
+                            "path": "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles",
+                            "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "Lists views (profiles) to which the user has access.",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/analytics",
+                                "https://www.googleapis.com/auth/analytics.readonly"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account ID for the views (profiles) to retrieve. Can either be a specific account ID or '~all', which refers to all the accounts to which the user has access.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "webPropertyId",
+                                    "desc": "Web property ID for the views (profiles) to retrieve. Can either be a specific web property ID or '~all', which refers to all the web properties to which the user has access.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optionalQueryParams": [
+                                {
+                                    "name": "max-results",
+                                    "desc": "The maximum number of views (profiles) to include in this response.",
+                                    "type": "int32"
+                                },
+                                {
+                                    "name": "start-index",
+                                    "desc": "An index of the first entity to retrieve. Use this parameter as a pagination mechanism along with the max-results parameter.",
+                                    "type": "int32",
+                                    "min": "1"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "segments",
+                    "methods": [
+                        {
+                            "path": "management/segments",
+                            "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "Lists advanced segments to which the user has access.",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/analytics",
+                                "https://www.googleapis.com/auth/analytics.readonly"
+                            ],
+                            "optionalQueryParams": [
+                                {
+                                    "name": "max-results",
+                                    "desc": "The maximum number of advanced segments to include in this response.",
+                                    "type": "int32"
+                                },
+                                {
+                                    "name": "start-index",
+                                    "desc": "An index of the first advanced segment to retrieve. Use this parameter as a pagination mechanism along with the max-results parameter.",
+                                    "type": "int32",
+                                    "min": "1"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "webproperties",
+                    "methods": [
+                        {
+                            "path": "management/accounts/{accountId}/webproperties",
+                            "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "Lists web properties to which the user has access.",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/analytics",
+                                "https://www.googleapis.com/auth/analytics.readonly"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account ID to retrieve web properties for. Can either be a specific account ID or '~all', which refers to all the accounts that user has access to.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optionalQueryParams": [
+                                {
+                                    "name": "max-results",
+                                    "desc": "The maximum number of web properties to include in this response.",
+                                    "type": "int32"
+                                },
+                                {
+                                    "name": "start-index",
+                                    "desc": "An index of the first entity to retrieve. Use this parameter as a pagination mechanism along with the max-results parameter.",
+                                    "type": "int32",
+                                    "min": "1"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "accounts",
+                    "methods": [
+                        {
+                            "path": "management/accounts",
+                            "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "Lists all accounts to which the user has access.",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/analytics",
+                                "https://www.googleapis.com/auth/analytics.readonly"
+                            ],
+                            "optionalQueryParams": [
+                                {
+                                    "name": "start-index",
+                                    "desc": "An index of the first account to retrieve. Use this parameter as a pagination mechanism along with the max-results parameter.",
+                                    "type": "int32",
+                                    "min": "1"
+                                },
+                                {
+                                    "name": "max-results",
+                                    "desc": "The maximum number of accounts to include in this response.",
+                                    "type": "int32"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "goals",
+                    "methods": [
+                        {
+                            "path": "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals",
+                            "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "Lists goals to which the user has access.",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/analytics",
+                                "https://www.googleapis.com/auth/analytics.readonly"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Account ID to retrieve goals for. Can either be a specific account ID or '~all', which refers to all the accounts that user has access to.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "webPropertyId",
+                                    "desc": "Web property ID to retrieve goals for. Can either be a specific web property ID or '~all', which refers to all the web properties that user has access to.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "profileId",
+                                    "desc": "View (Profile) ID to retrieve goals for. Can either be a specific view (profile) ID or '~all', which refers to all the views (profiles) that user has access to.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optionalQueryParams": [
+                                {
+                                    "name": "max-results",
+                                    "desc": "The maximum number of goals to include in this response.",
+                                    "type": "int32"
+                                },
+                                {
+                                    "name": "start-index",
+                                    "desc": "An index of the first goal to retrieve. Use this parameter as a pagination mechanism along with the max-results parameter.",
+                                    "type": "int32",
+                                    "min": "1"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "name": "data",
             "methods": [
                 {
-                    "name": "get",
-                    "desc": "Returns Analytics report data for a view (profile).",
                     "path": "data",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Returns Analytics report data for a view (profile).",
                     "scopes": [
                         "https://www.googleapis.com/auth/analytics",
                         "https://www.googleapis.com/auth/analytics.readonly"
@@ -104,7 +292,13 @@
                             "pattern": "ga:.+"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
+                        {
+                            "name": "filters",
+                            "desc": "A comma-separated list of dimension or metric filters to be applied to the report data.",
+                            "type": "string",
+                            "pattern": "ga:.+"
+                        },
                         {
                             "name": "sort",
                             "desc": "A comma-separated list of dimensions or metrics that determine the sort order for the report data.",
@@ -118,6 +312,11 @@
                             "pattern": "(ga:.+)?"
                         },
                         {
+                            "name": "max-results",
+                            "desc": "The maximum number of entries to include in this feed.",
+                            "type": "int32"
+                        },
+                        {
                             "name": "segment",
                             "desc": "An Analytics advanced segment to be applied to the report data.",
                             "type": "string"
@@ -127,204 +326,6 @@
                             "desc": "An index of the first entity to retrieve. Use this parameter as a pagination mechanism along with the max-results parameter.",
                             "type": "int32",
                             "min": "1"
-                        },
-                        {
-                            "name": "filters",
-                            "desc": "A comma-separated list of dimension or metric filters to be applied to the report data.",
-                            "type": "string",
-                            "pattern": "ga:.+"
-                        },
-                        {
-                            "name": "max-results",
-                            "desc": "The maximum number of entries to include in this feed.",
-                            "type": "int32"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "management",
-            "resources": [
-                {
-                    "name": "goals",
-                    "methods": [
-                        {
-                            "name": "list",
-                            "desc": "Lists goals to which the user has access.",
-                            "path": "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals",
-                            "httpMethod": "GET",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/analytics",
-                                "https://www.googleapis.com/auth/analytics.readonly"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "accountId",
-                                    "desc": "Account ID to retrieve goals for. Can either be a specific account ID or '~all', which refers to all the accounts that user has access to.",
-                                    "required": true,
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "webPropertyId",
-                                    "desc": "Web property ID to retrieve goals for. Can either be a specific web property ID or '~all', which refers to all the web properties that user has access to.",
-                                    "required": true,
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "profileId",
-                                    "desc": "View (Profile) ID to retrieve goals for. Can either be a specific view (profile) ID or '~all', which refers to all the views (profiles) that user has access to.",
-                                    "required": true,
-                                    "type": "string"
-                                }
-                            ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "max-results",
-                                    "desc": "The maximum number of goals to include in this response.",
-                                    "type": "int32"
-                                },
-                                {
-                                    "name": "start-index",
-                                    "desc": "An index of the first goal to retrieve. Use this parameter as a pagination mechanism along with the max-results parameter.",
-                                    "type": "int32",
-                                    "min": "1"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "profiles",
-                    "methods": [
-                        {
-                            "name": "list",
-                            "desc": "Lists views (profiles) to which the user has access.",
-                            "path": "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles",
-                            "httpMethod": "GET",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/analytics",
-                                "https://www.googleapis.com/auth/analytics.readonly"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "accountId",
-                                    "desc": "Account ID for the views (profiles) to retrieve. Can either be a specific account ID or '~all', which refers to all the accounts to which the user has access.",
-                                    "required": true,
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "webPropertyId",
-                                    "desc": "Web property ID for the views (profiles) to retrieve. Can either be a specific web property ID or '~all', which refers to all the web properties to which the user has access.",
-                                    "required": true,
-                                    "type": "string"
-                                }
-                            ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "start-index",
-                                    "desc": "An index of the first entity to retrieve. Use this parameter as a pagination mechanism along with the max-results parameter.",
-                                    "type": "int32",
-                                    "min": "1"
-                                },
-                                {
-                                    "name": "max-results",
-                                    "desc": "The maximum number of views (profiles) to include in this response.",
-                                    "type": "int32"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "segments",
-                    "methods": [
-                        {
-                            "name": "list",
-                            "desc": "Lists advanced segments to which the user has access.",
-                            "path": "management/segments",
-                            "httpMethod": "GET",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/analytics",
-                                "https://www.googleapis.com/auth/analytics.readonly"
-                            ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "max-results",
-                                    "desc": "The maximum number of advanced segments to include in this response.",
-                                    "type": "int32"
-                                },
-                                {
-                                    "name": "start-index",
-                                    "desc": "An index of the first advanced segment to retrieve. Use this parameter as a pagination mechanism along with the max-results parameter.",
-                                    "type": "int32",
-                                    "min": "1"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "webproperties",
-                    "methods": [
-                        {
-                            "name": "list",
-                            "desc": "Lists web properties to which the user has access.",
-                            "path": "management/accounts/{accountId}/webproperties",
-                            "httpMethod": "GET",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/analytics",
-                                "https://www.googleapis.com/auth/analytics.readonly"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "accountId",
-                                    "desc": "Account ID to retrieve web properties for. Can either be a specific account ID or '~all', which refers to all the accounts that user has access to.",
-                                    "required": true,
-                                    "type": "string"
-                                }
-                            ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "max-results",
-                                    "desc": "The maximum number of web properties to include in this response.",
-                                    "type": "int32"
-                                },
-                                {
-                                    "name": "start-index",
-                                    "desc": "An index of the first entity to retrieve. Use this parameter as a pagination mechanism along with the max-results parameter.",
-                                    "type": "int32",
-                                    "min": "1"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "accounts",
-                    "methods": [
-                        {
-                            "name": "list",
-                            "desc": "Lists all accounts to which the user has access.",
-                            "path": "management/accounts",
-                            "httpMethod": "GET",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/analytics",
-                                "https://www.googleapis.com/auth/analytics.readonly"
-                            ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "start-index",
-                                    "desc": "An index of the first account to retrieve. Use this parameter as a pagination mechanism along with the max-results parameter.",
-                                    "type": "int32",
-                                    "min": "1"
-                                },
-                                {
-                                    "name": "max-results",
-                                    "desc": "The maximum number of accounts to include in this response.",
-                                    "type": "int32"
-                                }
-                            ]
                         }
                     ]
                 }

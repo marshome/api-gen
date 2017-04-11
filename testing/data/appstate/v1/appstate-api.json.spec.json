@@ -10,12 +10,18 @@
     "documentationLink": "https://developers.google.com/games/services/web/api/states",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "appstate/v1/",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/appstate"
         ]
     },
     "parameters": [
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
+            "type": "string"
+        },
         {
             "name": "prettyPrint",
             "desc": "Returns response with indentations and line breaks.",
@@ -53,14 +59,75 @@
             "name": "key",
             "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
             "type": "string"
-        },
-        {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
         }
     ],
     "schemas": [
+        {
+            "name": "ListResponse",
+            "desc": "This is a JSON template to convert a list-response for app state.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "maximumKeyCount",
+                    "desc": "The maximum number of keys allowed for this user.",
+                    "type": "int32"
+                },
+                {
+                    "name": "items",
+                    "desc": "The app state data.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "GetResponse"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#listResponse.",
+                    "type": "string",
+                    "default": "appstate#listResponse"
+                }
+            ]
+        },
+        {
+            "name": "UpdateRequest",
+            "desc": "This is a JSON template for a requests which update app state",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "data",
+                    "desc": "The new app state data that your application is trying to update with.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#updateRequest.",
+                    "type": "string",
+                    "default": "appstate#updateRequest"
+                }
+            ]
+        },
+        {
+            "name": "WriteResult",
+            "desc": "This is a JSON template for an app state write result.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "currentStateVersion",
+                    "desc": "The version of the data for this key on the server.",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#writeResult.",
+                    "type": "string",
+                    "default": "appstate#writeResult"
+                },
+                {
+                    "name": "stateKey",
+                    "desc": "The written key.",
+                    "type": "int32"
+                }
+            ]
+        },
         {
             "name": "GetResponse",
             "desc": "This is a JSON template for an app state resource.",
@@ -88,72 +155,6 @@
                     "type": "int32"
                 }
             ]
-        },
-        {
-            "name": "ListResponse",
-            "desc": "This is a JSON template to convert a list-response for app state.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "items",
-                    "desc": "The app state data.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "GetResponse"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#listResponse.",
-                    "type": "string",
-                    "default": "appstate#listResponse"
-                },
-                {
-                    "name": "maximumKeyCount",
-                    "desc": "The maximum number of keys allowed for this user.",
-                    "type": "int32"
-                }
-            ]
-        },
-        {
-            "name": "UpdateRequest",
-            "desc": "This is a JSON template for a requests which update app state",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "kind",
-                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#updateRequest.",
-                    "type": "string",
-                    "default": "appstate#updateRequest"
-                },
-                {
-                    "name": "data",
-                    "desc": "The new app state data that your application is trying to update with.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "WriteResult",
-            "desc": "This is a JSON template for an app state write result.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "stateKey",
-                    "desc": "The written key.",
-                    "type": "int32"
-                },
-                {
-                    "name": "currentStateVersion",
-                    "desc": "The version of the data for this key on the server.",
-                    "type": "string"
-                },
-                {
-                    "name": "kind",
-                    "desc": "Uniquely identifies the type of this resource. Value is always the fixed string appstate#writeResult.",
-                    "type": "string",
-                    "default": "appstate#writeResult"
-                }
-            ]
         }
     ],
     "resources": [
@@ -161,56 +162,10 @@
             "name": "states",
             "methods": [
                 {
-                    "name": "clear",
-                    "desc": "Clears (sets to empty) the data for the passed key if and only if the passed version matches the currently stored version. This method results in a conflict error on version mismatch.",
-                    "path": "states/{stateKey}/clear",
-                    "httpMethod": "POST",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/appstate"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "stateKey",
-                            "desc": "The key for the data to be retrieved.",
-                            "required": true,
-                            "type": "int32",
-                            "min": "0",
-                            "max": "3"
-                        }
-                    ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "currentDataVersion",
-                            "desc": "The version of the data to be cleared. Version strings are returned by the server.",
-                            "type": "string"
-                        }
-                    ],
-                    "response": "WriteResult"
-                },
-                {
-                    "name": "delete",
-                    "desc": "Deletes a key and the data associated with it. The key is removed and no longer counts against the key quota. Note that since this method is not safe in the face of concurrent modifications, it should only be used for development and testing purposes. Invoking this method in shipping code can result in data loss and data corruption.",
-                    "path": "states/{stateKey}",
-                    "httpMethod": "DELETE",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/appstate"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "stateKey",
-                            "desc": "The key for the data to be retrieved.",
-                            "required": true,
-                            "type": "int32",
-                            "min": "0",
-                            "max": "3"
-                        }
-                    ]
-                },
-                {
-                    "name": "get",
-                    "desc": "Retrieves the data corresponding to the passed key. If the key does not exist on the server, an HTTP 404 will be returned.",
                     "path": "states/{stateKey}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Retrieves the data corresponding to the passed key. If the key does not exist on the server, an HTTP 404 will be returned.",
                     "scopes": [
                         "https://www.googleapis.com/auth/appstate"
                     ],
@@ -227,14 +182,14 @@
                     "response": "GetResponse"
                 },
                 {
-                    "name": "list",
-                    "desc": "Lists all the states keys, and optionally the state data.",
                     "path": "states",
                     "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "Lists all the states keys, and optionally the state data.",
                     "scopes": [
                         "https://www.googleapis.com/auth/appstate"
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
                         {
                             "name": "includeData",
                             "desc": "Whether to include the full data in addition to the version number",
@@ -245,10 +200,10 @@
                     "response": "ListResponse"
                 },
                 {
-                    "name": "update",
-                    "desc": "Update the data associated with the input key if and only if the passed version matches the currently stored version. This method is safe in the face of concurrent writes. Maximum per-key size is 128KB.",
                     "path": "states/{stateKey}",
                     "httpMethod": "PUT",
+                    "name": "update",
+                    "desc": "Update the data associated with the input key if and only if the passed version matches the currently stored version. This method is safe in the face of concurrent writes. Maximum per-key size is 128KB.",
                     "scopes": [
                         "https://www.googleapis.com/auth/appstate"
                     ],
@@ -262,7 +217,7 @@
                             "max": "3"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
                         {
                             "name": "currentStateVersion",
                             "desc": "The version of the app state your application is attempting to update. If this does not match the current version, this method will return a conflict error. If there is no data stored on the server for this key, the update will succeed irrespective of the value of this parameter.",
@@ -271,6 +226,52 @@
                     ],
                     "request": "UpdateRequest",
                     "response": "WriteResult"
+                },
+                {
+                    "path": "states/{stateKey}/clear",
+                    "httpMethod": "POST",
+                    "name": "clear",
+                    "desc": "Clears (sets to empty) the data for the passed key if and only if the passed version matches the currently stored version. This method results in a conflict error on version mismatch.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/appstate"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "stateKey",
+                            "desc": "The key for the data to be retrieved.",
+                            "required": true,
+                            "type": "int32",
+                            "min": "0",
+                            "max": "3"
+                        }
+                    ],
+                    "optionalQueryParams": [
+                        {
+                            "name": "currentDataVersion",
+                            "desc": "The version of the data to be cleared. Version strings are returned by the server.",
+                            "type": "string"
+                        }
+                    ],
+                    "response": "WriteResult"
+                },
+                {
+                    "path": "states/{stateKey}",
+                    "httpMethod": "DELETE",
+                    "name": "delete",
+                    "desc": "Deletes a key and the data associated with it. The key is removed and no longer counts against the key quota. Note that since this method is not safe in the face of concurrent modifications, it should only be used for development and testing purposes. Invoking this method in shipping code can result in data loss and data corruption.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/appstate"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "stateKey",
+                            "desc": "The key for the data to be retrieved.",
+                            "required": true,
+                            "type": "int32",
+                            "min": "0",
+                            "max": "3"
+                        }
+                    ]
                 }
             ]
         }

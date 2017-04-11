@@ -10,6 +10,7 @@
     "documentationLink": "https://developers.google.com/ad-exchange/buyer-rest/guides/client-access/",
     "protocol": "rest",
     "rootUrl": "https://adexchangebuyer.googleapis.com/",
+    "servicePath": "",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/adexchange.buyer"
@@ -17,14 +18,13 @@
     },
     "parameters": [
         {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
             "name": "uploadType",
             "desc": "Legacy upload protocol for media (e.g. \"media\", \"multipart\").",
+            "type": "string"
+        },
+        {
+            "name": "callback",
+            "desc": "JSONP",
             "type": "string"
         },
         {
@@ -48,27 +48,6 @@
             ]
         },
         {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
-            "type": "string"
-        },
-        {
-            "name": "pp",
-            "desc": "Pretty-print response.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
-        {
-            "name": "bearer_token",
-            "desc": "OAuth bearer token.",
-            "type": "string"
-        },
-        {
             "name": "access_token",
             "desc": "OAuth access token.",
             "type": "string"
@@ -79,9 +58,26 @@
             "type": "string"
         },
         {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
             "name": "upload_protocol",
             "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
             "type": "string"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
         },
         {
             "name": "fields",
@@ -104,308 +100,233 @@
             ]
         },
         {
-            "name": "callback",
-            "desc": "JSONP",
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
+            "type": "string"
+        },
+        {
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
             "type": "string"
         }
     ],
     "schemas": [
         {
-            "name": "ClientUserInvitation",
-            "desc": "An invitation for a new client user to get access to the Ad Exchange\nBuyer UI.\nAll fields are required unless otherwise specified.",
+            "name": "Creative",
+            "desc": "A creative and its classification data.",
             "type": "object",
             "fields": [
                 {
-                    "name": "invitationId",
-                    "desc": "The unique numerical ID of the invitation that is sent to the user.\nThe value of this field is ignored in create operations.",
-                    "type": "int64"
+                    "name": "vendorIds",
+                    "desc": "All vendor IDs for the ads that may be shown from this creative.\nSee https://storage.googleapis.com/adx-rtb-dictionaries/vendors.txt\nfor possible values.",
+                    "collection": "array",
+                    "type": "int32"
                 },
                 {
-                    "name": "email",
-                    "desc": "The email address to which the invitation is sent. Email\naddresses should be unique among all client users under each sponsor\nbuyer.",
+                    "name": "openAuctionStatus",
+                    "desc": "@OutputOnly The top-level open auction status of this creative.\nIf disapproved, an entry for 'auctionType = OPEN_AUCTION' (or 'ALL') in\nserving_restrictions will also exist. Note\nthat this may be nuanced with other contextual restrictions, in which case,\nit may be preferable to read from serving_restrictions directly.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "STATUS_UNSPECIFIED",
+                            "desc": "The status is unknown."
+                        },
+                        {
+                            "name": "NOT_CHECKED",
+                            "desc": "The creative has not been checked."
+                        },
+                        {
+                            "name": "CONDITIONALLY_APPROVED",
+                            "desc": "The creative has been conditionally approved.\nSee serving_restrictions for details."
+                        },
+                        {
+                            "name": "APPROVED",
+                            "desc": "The creative has been approved."
+                        },
+                        {
+                            "name": "DISAPPROVED",
+                            "desc": "The creative has been disapproved."
+                        }
+                    ]
+                },
+                {
+                    "name": "filteringStats",
+                    "desc": "@OutputOnly The filtering stats for this creative.",
+                    "type": "ref",
+                    "refType": "FilteringStats"
+                },
+                {
+                    "name": "accountId",
+                    "desc": "The account that this creative belongs to.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
                     "type": "string"
                 },
                 {
-                    "name": "clientAccountId",
-                    "desc": "Numerical account ID of the client buyer\nthat the invited user is associated with.\nThe value of this field is ignored in create operations.",
+                    "name": "agencyId",
+                    "desc": "The agency ID for this creative.",
                     "type": "int64"
-                }
-            ]
-        },
-        {
-            "name": "FilteringStats",
-            "desc": "@OutputOnly Filtering reasons for this creative during a period of a single\nday (from midnight to midnight Pacific).",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "date",
-                    "desc": "The day during which the data was collected.\nThe data is collected from 00:00:00 to 23:59:59 PT.\nDuring switches from PST to PDT and back, the day may\ncontain 23 or 25 hours of data instead of the usual 24.",
-                    "type": "ref",
-                    "refType": "Date"
                 },
                 {
-                    "name": "reasons",
-                    "desc": "The set of filtering reasons for this date.",
+                    "name": "corrections",
+                    "desc": "@OutputOnly Shows any corrections that were applied to this creative.",
                     "collection": "array",
                     "type": "ref",
-                    "refType": "Reason"
-                }
-            ]
-        },
-        {
-            "name": "Client",
-            "desc": "A client resource represents a client buyer\u0026mdash;an agency,\na brand, or an advertiser customer of the sponsor buyer.\nUsers associated with the client buyer have restricted access to\nthe Ad Exchange Marketplace and certain other sections\nof the Ad Exchange Buyer UI based on the role\ngranted to the client buyer.\nAll fields are required unless otherwise specified.",
-            "type": "object",
-            "fields": [
+                    "refType": "Correction"
+                },
                 {
-                    "name": "entityType",
-                    "desc": "The type of the client entity: `ADVERTISER`, `BRAND`, or `AGENCY`.",
+                    "name": "version",
+                    "desc": "@OutputOnly The version of this creative.",
+                    "type": "int32"
+                },
+                {
+                    "name": "dealsStatus",
+                    "desc": "@OutputOnly The top-level deals status of this creative.\nIf disapproved, an entry for 'auctionType=DIRECT_DEALS' (or 'ALL') in\nserving_restrictions will also exist. Note\nthat this may be nuanced with other contextual restrictions, in which case,\nit may be preferable to read from serving_restrictions directly.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
                     "type": "string",
                     "enum": [
                         {
-                            "name": "ENTITY_TYPE_UNSPECIFIED",
-                            "desc": "A placeholder for an undefined client entity type. Should not be used."
+                            "name": "STATUS_UNSPECIFIED",
+                            "desc": "The status is unknown."
                         },
                         {
-                            "name": "ADVERTISER",
-                            "desc": "An advertiser."
+                            "name": "NOT_CHECKED",
+                            "desc": "The creative has not been checked."
                         },
                         {
-                            "name": "BRAND",
-                            "desc": "A brand."
+                            "name": "CONDITIONALLY_APPROVED",
+                            "desc": "The creative has been conditionally approved.\nSee serving_restrictions for details."
                         },
                         {
-                            "name": "AGENCY",
-                            "desc": "An advertising agency."
+                            "name": "APPROVED",
+                            "desc": "The creative has been approved."
+                        },
+                        {
+                            "name": "DISAPPROVED",
+                            "desc": "The creative has been disapproved."
                         }
                     ]
                 },
                 {
-                    "name": "clientName",
-                    "desc": "Name used to represent this client to publishers.\nYou may have multiple clients that map to the same entity,\nbut for each client the combination of `clientName` and entity\nmust be unique.\nYou can specify this field as empty.",
-                    "type": "string"
+                    "name": "apiUpdateTime",
+                    "desc": "@OutputOnly The last update timestamp of the creative via API.",
+                    "type": "datetime"
                 },
                 {
-                    "name": "role",
-                    "desc": "The role which is assigned to the client buyer. Each role implies a set of\npermissions granted to the client. Must be one of `CLIENT_DEAL_VIEWER`,\n`CLIENT_DEAL_NEGOTIATOR` or `CLIENT_DEAL_APPROVER`.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "CLIENT_ROLE_UNSPECIFIED",
-                            "desc": "A placeholder for an undefined client role."
-                        },
-                        {
-                            "name": "CLIENT_DEAL_VIEWER",
-                            "desc": "Users associated with this client can see publisher deal offers\nin the Marketplace.\nThey can neither negotiate proposals nor approve deals.\nIf this client is visible to publishers, they can send deal proposals\nto this client."
-                        },
-                        {
-                            "name": "CLIENT_DEAL_NEGOTIATOR",
-                            "desc": "Users associated with this client can respond to deal proposals\nsent to them by publishers. They can also initiate deal proposals\nof their own."
-                        },
-                        {
-                            "name": "CLIENT_DEAL_APPROVER",
-                            "desc": "Users associated with this client can approve eligible deals\non your behalf. Some deals may still explicitly require publisher\nfinalization. If this role is not selected, the sponsor buyer\nwill need to manually approve each of their deals."
-                        }
-                    ]
-                },
-                {
-                    "name": "visibleToSeller",
-                    "desc": "Whether the client buyer will be visible to sellers.",
-                    "type": "bool"
-                },
-                {
-                    "name": "entityId",
-                    "desc": "Numerical identifier of the client entity.\nThe entity can be an advertiser, a brand, or an agency.\nThis identifier is unique among all the entities with the same type.\n\nA list of all known advertisers with their identifiers is available in the\n[advertisers.txt](https://storage.googleapis.com/adx-rtb-dictionaries/advertisers.txt)\nfile.\n\nA list of all known brands with their identifiers is available in the\n[brands.txt](https://storage.googleapis.com/adx-rtb-dictionaries/brands.txt)\nfile.\n\nA list of all known agencies with their identifiers is available in the\n[agencies.txt](https://storage.googleapis.com/adx-rtb-dictionaries/agencies.txt)\nfile.",
-                    "type": "int64"
-                },
-                {
-                    "name": "clientAccountId",
-                    "desc": "The globally-unique numerical ID of the client.\nThe value of this field is ignored in create and update operations.",
-                    "type": "int64"
-                },
-                {
-                    "name": "entityName",
-                    "desc": "The name of the entity. This field is automatically fetched based on\nthe type and ID.\nThe value of this field is ignored in create and update operations.",
-                    "type": "string"
-                },
-                {
-                    "name": "status",
-                    "desc": "The status of the client buyer.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "CLIENT_STATUS_UNSPECIFIED",
-                            "desc": "A placeholder for an undefined client status."
-                        },
-                        {
-                            "name": "DISABLED",
-                            "desc": "A client that is currently disabled."
-                        },
-                        {
-                            "name": "ACTIVE",
-                            "desc": "A client that is currently active."
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "ListDealAssociationsResponse",
-            "desc": "A response for listing creative and deal associations",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "associations",
-                    "desc": "The list of associations.",
+                    "name": "detectedLanguages",
+                    "desc": "@OutputOnly\nThe detected languages for this creative. The order is arbitrary. The codes\nare 2 or 5 characters and are documented at\nhttps://developers.google.com/adwords/api/docs/appendix/languagecodes.",
                     "collection": "array",
-                    "type": "ref",
-                    "refType": "CreativeDealAssociation"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "A token to retrieve the next page of results.\nPass this value in the\nListDealAssociationsRequest.page_token\nfield in the subsequent call to 'ListDealAssociation' method to retrieve\nthe next page of results.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Date",
-            "desc": "Represents a whole calendar date, e.g. date of birth. The time of day and\ntime zone are either specified elsewhere or are not significant. The date\nis relative to the Proleptic Gregorian Calendar. The day may be 0 to\nrepresent a year and month where the day is not significant, e.g. credit card\nexpiration date. The year may be 0 to represent a month and day independent\nof year, e.g. anniversary date. Related types are google.type.TimeOfDay\nand `google.protobuf.Timestamp`.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "month",
-                    "desc": "Month of year. Must be from 1 to 12.",
-                    "type": "int32"
-                },
-                {
-                    "name": "year",
-                    "desc": "Year of date. Must be from 1 to 9999, or 0 if specifying a date without\na year.",
-                    "type": "int32"
-                },
-                {
-                    "name": "day",
-                    "desc": "Day of month. Must be from 1 to 31 and valid for the year and month, or 0\nif specifying a year/month where the day is not significant.",
-                    "type": "int32"
-                }
-            ]
-        },
-        {
-            "name": "Empty",
-            "desc": "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
-            "type": "object"
-        },
-        {
-            "name": "NativeContent",
-            "desc": "Native content for a creative.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "clickTrackingUrl",
-                    "desc": "The URL to use for click tracking.",
                     "type": "string"
                 },
                 {
-                    "name": "image",
-                    "desc": "A large image.",
+                    "name": "creativeId",
+                    "desc": "The buyer-defined creative ID of this creative.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
+                    "type": "string"
+                },
+                {
+                    "name": "detectedSensitiveCategories",
+                    "desc": "@OutputOnly Detected sensitive categories, if any.\nSee the ad-sensitive-categories.txt file in the technical documentation for\na list of IDs. You should use these IDs along with the\nexcluded-sensitive-category field in the bid request to filter your bids.",
+                    "collection": "array",
+                    "type": "int32"
+                },
+                {
+                    "name": "html",
+                    "desc": "An HTML creative.",
                     "type": "ref",
-                    "refType": "Image"
+                    "refType": "HtmlContent"
                 },
                 {
                     "name": "advertiserName",
-                    "desc": "The name of the advertiser or sponsor, to be displayed in the ad creative.",
+                    "desc": "The name of the company being advertised in the creative.",
                     "type": "string"
                 },
                 {
-                    "name": "storeUrl",
-                    "desc": "The URL to the app store to purchase/download the promoted app.",
+                    "name": "detectedDomains",
+                    "desc": "@OutputOnly\nThe detected domains for this creative.",
+                    "collection": "array",
                     "type": "string"
                 },
                 {
-                    "name": "appIcon",
-                    "desc": "The app icon, for app download ads.",
+                    "name": "native",
+                    "desc": "A native creative.",
                     "type": "ref",
-                    "refType": "Image"
+                    "refType": "NativeContent"
                 },
                 {
-                    "name": "starRating",
-                    "desc": "The app rating in the app store. Must be in the range [0-5].",
-                    "type": "float64"
-                },
-                {
-                    "name": "videoUrl",
-                    "desc": "The URL to fetch a native video ad.",
-                    "type": "string"
-                },
-                {
-                    "name": "clickLinkUrl",
-                    "desc": "The URL that the browser/SDK will load when the user clicks the ad.",
-                    "type": "string"
-                },
-                {
-                    "name": "logo",
-                    "desc": "A smaller image, for the advertiser's logo.",
+                    "name": "servingRestrictions",
+                    "desc": "@OutputOnly The granular status of this ad in specific contexts.\nA context here relates to where something ultimately serves (for example,\na physical location, a platform, an HTTPS vs HTTP request, or the type\nof auction).",
+                    "collection": "array",
                     "type": "ref",
-                    "refType": "Image"
+                    "refType": "ServingRestriction"
                 },
                 {
-                    "name": "priceDisplayText",
-                    "desc": "The price of the promoted app including currency info.",
+                    "name": "video",
+                    "desc": "A video creative.",
+                    "type": "ref",
+                    "refType": "VideoContent"
+                },
+                {
+                    "name": "restrictedCategories",
+                    "desc": "All restricted categories for the ads that may be shown from this creative.",
+                    "collection": "array",
                     "type": "string"
                 },
                 {
-                    "name": "headline",
-                    "desc": "A short title for the ad.",
+                    "name": "impressionTrackingUrls",
+                    "desc": "The set of URLs to be called to record an impression.",
+                    "collection": "array",
                     "type": "string"
                 },
                 {
-                    "name": "callToAction",
-                    "desc": "A label for the button that the user is supposed to click.",
+                    "name": "attributes",
+                    "desc": "All attributes for the ads that may be shown from this creative.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
+                    "collection": "array",
                     "type": "string"
                 },
                 {
-                    "name": "body",
-                    "desc": "A long description of the ad.",
+                    "name": "clickThroughUrls",
+                    "desc": "The set of destination URLs for the creative.",
+                    "collection": "array",
                     "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Image",
-            "desc": "An image resource. You may provide a larger image than was requested,\nso long as the aspect ratio is preserved.",
-            "type": "object",
-            "fields": [
+                },
                 {
-                    "name": "width",
-                    "desc": "Image width in pixels.",
+                    "name": "adChoicesDestinationUrl",
+                    "desc": "The link to AdChoices destination page.",
+                    "type": "string"
+                },
+                {
+                    "name": "detectedProductCategories",
+                    "desc": "@OutputOnly Detected product categories, if any.\nSee the ad-product-categories.txt file in the technical documentation\nfor a list of IDs.",
+                    "collection": "array",
                     "type": "int32"
                 },
                 {
-                    "name": "url",
-                    "desc": "The URL of the image.",
-                    "type": "string"
-                },
-                {
-                    "name": "height",
-                    "desc": "Image height in pixels.",
-                    "type": "int32"
-                }
-            ]
-        },
-        {
-            "name": "Reason",
-            "desc": "A specific filtering status and how many times it occurred.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "status",
-                    "desc": "The filtering status code. Please refer to the\n[creative-status-codes.txt](https://storage.googleapis.com/adx-rtb-dictionaries/creative-status-codes.txt)\nfile for different statuses.",
-                    "type": "int32"
-                },
-                {
-                    "name": "count",
-                    "desc": "The number of times the creative was filtered for the status. The\ncount is aggregated across all publishers on the exchange.",
+                    "name": "detectedAdvertiserIds",
+                    "desc": "@OutputOnly Detected advertiser IDs, if any.",
+                    "collection": "array",
                     "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "WatchCreativeRequest",
+            "desc": "A request for watching changes to creative Status.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "topic",
+                    "desc": "The Pub/Sub topic to publish notifications to.\nThis topic must already exist and must give permission to\nad-exchange-buyside-reports@google.com to write to the topic.\nThis should be the full resource name in\n\"projects/{project_id}/topics/{topic_id}\" format.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "PlatformContext",
+            "desc": "@OutputOnly The type of platform the restriction applies to.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "platforms",
+                    "desc": "The platforms this restriction applies to.",
+                    "collection": "array",
+                    "type": "string"
                 }
             ]
         },
@@ -450,345 +371,21 @@
             ]
         },
         {
-            "name": "AuctionContext",
-            "desc": "@OutputOnly The auction type the restriction applies to.",
+            "name": "ListCreativesResponse",
+            "desc": "A response for listing creatives.",
             "type": "object",
             "fields": [
                 {
-                    "name": "auctionTypes",
-                    "desc": "The auction types this restriction applies to.",
-                    "collection": "array",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "LocationContext",
-            "desc": "@OutputOnly The Geo criteria the restriction applies to.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "geoCriteriaIds",
-                    "desc": "IDs representing the geo location for this context.\nPlease refer to the\n[geo-table.csv](https://storage.googleapis.com/adx-rtb-dictionaries/geo-table.csv)\nfile for different geo criteria IDs.",
-                    "collection": "array",
-                    "type": "int32"
-                }
-            ]
-        },
-        {
-            "name": "Creative",
-            "desc": "A creative and its classification data.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "detectedLanguages",
-                    "desc": "@OutputOnly\nThe detected languages for this creative. The order is arbitrary. The codes\nare 2 or 5 characters and are documented at\nhttps://developers.google.com/adwords/api/docs/appendix/languagecodes.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "creativeId",
-                    "desc": "The buyer-defined creative ID of this creative.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
-                    "type": "string"
-                },
-                {
-                    "name": "version",
-                    "desc": "@OutputOnly The version of this creative.",
-                    "type": "int32"
-                },
-                {
-                    "name": "html",
-                    "desc": "An HTML creative.",
-                    "type": "ref",
-                    "refType": "HtmlContent"
-                },
-                {
-                    "name": "dealsStatus",
-                    "desc": "@OutputOnly The top-level deals status of this creative.\nIf disapproved, an entry for 'auctionType=DIRECT_DEALS' (or 'ALL') in\nserving_restrictions will also exist. Note\nthat this may be nuanced with other contextual restrictions, in which case,\nit may be preferable to read from serving_restrictions directly.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "STATUS_UNSPECIFIED",
-                            "desc": "The status is unknown."
-                        },
-                        {
-                            "name": "NOT_CHECKED",
-                            "desc": "The creative has not been checked."
-                        },
-                        {
-                            "name": "CONDITIONALLY_APPROVED",
-                            "desc": "The creative has been conditionally approved.\nSee serving_restrictions for details."
-                        },
-                        {
-                            "name": "APPROVED",
-                            "desc": "The creative has been approved."
-                        },
-                        {
-                            "name": "DISAPPROVED",
-                            "desc": "The creative has been disapproved."
-                        }
-                    ]
-                },
-                {
-                    "name": "accountId",
-                    "desc": "The account that this creative belongs to.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
-                    "type": "string"
-                },
-                {
-                    "name": "native",
-                    "desc": "A native creative.",
-                    "type": "ref",
-                    "refType": "NativeContent"
-                },
-                {
-                    "name": "detectedSensitiveCategories",
-                    "desc": "@OutputOnly Detected sensitive categories, if any.\nSee the ad-sensitive-categories.txt file in the technical documentation for\na list of IDs. You should use these IDs along with the\nexcluded-sensitive-category field in the bid request to filter your bids.",
-                    "collection": "array",
-                    "type": "int32"
-                },
-                {
-                    "name": "restrictedCategories",
-                    "desc": "All restricted categories for the ads that may be shown from this creative.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "vendorIds",
-                    "desc": "All vendor IDs for the ads that may be shown from this creative.\nSee https://storage.googleapis.com/adx-rtb-dictionaries/vendors.txt\nfor possible values.",
-                    "collection": "array",
-                    "type": "int32"
-                },
-                {
-                    "name": "detectedDomains",
-                    "desc": "@OutputOnly\nThe detected domains for this creative.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "detectedAdvertiserIds",
-                    "desc": "@OutputOnly Detected advertiser IDs, if any.",
-                    "collection": "array",
-                    "type": "int64"
-                },
-                {
-                    "name": "filteringStats",
-                    "desc": "@OutputOnly The filtering stats for this creative.",
-                    "type": "ref",
-                    "refType": "FilteringStats"
-                },
-                {
-                    "name": "attributes",
-                    "desc": "All attributes for the ads that may be shown from this creative.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "apiUpdateTime",
-                    "desc": "@OutputOnly The last update timestamp of the creative via API.",
-                    "type": "datetime"
-                },
-                {
-                    "name": "video",
-                    "desc": "A video creative.",
-                    "type": "ref",
-                    "refType": "VideoContent"
-                },
-                {
-                    "name": "adChoicesDestinationUrl",
-                    "desc": "The link to AdChoices destination page.",
-                    "type": "string"
-                },
-                {
-                    "name": "openAuctionStatus",
-                    "desc": "@OutputOnly The top-level open auction status of this creative.\nIf disapproved, an entry for 'auctionType = OPEN_AUCTION' (or 'ALL') in\nserving_restrictions will also exist. Note\nthat this may be nuanced with other contextual restrictions, in which case,\nit may be preferable to read from serving_restrictions directly.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "STATUS_UNSPECIFIED",
-                            "desc": "The status is unknown."
-                        },
-                        {
-                            "name": "NOT_CHECKED",
-                            "desc": "The creative has not been checked."
-                        },
-                        {
-                            "name": "CONDITIONALLY_APPROVED",
-                            "desc": "The creative has been conditionally approved.\nSee serving_restrictions for details."
-                        },
-                        {
-                            "name": "APPROVED",
-                            "desc": "The creative has been approved."
-                        },
-                        {
-                            "name": "DISAPPROVED",
-                            "desc": "The creative has been disapproved."
-                        }
-                    ]
-                },
-                {
-                    "name": "advertiserName",
-                    "desc": "The name of the company being advertised in the creative.",
-                    "type": "string"
-                },
-                {
-                    "name": "servingRestrictions",
-                    "desc": "@OutputOnly The granular status of this ad in specific contexts.\nA context here relates to where something ultimately serves (for example,\na physical location, a platform, an HTTPS vs HTTP request, or the type\nof auction).",
+                    "name": "creatives",
+                    "desc": "The list of creatives.",
                     "collection": "array",
                     "type": "ref",
-                    "refType": "ServingRestriction"
-                },
-                {
-                    "name": "agencyId",
-                    "desc": "The agency ID for this creative.",
-                    "type": "int64"
-                },
-                {
-                    "name": "clickThroughUrls",
-                    "desc": "The set of destination URLs for the creative.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "corrections",
-                    "desc": "@OutputOnly Shows any corrections that were applied to this creative.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Correction"
-                },
-                {
-                    "name": "impressionTrackingUrls",
-                    "desc": "The set of URLs to be called to record an impression.",
-                    "collection": "array",
-                    "type": "string"
-                },
-                {
-                    "name": "detectedProductCategories",
-                    "desc": "@OutputOnly Detected product categories, if any.\nSee the ad-product-categories.txt file in the technical documentation\nfor a list of IDs.",
-                    "collection": "array",
-                    "type": "int32"
-                }
-            ]
-        },
-        {
-            "name": "WatchCreativeRequest",
-            "desc": "A request for watching changes to creative Status.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "topic",
-                    "desc": "The Pub/Sub topic to publish notifications to.\nThis topic must already exist and must give permission to\nad-exchange-buyside-reports@google.com to write to the topic.\nThis should be the full resource name in\n\"projects/{project_id}/topics/{topic_id}\" format.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "HtmlContent",
-            "desc": "HTML content for a creative.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "width",
-                    "desc": "The width of the HTML snippet in pixels.",
-                    "type": "int32"
-                },
-                {
-                    "name": "snippet",
-                    "desc": "The HTML snippet that displays the ad when inserted in the web page.",
-                    "type": "string"
-                },
-                {
-                    "name": "height",
-                    "desc": "The height of the HTML snippet in pixels.",
-                    "type": "int32"
-                }
-            ]
-        },
-        {
-            "name": "ListClientUsersResponse",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "users",
-                    "desc": "The returned list of client users.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ClientUser"
+                    "refType": "Creative"
                 },
                 {
                     "name": "nextPageToken",
-                    "desc": "A token to retrieve the next page of results.\nPass this value in the\nListClientUsersRequest.pageToken\nfield in the subsequent call to the\nclients.invitations.list\nmethod to retrieve the next\npage of results.",
+                    "desc": "A token to retrieve the next page of results.\nPass this value in the\nListCreativesRequest.page_token\nfield in the subsequent call to `ListCreatives` method to retrieve the next\npage of results.",
                     "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "AppContext",
-            "desc": "@OutputOnly The app type the restriction applies to for mobile device.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "appTypes",
-                    "desc": "The app types this restriction applies to.",
-                    "collection": "array",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "SecurityContext",
-            "desc": "@OutputOnly A security context.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "securities",
-                    "desc": "The security types in this context.",
-                    "collection": "array",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "ClientUser",
-            "desc": "A client user is created under a client buyer and has restricted access to\nthe Ad Exchange Marketplace and certain other sections\nof the Ad Exchange Buyer UI based on the role\ngranted to the associated client buyer.\n\nThe only way a new client user can be created is via accepting an\nemail invitation\n(see the\naccounts.clients.invitations.create\nmethod).\n\nAll fields are required unless otherwise specified.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "email",
-                    "desc": "User's email address. The value of this field\nis ignored in an update operation.",
-                    "type": "string"
-                },
-                {
-                    "name": "clientAccountId",
-                    "desc": "Numerical account ID of the client buyer\nwith which the user is associated; the\nbuyer must be a client of the current sponsor buyer.\nThe value of this field is ignored in an update operation.",
-                    "type": "int64"
-                },
-                {
-                    "name": "status",
-                    "desc": "The status of the client user.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "USER_STATUS_UNSPECIFIED",
-                            "desc": "A placeholder for an undefined user status."
-                        },
-                        {
-                            "name": "PENDING",
-                            "desc": "A user who was already created but hasn't accepted the invitation yet."
-                        },
-                        {
-                            "name": "ACTIVE",
-                            "desc": "A user that is currently active."
-                        },
-                        {
-                            "name": "DISABLED",
-                            "desc": "A user that is currently disabled."
-                        }
-                    ]
-                },
-                {
-                    "name": "userId",
-                    "desc": "The unique numerical ID of the client user\nthat has accepted an invitation.\nThe value of this field is ignored in an update operation.",
-                    "type": "int64"
                 }
             ]
         },
@@ -1189,21 +786,234 @@
             ]
         },
         {
-            "name": "ListCreativesResponse",
-            "desc": "A response for listing creatives.",
+            "name": "ListClientUsersResponse",
             "type": "object",
             "fields": [
                 {
+                    "name": "users",
+                    "desc": "The returned list of client users.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ClientUser"
+                },
+                {
                     "name": "nextPageToken",
-                    "desc": "A token to retrieve the next page of results.\nPass this value in the\nListCreativesRequest.page_token\nfield in the subsequent call to `ListCreatives` method to retrieve the next\npage of results.",
+                    "desc": "A token to retrieve the next page of results.\nPass this value in the\nListClientUsersRequest.pageToken\nfield in the subsequent call to the\nclients.invitations.list\nmethod to retrieve the next\npage of results.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "FilteringStats",
+            "desc": "@OutputOnly Filtering reasons for this creative during a period of a single\nday (from midnight to midnight Pacific).",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "date",
+                    "desc": "The day during which the data was collected.\nThe data is collected from 00:00:00 to 23:59:59 PT.\nDuring switches from PST to PDT and back, the day may\ncontain 23 or 25 hours of data instead of the usual 24.",
+                    "type": "ref",
+                    "refType": "Date"
+                },
+                {
+                    "name": "reasons",
+                    "desc": "The set of filtering reasons for this date.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Reason"
+                }
+            ]
+        },
+        {
+            "name": "Client",
+            "desc": "A client resource represents a client buyer\u0026mdash;an agency,\na brand, or an advertiser customer of the sponsor buyer.\nUsers associated with the client buyer have restricted access to\nthe Ad Exchange Marketplace and certain other sections\nof the Ad Exchange Buyer UI based on the role\ngranted to the client buyer.\nAll fields are required unless otherwise specified.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "clientAccountId",
+                    "desc": "The globally-unique numerical ID of the client.\nThe value of this field is ignored in create and update operations.",
+                    "type": "int64"
+                },
+                {
+                    "name": "entityName",
+                    "desc": "The name of the entity. This field is automatically fetched based on\nthe type and ID.\nThe value of this field is ignored in create and update operations.",
                     "type": "string"
                 },
                 {
-                    "name": "creatives",
-                    "desc": "The list of creatives.",
+                    "name": "status",
+                    "desc": "The status of the client buyer.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "CLIENT_STATUS_UNSPECIFIED",
+                            "desc": "A placeholder for an undefined client status."
+                        },
+                        {
+                            "name": "DISABLED",
+                            "desc": "A client that is currently disabled."
+                        },
+                        {
+                            "name": "ACTIVE",
+                            "desc": "A client that is currently active."
+                        }
+                    ]
+                },
+                {
+                    "name": "entityType",
+                    "desc": "The type of the client entity: `ADVERTISER`, `BRAND`, or `AGENCY`.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "ENTITY_TYPE_UNSPECIFIED",
+                            "desc": "A placeholder for an undefined client entity type. Should not be used."
+                        },
+                        {
+                            "name": "ADVERTISER",
+                            "desc": "An advertiser."
+                        },
+                        {
+                            "name": "BRAND",
+                            "desc": "A brand."
+                        },
+                        {
+                            "name": "AGENCY",
+                            "desc": "An advertising agency."
+                        }
+                    ]
+                },
+                {
+                    "name": "clientName",
+                    "desc": "Name used to represent this client to publishers.\nYou may have multiple clients that map to the same entity,\nbut for each client the combination of `clientName` and entity\nmust be unique.\nYou can specify this field as empty.",
+                    "type": "string"
+                },
+                {
+                    "name": "role",
+                    "desc": "The role which is assigned to the client buyer. Each role implies a set of\npermissions granted to the client. Must be one of `CLIENT_DEAL_VIEWER`,\n`CLIENT_DEAL_NEGOTIATOR` or `CLIENT_DEAL_APPROVER`.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "CLIENT_ROLE_UNSPECIFIED",
+                            "desc": "A placeholder for an undefined client role."
+                        },
+                        {
+                            "name": "CLIENT_DEAL_VIEWER",
+                            "desc": "Users associated with this client can see publisher deal offers\nin the Marketplace.\nThey can neither negotiate proposals nor approve deals.\nIf this client is visible to publishers, they can send deal proposals\nto this client."
+                        },
+                        {
+                            "name": "CLIENT_DEAL_NEGOTIATOR",
+                            "desc": "Users associated with this client can respond to deal proposals\nsent to them by publishers. They can also initiate deal proposals\nof their own."
+                        },
+                        {
+                            "name": "CLIENT_DEAL_APPROVER",
+                            "desc": "Users associated with this client can approve eligible deals\non your behalf. Some deals may still explicitly require publisher\nfinalization. If this role is not selected, the sponsor buyer\nwill need to manually approve each of their deals."
+                        }
+                    ]
+                },
+                {
+                    "name": "visibleToSeller",
+                    "desc": "Whether the client buyer will be visible to sellers.",
+                    "type": "bool"
+                },
+                {
+                    "name": "entityId",
+                    "desc": "Numerical identifier of the client entity.\nThe entity can be an advertiser, a brand, or an agency.\nThis identifier is unique among all the entities with the same type.\n\nA list of all known advertisers with their identifiers is available in the\n[advertisers.txt](https://storage.googleapis.com/adx-rtb-dictionaries/advertisers.txt)\nfile.\n\nA list of all known brands with their identifiers is available in the\n[brands.txt](https://storage.googleapis.com/adx-rtb-dictionaries/brands.txt)\nfile.\n\nA list of all known agencies with their identifiers is available in the\n[agencies.txt](https://storage.googleapis.com/adx-rtb-dictionaries/agencies.txt)\nfile.",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "Image",
+            "desc": "An image resource. You may provide a larger image than was requested,\nso long as the aspect ratio is preserved.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "width",
+                    "desc": "Image width in pixels.",
+                    "type": "int32"
+                },
+                {
+                    "name": "url",
+                    "desc": "The URL of the image.",
+                    "type": "string"
+                },
+                {
+                    "name": "height",
+                    "desc": "Image height in pixels.",
+                    "type": "int32"
+                }
+            ]
+        },
+        {
+            "name": "AddDealAssociationRequest",
+            "desc": "A request for associating a deal and a creative.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "association",
+                    "desc": "The association between a creative and a deal that should be added.",
+                    "type": "ref",
+                    "refType": "CreativeDealAssociation"
+                }
+            ]
+        },
+        {
+            "name": "Empty",
+            "desc": "A generic empty message that you can re-use to avoid defining duplicated\nempty messages in your APIs. A typical example is to use it as the request\nor the response type of an API method. For instance:\n\n    service Foo {\n      rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);\n    }\n\nThe JSON representation for `Empty` is empty JSON object `{}`.",
+            "type": "object"
+        },
+        {
+            "name": "SecurityContext",
+            "desc": "@OutputOnly A security context.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "securities",
+                    "desc": "The security types in this context.",
+                    "collection": "array",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "VideoContent",
+            "desc": "Video content for a creative.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "videoUrl",
+                    "desc": "The URL to fetch a video ad.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "LocationContext",
+            "desc": "@OutputOnly The Geo criteria the restriction applies to.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "geoCriteriaIds",
+                    "desc": "IDs representing the geo location for this context.\nPlease refer to the\n[geo-table.csv](https://storage.googleapis.com/adx-rtb-dictionaries/geo-table.csv)\nfile for different geo criteria IDs.",
+                    "collection": "array",
+                    "type": "int32"
+                }
+            ]
+        },
+        {
+            "name": "ListDealAssociationsResponse",
+            "desc": "A response for listing creative and deal associations",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "associations",
+                    "desc": "The list of associations.",
                     "collection": "array",
                     "type": "ref",
-                    "refType": "Creative"
+                    "refType": "CreativeDealAssociation"
+                },
+                {
+                    "name": "nextPageToken",
+                    "desc": "A token to retrieve the next page of results.\nPass this value in the\nListDealAssociationsRequest.page_token\nfield in the subsequent call to 'ListDealAssociation' method to retrieve\nthe next page of results.",
+                    "type": "string"
                 }
             ]
         },
@@ -1212,6 +1022,12 @@
             "desc": "The serving context for this restriction.",
             "type": "object",
             "fields": [
+                {
+                    "name": "platform",
+                    "desc": "Matches impressions coming from a particular platform.",
+                    "type": "ref",
+                    "refType": "PlatformContext"
+                },
                 {
                     "name": "location",
                     "desc": "Matches impressions coming from users *or* publishers in a specific\nlocation.",
@@ -1246,12 +1062,311 @@
                     "desc": "Matches impressions for a particular security type.",
                     "type": "ref",
                     "refType": "SecurityContext"
+                }
+            ]
+        },
+        {
+            "name": "ClientUserInvitation",
+            "desc": "An invitation for a new client user to get access to the Ad Exchange\nBuyer UI.\nAll fields are required unless otherwise specified.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "invitationId",
+                    "desc": "The unique numerical ID of the invitation that is sent to the user.\nThe value of this field is ignored in create operations.",
+                    "type": "int64"
                 },
                 {
-                    "name": "platform",
-                    "desc": "Matches impressions coming from a particular platform.",
+                    "name": "email",
+                    "desc": "The email address to which the invitation is sent. Email\naddresses should be unique among all client users under each sponsor\nbuyer.",
+                    "type": "string"
+                },
+                {
+                    "name": "clientAccountId",
+                    "desc": "Numerical account ID of the client buyer\nthat the invited user is associated with.\nThe value of this field is ignored in create operations.",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "ListClientsResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "nextPageToken",
+                    "desc": "A token to retrieve the next page of results.\nPass this value in the\nListClientsRequest.pageToken\nfield in the subsequent call to the\naccounts.clients.list method\nto retrieve the next page of results.",
+                    "type": "string"
+                },
+                {
+                    "name": "clients",
+                    "desc": "The returned list of clients.",
+                    "collection": "array",
                     "type": "ref",
-                    "refType": "PlatformContext"
+                    "refType": "Client"
+                }
+            ]
+        },
+        {
+            "name": "NativeContent",
+            "desc": "Native content for a creative.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "headline",
+                    "desc": "A short title for the ad.",
+                    "type": "string"
+                },
+                {
+                    "name": "appIcon",
+                    "desc": "The app icon, for app download ads.",
+                    "type": "ref",
+                    "refType": "Image"
+                },
+                {
+                    "name": "callToAction",
+                    "desc": "A label for the button that the user is supposed to click.",
+                    "type": "string"
+                },
+                {
+                    "name": "body",
+                    "desc": "A long description of the ad.",
+                    "type": "string"
+                },
+                {
+                    "name": "starRating",
+                    "desc": "The app rating in the app store. Must be in the range [0-5].",
+                    "type": "float64"
+                },
+                {
+                    "name": "videoUrl",
+                    "desc": "The URL to fetch a native video ad.",
+                    "type": "string"
+                },
+                {
+                    "name": "clickLinkUrl",
+                    "desc": "The URL that the browser/SDK will load when the user clicks the ad.",
+                    "type": "string"
+                },
+                {
+                    "name": "logo",
+                    "desc": "A smaller image, for the advertiser's logo.",
+                    "type": "ref",
+                    "refType": "Image"
+                },
+                {
+                    "name": "storeUrl",
+                    "desc": "The URL to the app store to purchase/download the promoted app.",
+                    "type": "string"
+                },
+                {
+                    "name": "priceDisplayText",
+                    "desc": "The price of the promoted app including currency info.",
+                    "type": "string"
+                },
+                {
+                    "name": "clickTrackingUrl",
+                    "desc": "The URL to use for click tracking.",
+                    "type": "string"
+                },
+                {
+                    "name": "image",
+                    "desc": "A large image.",
+                    "type": "ref",
+                    "refType": "Image"
+                },
+                {
+                    "name": "advertiserName",
+                    "desc": "The name of the advertiser or sponsor, to be displayed in the ad creative.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "HtmlContent",
+            "desc": "HTML content for a creative.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "width",
+                    "desc": "The width of the HTML snippet in pixels.",
+                    "type": "int32"
+                },
+                {
+                    "name": "snippet",
+                    "desc": "The HTML snippet that displays the ad when inserted in the web page.",
+                    "type": "string"
+                },
+                {
+                    "name": "height",
+                    "desc": "The height of the HTML snippet in pixels.",
+                    "type": "int32"
+                }
+            ]
+        },
+        {
+            "name": "AuctionContext",
+            "desc": "@OutputOnly The auction type the restriction applies to.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "auctionTypes",
+                    "desc": "The auction types this restriction applies to.",
+                    "collection": "array",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "ListClientUserInvitationsResponse",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "nextPageToken",
+                    "desc": "A token to retrieve the next page of results.\nPass this value in the\nListClientUserInvitationsRequest.pageToken\nfield in the subsequent call to the\nclients.invitations.list\nmethod to retrieve the next\npage of results.",
+                    "type": "string"
+                },
+                {
+                    "name": "invitations",
+                    "desc": "The returned list of client users.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ClientUserInvitation"
+                }
+            ]
+        },
+        {
+            "name": "ClientUser",
+            "desc": "A client user is created under a client buyer and has restricted access to\nthe Ad Exchange Marketplace and certain other sections\nof the Ad Exchange Buyer UI based on the role\ngranted to the associated client buyer.\n\nThe only way a new client user can be created is via accepting an\nemail invitation\n(see the\naccounts.clients.invitations.create\nmethod).\n\nAll fields are required unless otherwise specified.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "clientAccountId",
+                    "desc": "Numerical account ID of the client buyer\nwith which the user is associated; the\nbuyer must be a client of the current sponsor buyer.\nThe value of this field is ignored in an update operation.",
+                    "type": "int64"
+                },
+                {
+                    "name": "status",
+                    "desc": "The status of the client user.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "USER_STATUS_UNSPECIFIED",
+                            "desc": "A placeholder for an undefined user status."
+                        },
+                        {
+                            "name": "PENDING",
+                            "desc": "A user who was already created but hasn't accepted the invitation yet."
+                        },
+                        {
+                            "name": "ACTIVE",
+                            "desc": "A user that is currently active."
+                        },
+                        {
+                            "name": "DISABLED",
+                            "desc": "A user that is currently disabled."
+                        }
+                    ]
+                },
+                {
+                    "name": "userId",
+                    "desc": "The unique numerical ID of the client user\nthat has accepted an invitation.\nThe value of this field is ignored in an update operation.",
+                    "type": "int64"
+                },
+                {
+                    "name": "email",
+                    "desc": "User's email address. The value of this field\nis ignored in an update operation.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "CreativeDealAssociation",
+            "desc": "The association between a creative and a deal.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "dealsId",
+                    "desc": "The externalDealId for the deal associated with the creative.",
+                    "type": "string"
+                },
+                {
+                    "name": "accountId",
+                    "desc": "The account the creative belongs to.",
+                    "type": "string"
+                },
+                {
+                    "name": "creativeId",
+                    "desc": "The ID of the creative associated with the deal.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "RemoveDealAssociationRequest",
+            "desc": "A request for removing the association between a deal and a creative.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "association",
+                    "desc": "The association between a creative and a deal that should be removed.",
+                    "type": "ref",
+                    "refType": "CreativeDealAssociation"
+                }
+            ]
+        },
+        {
+            "name": "StopWatchingCreativeRequest",
+            "desc": "A request for stopping notifications for changes to creative Status.",
+            "type": "object"
+        },
+        {
+            "name": "Date",
+            "desc": "Represents a whole calendar date, e.g. date of birth. The time of day and\ntime zone are either specified elsewhere or are not significant. The date\nis relative to the Proleptic Gregorian Calendar. The day may be 0 to\nrepresent a year and month where the day is not significant, e.g. credit card\nexpiration date. The year may be 0 to represent a month and day independent\nof year, e.g. anniversary date. Related types are google.type.TimeOfDay\nand `google.protobuf.Timestamp`.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "month",
+                    "desc": "Month of year. Must be from 1 to 12.",
+                    "type": "int32"
+                },
+                {
+                    "name": "year",
+                    "desc": "Year of date. Must be from 1 to 9999, or 0 if specifying a date without\na year.",
+                    "type": "int32"
+                },
+                {
+                    "name": "day",
+                    "desc": "Day of month. Must be from 1 to 31 and valid for the year and month, or 0\nif specifying a year/month where the day is not significant.",
+                    "type": "int32"
+                }
+            ]
+        },
+        {
+            "name": "Reason",
+            "desc": "A specific filtering status and how many times it occurred.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "status",
+                    "desc": "The filtering status code. Please refer to the\n[creative-status-codes.txt](https://storage.googleapis.com/adx-rtb-dictionaries/creative-status-codes.txt)\nfile for different statuses.",
+                    "type": "int32"
+                },
+                {
+                    "name": "count",
+                    "desc": "The number of times the creative was filtered for the status. The\ncount is aggregated across all publishers on the exchange.",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "AppContext",
+            "desc": "@OutputOnly The app type the restriction applies to for mobile device.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "appTypes",
+                    "desc": "The app types this restriction applies to.",
+                    "collection": "array",
+                    "type": "string"
                 }
             ]
         },
@@ -1260,6 +1375,13 @@
             "desc": "@OutputOnly Shows any corrections that were applied to this creative.",
             "type": "object",
             "fields": [
+                {
+                    "name": "contexts",
+                    "desc": "The contexts for the correction.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "ServingContext"
+                },
                 {
                     "name": "details",
                     "desc": "Additional details about what was corrected.",
@@ -1320,127 +1442,6 @@
                             "desc": "The ad contains video content."
                         }
                     ]
-                },
-                {
-                    "name": "contexts",
-                    "desc": "The contexts for the correction.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ServingContext"
-                }
-            ]
-        },
-        {
-            "name": "AddDealAssociationRequest",
-            "desc": "A request for associating a deal and a creative.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "association",
-                    "desc": "The association between a creative and a deal that should be added.",
-                    "type": "ref",
-                    "refType": "CreativeDealAssociation"
-                }
-            ]
-        },
-        {
-            "name": "CreativeDealAssociation",
-            "desc": "The association between a creative and a deal.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "dealsId",
-                    "desc": "The externalDealId for the deal associated with the creative.",
-                    "type": "string"
-                },
-                {
-                    "name": "accountId",
-                    "desc": "The account the creative belongs to.",
-                    "type": "string"
-                },
-                {
-                    "name": "creativeId",
-                    "desc": "The ID of the creative associated with the deal.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "RemoveDealAssociationRequest",
-            "desc": "A request for removing the association between a deal and a creative.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "association",
-                    "desc": "The association between a creative and a deal that should be removed.",
-                    "type": "ref",
-                    "refType": "CreativeDealAssociation"
-                }
-            ]
-        },
-        {
-            "name": "StopWatchingCreativeRequest",
-            "desc": "A request for stopping notifications for changes to creative Status.",
-            "type": "object"
-        },
-        {
-            "name": "ListClientsResponse",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "nextPageToken",
-                    "desc": "A token to retrieve the next page of results.\nPass this value in the\nListClientsRequest.pageToken\nfield in the subsequent call to the\naccounts.clients.list method\nto retrieve the next page of results.",
-                    "type": "string"
-                },
-                {
-                    "name": "clients",
-                    "desc": "The returned list of clients.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Client"
-                }
-            ]
-        },
-        {
-            "name": "VideoContent",
-            "desc": "Video content for a creative.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "videoUrl",
-                    "desc": "The URL to fetch a video ad.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "ListClientUserInvitationsResponse",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "nextPageToken",
-                    "desc": "A token to retrieve the next page of results.\nPass this value in the\nListClientUserInvitationsRequest.pageToken\nfield in the subsequent call to the\nclients.invitations.list\nmethod to retrieve the next\npage of results.",
-                    "type": "string"
-                },
-                {
-                    "name": "invitations",
-                    "desc": "The returned list of client users.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "ClientUserInvitation"
-                }
-            ]
-        },
-        {
-            "name": "PlatformContext",
-            "desc": "@OutputOnly The type of platform the restriction applies to.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "platforms",
-                    "desc": "The platforms this restriction applies to.",
-                    "collection": "array",
-                    "type": "string"
                 }
             ]
         }
@@ -1453,10 +1454,35 @@
                     "name": "clients",
                     "methods": [
                         {
-                            "name": "create",
-                            "desc": "Creates a new client buyer.",
+                            "path": "v2beta1/accounts/{accountId}/clients/{clientAccountId}",
+                            "httpMethod": "PUT",
+                            "name": "update",
+                            "desc": "Updates an existing client buyer.",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adexchange.buyer"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "Unique numerical account ID for the buyer of which the client buyer\nis a customer; the sponsor buyer to update a client for. (required)",
+                                    "required": true,
+                                    "type": "int64"
+                                },
+                                {
+                                    "name": "clientAccountId",
+                                    "desc": "Unique numerical account ID of the client to update. (required)",
+                                    "required": true,
+                                    "type": "int64"
+                                }
+                            ],
+                            "request": "Client",
+                            "response": "Client"
+                        },
+                        {
                             "path": "v2beta1/accounts/{accountId}/clients",
                             "httpMethod": "POST",
+                            "name": "create",
+                            "desc": "Creates a new client buyer.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/adexchange.buyer"
                             ],
@@ -1472,10 +1498,10 @@
                             "response": "Client"
                         },
                         {
-                            "name": "get",
-                            "desc": "Gets a client buyer with a given client account ID.",
                             "path": "v2beta1/accounts/{accountId}/clients/{clientAccountId}",
                             "httpMethod": "GET",
+                            "name": "get",
+                            "desc": "Gets a client buyer with a given client account ID.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/adexchange.buyer"
                             ],
@@ -1496,10 +1522,10 @@
                             "response": "Client"
                         },
                         {
-                            "name": "list",
-                            "desc": "Lists all the clients for the current sponsor buyer.",
                             "path": "v2beta1/accounts/{accountId}/clients",
                             "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "Lists all the clients for the current sponsor buyer.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/adexchange.buyer"
                             ],
@@ -1511,44 +1537,19 @@
                                     "type": "int64"
                                 }
                             ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "pageSize",
-                                    "desc": "Requested page size. The server may return fewer clients than requested.\nIf unspecified, the server will pick an appropriate default.",
-                                    "type": "int32"
-                                },
+                            "optionalQueryParams": [
                                 {
                                     "name": "pageToken",
                                     "desc": "A token identifying a page of results the server should return.\nTypically, this is the value of\nListClientsResponse.nextPageToken\nreturned from the previous call to the\naccounts.clients.list method.",
                                     "type": "string"
+                                },
+                                {
+                                    "name": "pageSize",
+                                    "desc": "Requested page size. The server may return fewer clients than requested.\nIf unspecified, the server will pick an appropriate default.",
+                                    "type": "int32"
                                 }
                             ],
                             "response": "ListClientsResponse"
-                        },
-                        {
-                            "name": "update",
-                            "desc": "Updates an existing client buyer.",
-                            "path": "v2beta1/accounts/{accountId}/clients/{clientAccountId}",
-                            "httpMethod": "PUT",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/adexchange.buyer"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "accountId",
-                                    "desc": "Unique numerical account ID for the buyer of which the client buyer\nis a customer; the sponsor buyer to update a client for. (required)",
-                                    "required": true,
-                                    "type": "int64"
-                                },
-                                {
-                                    "name": "clientAccountId",
-                                    "desc": "Unique numerical account ID of the client to update. (required)",
-                                    "required": true,
-                                    "type": "int64"
-                                }
-                            ],
-                            "request": "Client",
-                            "response": "Client"
                         }
                     ],
                     "resources": [
@@ -1556,10 +1557,46 @@
                             "name": "users",
                             "methods": [
                                 {
-                                    "name": "get",
-                                    "desc": "Retrieves an existing client user.",
+                                    "path": "v2beta1/accounts/{accountId}/clients/{clientAccountId}/users",
+                                    "httpMethod": "GET",
+                                    "name": "list",
+                                    "desc": "Lists all the known client users for a specified\nsponsor buyer account ID.",
+                                    "scopes": [
+                                        "https://www.googleapis.com/auth/adexchange.buyer"
+                                    ],
+                                    "pathParams": [
+                                        {
+                                            "name": "accountId",
+                                            "desc": "Numerical account ID of the sponsor buyer of the client to list users for.\n(required)",
+                                            "required": true,
+                                            "type": "int64"
+                                        },
+                                        {
+                                            "name": "clientAccountId",
+                                            "desc": "The account ID of the client buyer to list users for. (required)\nYou must specify either a string representation of a\nnumerical account identifier or the `-` character\nto list all the client users for all the clients\nof a given sponsor buyer.",
+                                            "required": true,
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "optionalQueryParams": [
+                                        {
+                                            "name": "pageSize",
+                                            "desc": "Requested page size. The server may return fewer clients than requested.\nIf unspecified, the server will pick an appropriate default.",
+                                            "type": "int32"
+                                        },
+                                        {
+                                            "name": "pageToken",
+                                            "desc": "A token identifying a page of results the server should return.\nTypically, this is the value of\nListClientUsersResponse.nextPageToken\nreturned from the previous call to the\naccounts.clients.users.list method.",
+                                            "type": "string"
+                                        }
+                                    ],
+                                    "response": "ListClientUsersResponse"
+                                },
+                                {
                                     "path": "v2beta1/accounts/{accountId}/clients/{clientAccountId}/users/{userId}",
                                     "httpMethod": "GET",
+                                    "name": "get",
+                                    "desc": "Retrieves an existing client user.",
                                     "scopes": [
                                         "https://www.googleapis.com/auth/adexchange.buyer"
                                     ],
@@ -1586,10 +1623,10 @@
                                     "response": "ClientUser"
                                 },
                                 {
-                                    "name": "update",
-                                    "desc": "Updates an existing client user.\nOnly the user status can be changed on update.",
                                     "path": "v2beta1/accounts/{accountId}/clients/{clientAccountId}/users/{userId}",
                                     "httpMethod": "PUT",
+                                    "name": "update",
+                                    "desc": "Updates an existing client user.\nOnly the user status can be changed on update.",
                                     "scopes": [
                                         "https://www.googleapis.com/auth/adexchange.buyer"
                                     ],
@@ -1615,42 +1652,6 @@
                                     ],
                                     "request": "ClientUser",
                                     "response": "ClientUser"
-                                },
-                                {
-                                    "name": "list",
-                                    "desc": "Lists all the known client users for a specified\nsponsor buyer account ID.",
-                                    "path": "v2beta1/accounts/{accountId}/clients/{clientAccountId}/users",
-                                    "httpMethod": "GET",
-                                    "scopes": [
-                                        "https://www.googleapis.com/auth/adexchange.buyer"
-                                    ],
-                                    "pathParams": [
-                                        {
-                                            "name": "accountId",
-                                            "desc": "Numerical account ID of the sponsor buyer of the client to list users for.\n(required)",
-                                            "required": true,
-                                            "type": "int64"
-                                        },
-                                        {
-                                            "name": "clientAccountId",
-                                            "desc": "The account ID of the client buyer to list users for. (required)\nYou must specify either a string representation of a\nnumerical account identifier or the `-` character\nto list all the client users for all the clients\nof a given sponsor buyer.",
-                                            "required": true,
-                                            "type": "string"
-                                        }
-                                    ],
-                                    "optinalQueryParams": [
-                                        {
-                                            "name": "pageToken",
-                                            "desc": "A token identifying a page of results the server should return.\nTypically, this is the value of\nListClientUsersResponse.nextPageToken\nreturned from the previous call to the\naccounts.clients.users.list method.",
-                                            "type": "string"
-                                        },
-                                        {
-                                            "name": "pageSize",
-                                            "desc": "Requested page size. The server may return fewer clients than requested.\nIf unspecified, the server will pick an appropriate default.",
-                                            "type": "int32"
-                                        }
-                                    ],
-                                    "response": "ListClientUsersResponse"
                                 }
                             ]
                         },
@@ -1658,10 +1659,10 @@
                             "name": "invitations",
                             "methods": [
                                 {
-                                    "name": "get",
-                                    "desc": "Retrieves an existing client user invitation.",
                                     "path": "v2beta1/accounts/{accountId}/clients/{clientAccountId}/invitations/{invitationId}",
                                     "httpMethod": "GET",
+                                    "name": "get",
+                                    "desc": "Retrieves an existing client user invitation.",
                                     "scopes": [
                                         "https://www.googleapis.com/auth/adexchange.buyer"
                                     ],
@@ -1688,10 +1689,10 @@
                                     "response": "ClientUserInvitation"
                                 },
                                 {
-                                    "name": "list",
-                                    "desc": "Lists all the client users invitations for a client\nwith a given account ID.",
                                     "path": "v2beta1/accounts/{accountId}/clients/{clientAccountId}/invitations",
                                     "httpMethod": "GET",
+                                    "name": "list",
+                                    "desc": "Lists all the client users invitations for a client\nwith a given account ID.",
                                     "scopes": [
                                         "https://www.googleapis.com/auth/adexchange.buyer"
                                     ],
@@ -1709,25 +1710,25 @@
                                             "type": "string"
                                         }
                                     ],
-                                    "optinalQueryParams": [
-                                        {
-                                            "name": "pageToken",
-                                            "desc": "A token identifying a page of results the server should return.\nTypically, this is the value of\nListClientUserInvitationsResponse.nextPageToken\nreturned from the previous call to the\nclients.invitations.list\nmethod.",
-                                            "type": "string"
-                                        },
+                                    "optionalQueryParams": [
                                         {
                                             "name": "pageSize",
                                             "desc": "Requested page size. Server may return fewer clients than requested.\nIf unspecified, server will pick an appropriate default.",
                                             "type": "int32"
+                                        },
+                                        {
+                                            "name": "pageToken",
+                                            "desc": "A token identifying a page of results the server should return.\nTypically, this is the value of\nListClientUserInvitationsResponse.nextPageToken\nreturned from the previous call to the\nclients.invitations.list\nmethod.",
+                                            "type": "string"
                                         }
                                     ],
                                     "response": "ListClientUserInvitationsResponse"
                                 },
                                 {
-                                    "name": "create",
-                                    "desc": "Creates and sends out an email invitation to access\nan Ad Exchange client buyer account.",
                                     "path": "v2beta1/accounts/{accountId}/clients/{clientAccountId}/invitations",
                                     "httpMethod": "POST",
+                                    "name": "create",
+                                    "desc": "Creates and sends out an email invitation to access\nan Ad Exchange client buyer account.",
                                     "scopes": [
                                         "https://www.googleapis.com/auth/adexchange.buyer"
                                     ],
@@ -1756,70 +1757,10 @@
                     "name": "creatives",
                     "methods": [
                         {
-                            "name": "update",
-                            "desc": "Updates a creative.",
-                            "path": "v2beta1/accounts/{accountId}/creatives/{creativeId}",
-                            "httpMethod": "PUT",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/adexchange.buyer"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "accountId",
-                                    "desc": "The account that this creative belongs to.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
-                                    "required": true,
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "creativeId",
-                                    "desc": "The buyer-defined creative ID of this creative.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
-                                    "required": true,
-                                    "type": "string"
-                                }
-                            ],
-                            "request": "Creative",
-                            "response": "Creative"
-                        },
-                        {
-                            "name": "list",
-                            "desc": "Lists creatives.",
-                            "path": "v2beta1/accounts/{accountId}/creatives",
-                            "httpMethod": "GET",
-                            "scopes": [
-                                "https://www.googleapis.com/auth/adexchange.buyer"
-                            ],
-                            "pathParams": [
-                                {
-                                    "name": "accountId",
-                                    "desc": "The account to list the creatives from.\nSpecify \"-\" to list all creatives the current user has access to.",
-                                    "required": true,
-                                    "type": "string"
-                                }
-                            ],
-                            "optinalQueryParams": [
-                                {
-                                    "name": "query",
-                                    "desc": "An optional query string to filter creatives. If no filter is specified,\nall active creatives will be returned.\nSupported queries are:\n\u003cul\u003e\n\u003cli\u003eaccountId=\u003ci\u003eaccount_id_string\u003c/i\u003e\n\u003cli\u003ecreativeId=\u003ci\u003ecreative_id_string\u003c/i\u003e\n\u003cli\u003edealsStatus: {approved, conditionally_approved, disapproved,\n                   not_checked}\n\u003cli\u003eopenAuctionStatus: {approved, conditionally_approved, disapproved,\n                          not_checked}\n\u003cli\u003eattribute: {a numeric attribute from the list of attributes}\n\u003cli\u003edisapprovalReason: {a reason from DisapprovalReason\n\u003c/ul\u003e\nExample: 'accountId=12345 AND (dealsStatus:disapproved AND disapprovalReason:unacceptable_content) OR attribute:47'",
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "pageToken",
-                                    "desc": "A token identifying a page of results the server should return.\nTypically, this is the value of\nListCreativesResponse.next_page_token\nreturned from the previous call to 'ListCreatives' method.",
-                                    "type": "string"
-                                },
-                                {
-                                    "name": "pageSize",
-                                    "desc": "Requested page size. The server may return fewer creatives than requested\n(due to timeout constraint) even if more are available via another call.\nIf unspecified, server will pick an appropriate default.\nAcceptable values are 1 to 1000, inclusive.",
-                                    "type": "int32"
-                                }
-                            ],
-                            "response": "ListCreativesResponse"
-                        },
-                        {
-                            "name": "create",
-                            "desc": "Creates a creative.",
                             "path": "v2beta1/accounts/{accountId}/creatives",
                             "httpMethod": "POST",
+                            "name": "create",
+                            "desc": "Creates a creative.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/adexchange.buyer"
                             ],
@@ -1831,7 +1772,7 @@
                                     "type": "string"
                                 }
                             ],
-                            "optinalQueryParams": [
+                            "optionalQueryParams": [
                                 {
                                     "name": "duplicateIdMode",
                                     "desc": "Indicates if multiple creatives can share an ID or not. Default is\nNO_DUPLICATES (one ID per creative).",
@@ -1850,10 +1791,10 @@
                             "response": "Creative"
                         },
                         {
-                            "name": "stopWatching",
-                            "desc": "Stops watching a creative. Will stop push notifications being sent to the\ntopics when the creative changes status.",
                             "path": "v2beta1/accounts/{accountId}/creatives/{creativeId}:stopWatching",
                             "httpMethod": "POST",
+                            "name": "stopWatching",
+                            "desc": "Stops watching a creative. Will stop push notifications being sent to the\ntopics when the creative changes status.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/adexchange.buyer"
                             ],
@@ -1875,10 +1816,10 @@
                             "response": "Empty"
                         },
                         {
-                            "name": "get",
-                            "desc": "Gets a creative.",
                             "path": "v2beta1/accounts/{accountId}/creatives/{creativeId}",
                             "httpMethod": "GET",
+                            "name": "get",
+                            "desc": "Gets a creative.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/adexchange.buyer"
                             ],
@@ -1899,10 +1840,10 @@
                             "response": "Creative"
                         },
                         {
-                            "name": "watch",
-                            "desc": "Watches a creative. Will result in push notifications being sent to the\ntopic when the creative changes status.",
                             "path": "v2beta1/accounts/{accountId}/creatives/{creativeId}:watch",
                             "httpMethod": "POST",
+                            "name": "watch",
+                            "desc": "Watches a creative. Will result in push notifications being sent to the\ntopic when the creative changes status.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/adexchange.buyer"
                             ],
@@ -1922,6 +1863,66 @@
                             ],
                             "request": "WatchCreativeRequest",
                             "response": "Empty"
+                        },
+                        {
+                            "path": "v2beta1/accounts/{accountId}/creatives/{creativeId}",
+                            "httpMethod": "PUT",
+                            "name": "update",
+                            "desc": "Updates a creative.",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adexchange.buyer"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "The account that this creative belongs to.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "creativeId",
+                                    "desc": "The buyer-defined creative ID of this creative.\nCan be used to filter the response of the\ncreatives.list\nmethod.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "request": "Creative",
+                            "response": "Creative"
+                        },
+                        {
+                            "path": "v2beta1/accounts/{accountId}/creatives",
+                            "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "Lists creatives.",
+                            "scopes": [
+                                "https://www.googleapis.com/auth/adexchange.buyer"
+                            ],
+                            "pathParams": [
+                                {
+                                    "name": "accountId",
+                                    "desc": "The account to list the creatives from.\nSpecify \"-\" to list all creatives the current user has access to.",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            ],
+                            "optionalQueryParams": [
+                                {
+                                    "name": "query",
+                                    "desc": "An optional query string to filter creatives. If no filter is specified,\nall active creatives will be returned.\nSupported queries are:\n\u003cul\u003e\n\u003cli\u003eaccountId=\u003ci\u003eaccount_id_string\u003c/i\u003e\n\u003cli\u003ecreativeId=\u003ci\u003ecreative_id_string\u003c/i\u003e\n\u003cli\u003edealsStatus: {approved, conditionally_approved, disapproved,\n                   not_checked}\n\u003cli\u003eopenAuctionStatus: {approved, conditionally_approved, disapproved,\n                          not_checked}\n\u003cli\u003eattribute: {a numeric attribute from the list of attributes}\n\u003cli\u003edisapprovalReason: {a reason from DisapprovalReason\n\u003c/ul\u003e\nExample: 'accountId=12345 AND (dealsStatus:disapproved AND disapprovalReason:unacceptable_content) OR attribute:47'",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "pageToken",
+                                    "desc": "A token identifying a page of results the server should return.\nTypically, this is the value of\nListCreativesResponse.next_page_token\nreturned from the previous call to 'ListCreatives' method.",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "pageSize",
+                                    "desc": "Requested page size. The server may return fewer creatives than requested\n(due to timeout constraint) even if more are available via another call.\nIf unspecified, server will pick an appropriate default.\nAcceptable values are 1 to 1000, inclusive.",
+                                    "type": "int32"
+                                }
+                            ],
+                            "response": "ListCreativesResponse"
                         }
                     ],
                     "resources": [
@@ -1929,10 +1930,10 @@
                             "name": "dealAssociations",
                             "methods": [
                                 {
-                                    "name": "list",
-                                    "desc": "List all creative-deal associations.",
                                     "path": "v2beta1/accounts/{accountId}/creatives/{creativeId}/dealAssociations",
                                     "httpMethod": "GET",
+                                    "name": "list",
+                                    "desc": "List all creative-deal associations.",
                                     "scopes": [
                                         "https://www.googleapis.com/auth/adexchange.buyer"
                                     ],
@@ -1950,7 +1951,7 @@
                                             "type": "string"
                                         }
                                     ],
-                                    "optinalQueryParams": [
+                                    "optionalQueryParams": [
                                         {
                                             "name": "pageToken",
                                             "desc": "A token identifying a page of results the server should return.\nTypically, this is the value of\nListDealAssociationsResponse.next_page_token\nreturned from the previous call to 'ListDealAssociations' method.",
@@ -1970,10 +1971,10 @@
                                     "response": "ListDealAssociationsResponse"
                                 },
                                 {
-                                    "name": "add",
-                                    "desc": "Associate an existing deal with a creative.",
                                     "path": "v2beta1/accounts/{accountId}/creatives/{creativeId}/dealAssociations:add",
                                     "httpMethod": "POST",
+                                    "name": "add",
+                                    "desc": "Associate an existing deal with a creative.",
                                     "scopes": [
                                         "https://www.googleapis.com/auth/adexchange.buyer"
                                     ],
@@ -1995,10 +1996,10 @@
                                     "response": "Empty"
                                 },
                                 {
-                                    "name": "remove",
-                                    "desc": "Remove the association between a deal and a creative.",
                                     "path": "v2beta1/accounts/{accountId}/creatives/{creativeId}/dealAssociations:remove",
                                     "httpMethod": "POST",
+                                    "name": "remove",
+                                    "desc": "Remove the association between a deal and a creative.",
                                     "scopes": [
                                         "https://www.googleapis.com/auth/adexchange.buyer"
                                     ],

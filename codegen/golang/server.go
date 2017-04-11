@@ -4,24 +4,23 @@ import (
 	"bytes"
 	"encoding/json"
 	"go/format"
-	"github.com/marshome/apis/spec"
+	"github.com/marshome/i-api/spec"
 )
 
-func GenerateServer(specJson []byte, namespace string) (code string, err error) {
+func GenerateServer(specJson []byte) (code []byte, err error) {
 	doc := spec.Document{}
 	err = json.Unmarshal(specJson, &doc)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	c := Context{}
-	c.Namespace = namespace
 	c.Code = &bytes.Buffer{}
 	c.spec = doc
 
 	c.Parse()
 
-	c.Pn("package %s", c.Namespace)
+	c.Pn("package %s", Namespace(c.spec.Name, c.spec.Version))
 	c.Pn("")
 
 	c.GenerateServerImports()
@@ -34,7 +33,7 @@ func GenerateServer(specJson []byte, namespace string) (code string, err error) 
 
 	clean, err := format.Source(c.Code.Bytes())
 	if err != nil {
-		return c.Code.String(), err
+		return c.Code.Bytes(), err
 	}
-	return string(clean), nil
+	return clean, nil
 }

@@ -1,7 +1,7 @@
 package codegen
 
 import (
-	"github.com/marshome/apis/spec"
+	"github.com/marshome/i-api/spec"
 	"fmt"
 )
 
@@ -9,10 +9,10 @@ type Schema struct {
 	c    *Context
 	Spec *spec.Object
 	Name string
-	Top bool
+	Top  bool
 }
 
-func NewSchema(c *Context, spec *spec.Object,name string,top bool)*Schema {
+func NewSchema(c *Context, spec *spec.Object, name string, top bool) *Schema {
 	s := &Schema{
 		c:c,
 		Spec:spec,

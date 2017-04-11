@@ -1,11 +1,11 @@
 package googlespec
 
 import (
-	"github.com/marshome/apis/spec"
+	"github.com/marshome/i-api/spec"
 	"strings"
 )
 
-func Convert(doc *APIDocument)(s *spec.Document) {
+func Convert(doc *APIDocument) (s *spec.Document) {
 	s = &spec.Document{}
 
 	s.Kind = doc.Kind
@@ -20,6 +20,7 @@ func Convert(doc *APIDocument)(s *spec.Document) {
 	s.Labels = doc.Labels
 	s.Protocol = doc.Protocol
 	s.RootUrl = doc.RootUrl
+	s.ServicePath = doc.ServicePath
 	s.Features = doc.Features
 
 	s.Auth = &spec.Auth{}
@@ -49,14 +50,14 @@ func Convert(doc *APIDocument)(s *spec.Document) {
 	if doc.Resources != nil {
 		s.Resources = make([]*spec.Resource, 0)
 		for rName, r := range doc.Resources {
-			s.Resources=append(s.Resources,convertResource(rName,r))
+			s.Resources = append(s.Resources, convertResource(rName, r))
 		}
 	}
 
 	return s
 }
 
-func convertType(typ string,format string)string {
+func convertType(typ string, format string) string {
 	if typ == "string" {
 		if format == "" {
 			return spec.TYPE_STRING
@@ -64,17 +65,17 @@ func convertType(typ string,format string)string {
 			return spec.TYPE_INT64
 		} else if format == "date-time" {
 			return spec.TYPE_DATETIME
-		}else if format=="byte"{
+		} else if format == "byte" {
 			return spec.TYPE_BYTE
-		}else if format=="google-datetime"{
+		} else if format == "google-datetime" {
 			return spec.TYPE_DATETIME
-		}else if format=="uint64"{
+		} else if format == "uint64" {
 			return spec.TYPE_UINT64
-		}else if format=="google-duration"{
+		} else if format == "google-duration" {
 			return spec.TYPE_STRING
-		}else if format=="google-fieldmask"{
+		} else if format == "google-fieldmask" {
 			return spec.TYPE_STRING
-		}else if format=="date"{
+		} else if format == "date" {
 			return spec.TYPE_DATE
 		}
 	} else if typ == "boolean" {
@@ -90,7 +91,7 @@ func convertType(typ string,format string)string {
 	} else if typ == "number" {
 		if format == "double" {
 			return spec.TYPE_FLOAT64
-		}else if format=="float"{
+		} else if format == "float" {
 			return spec.TYPE_FLOAT32
 		}
 	} else if typ == "any" {
@@ -102,7 +103,7 @@ func convertType(typ string,format string)string {
 	panic("convertType " + typ + " " + format)
 }
 
-func convertObject(name string,doc *APIObject)*spec.Object {
+func convertObject(name string, doc *APIObject) *spec.Object {
 	o := &spec.Object{}
 	o.Name = name
 	o.Desc = doc.Description
@@ -177,7 +178,7 @@ func convertObject(name string,doc *APIObject)*spec.Object {
 	return o
 }
 
-func convertResource(name string,doc *APIResource)*spec.Resource {
+func convertResource(name string, doc *APIResource) *spec.Resource {
 	r := &spec.Resource{}
 	r.Name = name
 
@@ -188,17 +189,17 @@ func convertResource(name string,doc *APIResource)*spec.Resource {
 		}
 	}
 
-	if doc.Resources!=nil{
-		r.Resources=make([]*spec.Resource,0)
-		for subName,subR:=range doc.Resources{
-			r.Resources=append(r.Resources,convertResource(subName,subR))
+	if doc.Resources != nil {
+		r.Resources = make([]*spec.Resource, 0)
+		for subName, subR := range doc.Resources {
+			r.Resources = append(r.Resources, convertResource(subName, subR))
 		}
 	}
 
 	return r
 }
 
-func convertMethod(name string,doc *APIMethod)*spec.Method {
+func convertMethod(name string, doc *APIMethod) *spec.Method {
 	m := &spec.Method{}
 	m.Name = name
 	m.Desc = doc.Description

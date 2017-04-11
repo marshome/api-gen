@@ -1,24 +1,24 @@
 package spec
 
-const(
-	TYPE_STRING ="string"
-	TYPE_BOOL="bool"
-	TYPE_BYTE="byte"
-	TYPE_INT32="int32"
-	TYPE_UINT32="uint32"
-	TYPE_INT64="int64"
-	TYPE_UINT64="uint64"
-	TYPE_FLOAT32="float32"
-	TYPE_FLOAT64="float64"
-	TYPE_DATE="date"
-	TYPE_DATETIME="datetime"
-	TYPE_ANY="any"
-	TYPE_REF="ref"
-	TYPE_OBJECT="object"
+const (
+	TYPE_STRING = "string"
+	TYPE_BOOL = "bool"
+	TYPE_BYTE = "byte"
+	TYPE_INT32 = "int32"
+	TYPE_UINT32 = "uint32"
+	TYPE_INT64 = "int64"
+	TYPE_UINT64 = "uint64"
+	TYPE_FLOAT32 = "float32"
+	TYPE_FLOAT64 = "float64"
+	TYPE_DATE = "date"
+	TYPE_DATETIME = "datetime"
+	TYPE_ANY = "any"
+	TYPE_REF = "ref"
+	TYPE_OBJECT = "object"
 
-	COLLECTION_NONE=""
-	COLLECTION_ARRAY="array"
-	COLLECTION_MAP="map"
+	COLLECTION_NONE = ""
+	COLLECTION_ARRAY = "array"
+	COLLECTION_MAP = "map"
 )
 
 type Directory struct {
@@ -54,6 +54,7 @@ type Document struct {
 	Labels            []string `json:"labels,omitempty"`                  // Labels for the status of this API. Valid values include limited_availability or deprecated.
 	Protocol          string   `json:"protocol"`                          // The protocol described by the document. For example, REST.
 	RootUrl           string   `json:"rootUrl"`                           // The root url under which all API services live.
+	ServicePath       string   `json:"servicePath"`
 
 	Features          []string                `json:"features,omitempty"` // A list of supported features for this API.
 	Auth              *Auth                `json:"auth,omitempty"`        // Authentication information.
@@ -88,14 +89,14 @@ type Object struct {
 }
 
 type Method struct {
-	Name                string        `json:"name,omitempty"`
-	Desc                string        `json:"desc,omitempty"`
 	Path                string        `json:"path"`
 	HttpMethod          string        `json:"httpMethod"`
+	Name                string        `json:"name,omitempty"`
+	Desc                string        `json:"desc,omitempty"`
 	Scopes              []string      `json:"scopes,omitempty"`
 	PathParams          []*Object     `json:"pathParams,omitempty"`
 	RequiredQueryParams []*Object     `json:"requiredQueryParams,omitempty"`
-	OptionalQueryParams []*Object     `json:"optinalQueryParams,omitempty"`
+	OptionalQueryParams []*Object     `json:"optionalQueryParams,omitempty"`
 	Request             string        `json:"request,omitempty"`
 	Response            string        `json:"response,omitempty"`
 }

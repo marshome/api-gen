@@ -10,12 +10,33 @@
     "documentationLink": "https://cloud.google.com/functions",
     "protocol": "rest",
     "rootUrl": "https://cloudfunctions.googleapis.com/",
+    "servicePath": "",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/cloud-platform"
         ]
     },
     "parameters": [
+        {
+            "name": "callback",
+            "desc": "JSONP",
+            "type": "string"
+        },
+        {
+            "name": "$.xgafv",
+            "desc": "V1 error format.",
+            "type": "string",
+            "enum": [
+                {
+                    "name": "1",
+                    "desc": "v1 error format"
+                },
+                {
+                    "name": "2",
+                    "desc": "v2 error format"
+                }
+            ]
+        },
         {
             "name": "alt",
             "desc": "Data format for response.",
@@ -42,9 +63,26 @@
             "type": "string"
         },
         {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "bearer_token",
+            "desc": "OAuth bearer token.",
+            "type": "string"
+        },
+        {
             "name": "upload_protocol",
             "desc": "Upload protocol for media (e.g. \"raw\", \"multipart\").",
             "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
         },
         {
             "name": "fields",
@@ -57,37 +95,6 @@
             "type": "string"
         },
         {
-            "name": "callback",
-            "desc": "JSONP",
-            "type": "string"
-        },
-        {
-            "name": "$.xgafv",
-            "desc": "V1 error format.",
-            "type": "string",
-            "enum": [
-                {
-                    "name": "1",
-                    "desc": "v1 error format"
-                },
-                {
-                    "name": "2",
-                    "desc": "v2 error format"
-                }
-            ]
-        },
-        {
-            "name": "oauth_token",
-            "desc": "OAuth 2.0 token for the current user.",
-            "type": "string"
-        },
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
             "name": "key",
             "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
             "type": "string"
@@ -98,182 +105,25 @@
             "type": "string"
         },
         {
-            "name": "pp",
-            "desc": "Pretty-print response.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "bearer_token",
-            "desc": "OAuth bearer token.",
+            "name": "oauth_token",
+            "desc": "OAuth 2.0 token for the current user.",
             "type": "string"
         }
     ],
     "schemas": [
         {
-            "name": "ListOperationsResponse",
-            "desc": "The response message for Operations.ListOperations.",
+            "name": "EventTrigger",
+            "desc": "Describes EventTrigger, used to request events be sent from another\nservice.",
             "type": "object",
             "fields": [
                 {
-                    "name": "operations",
-                    "desc": "A list of operations that matches the specified filter in the request.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Operation"
-                },
-                {
-                    "name": "nextPageToken",
-                    "desc": "The standard List next-page token.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "CallFunctionResponse",
-            "desc": "Response of `CallFunction` method.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "executionId",
-                    "desc": "Execution id of function invocation.",
+                    "name": "eventType",
+                    "desc": "`event_type` names contain the service that is sending an event and the\nkind of event that was fired. Must be of the form\n`providers/*/eventTypes/*` e.g. Directly handle a Message published to\nGoogle Cloud Pub/Sub `providers/cloud.pubsub/eventTypes/topic.publish`\n\n     Handle an object changing in Google Cloud Storage\n     `providers/cloud.storage/eventTypes/object.change`\n\n     Handle a write to the Firebase Realtime Database\n     `providers/firebase.database/eventTypes/data.write`",
                     "type": "string"
                 },
                 {
-                    "name": "result",
-                    "desc": "Result populated for successful execution of synchronous function. Will\nnot be populated if function does not return a result through context.",
-                    "type": "string"
-                },
-                {
-                    "name": "error",
-                    "desc": "Either system or user-function generated error. Set if execution\nwas not successful.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Operation",
-            "desc": "This resource represents a long-running operation that is the result of a\nnetwork API call.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "error",
-                    "desc": "The error result of the operation in case of failure or cancellation.",
-                    "type": "ref",
-                    "refType": "Status"
-                },
-                {
-                    "name": "metadata",
-                    "desc": "Service-specific metadata associated with the operation.  It typically\ncontains progress information and common metadata such as create time.\nSome services might not provide such metadata.  Any method that returns a\nlong-running operation should document the metadata type, if any.",
-                    "collection": "map",
-                    "type": "any"
-                },
-                {
-                    "name": "done",
-                    "desc": "If the value is `false`, it means the operation is still in progress.\nIf true, the operation is completed, and either `error` or `response` is\navailable.",
-                    "type": "bool"
-                },
-                {
-                    "name": "response",
-                    "desc": "The normal response of the operation in case of success.  If the original\nmethod returns no data on success, such as `Delete`, the response is\n`google.protobuf.Empty`.  If the original method is standard\n`Get`/`Create`/`Update`, the response should be the resource.  For other\nmethods, the response should have the type `XxxResponse`, where `Xxx`\nis the original method name.  For example, if the original method name\nis `TakeSnapshot()`, the inferred response type is\n`TakeSnapshotResponse`.",
-                    "collection": "map",
-                    "type": "any"
-                },
-                {
-                    "name": "name",
-                    "desc": "The server-assigned name, which is only unique within the same service that\noriginally returns it. If you use the default HTTP mapping, the\n`name` should have the format of `operations/some/unique/name`.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "CloudFunction",
-            "desc": "Describes a Cloud Function that contains user computation executed in\nresponse to an event. It encapsulate function and triggers configurations.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "entryPoint",
-                    "desc": "The name of the function (as defined in source code) that will be\nexecuted. Defaults to the resource name suffix, if not specified. For\nbackward compatibility, if function with given name is not found, then the\nsystem will try to use function named \"function\".\nFor Node.js this is name of a function exported by the module specified\nin `source_location`.",
-                    "type": "string"
-                },
-                {
-                    "name": "httpsTrigger",
-                    "desc": "An HTTPS endpoint type of source that can be triggered via URL.",
-                    "type": "ref",
-                    "refType": "HTTPSTrigger"
-                },
-                {
-                    "name": "status",
-                    "desc": "Output only. Status of the function deployment.",
-                    "type": "string",
-                    "enum": [
-                        {
-                            "name": "STATUS_UNSPECIFIED",
-                            "desc": "Status not specified."
-                        },
-                        {
-                            "name": "READY",
-                            "desc": "Successfully deployed."
-                        },
-                        {
-                            "name": "FAILED",
-                            "desc": "Not deployed correctly - behavior is undefined. The item should be updated\nor deleted to move it out of this state."
-                        },
-                        {
-                            "name": "DEPLOYING",
-                            "desc": "Creation or update in progress."
-                        },
-                        {
-                            "name": "DELETING",
-                            "desc": "Deletion in progress."
-                        }
-                    ]
-                },
-                {
-                    "name": "availableMemoryMb",
-                    "desc": "The amount of memory in MB available for a function.\nDefaults to 256MB.",
-                    "type": "int32"
-                },
-                {
-                    "name": "sourceArchiveUrl",
-                    "desc": "The URL, starting with gs://, pointing to the zip archive which contains\nthe function.",
-                    "type": "string"
-                },
-                {
-                    "name": "name",
-                    "desc": "A user-defined name of the function. Function names must be unique\nglobally and match pattern `projects/*/locations/*/functions/*`",
-                    "type": "string"
-                },
-                {
-                    "name": "serviceAccount",
-                    "desc": "Output only. The service account of the function.",
-                    "type": "string"
-                },
-                {
-                    "name": "sourceRepository",
-                    "desc": "The hosted repository where the function is defined.",
-                    "type": "ref",
-                    "refType": "SourceRepository"
-                },
-                {
-                    "name": "updateTime",
-                    "desc": "Output only. The last update timestamp of a Cloud Function.",
-                    "type": "datetime"
-                },
-                {
-                    "name": "latestOperation",
-                    "desc": "Output only. Name of the most recent operation modifying the function. If\nthe function status is `DEPLOYING` or `DELETING`, then it points to the\nactive operation.",
-                    "type": "string"
-                },
-                {
-                    "name": "eventTrigger",
-                    "desc": "A source that fires events in response to a condition in another service.",
-                    "type": "ref",
-                    "refType": "EventTrigger"
-                },
-                {
-                    "name": "timeout",
-                    "desc": "The function execution timeout. Execution is considered failed and\ncan be terminated if the function is not completed at the end of the\ntimeout period. Defaults to 60 seconds.",
+                    "name": "resource",
+                    "desc": "Which instance of the source's service should send events. E.g. for Pub/Sub\nthis would be a Pub/Sub topic at `projects/*/topics/*`. For Google Cloud\nStorage this would be a bucket at `projects/*/buckets/*`. For any source\nthat only supports one instance per-project, this should be the name of the\nproject (`projects/*`)",
                     "type": "string"
                 }
             ]
@@ -317,47 +167,16 @@
             ]
         },
         {
-            "name": "SourceRepository",
-            "desc": "Describes the location of the function source in a remote repository.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "tag",
-                    "desc": "The name of the tag that captures the state of the repository from\nwhich the function should be fetched.",
-                    "type": "string"
-                },
-                {
-                    "name": "branch",
-                    "desc": "The name of the branch from which the function should be fetched.",
-                    "type": "string"
-                },
-                {
-                    "name": "deployedRevision",
-                    "desc": "Output only. The id of the revision that was resolved at the moment of\nfunction creation or update. For example when a user deployed from a\nbranch, it will be the revision id of the latest change on this branch at\nthat time. If user deployed from revision then this value will be always\nequal to the revision specified by the user.",
-                    "type": "string"
-                },
-                {
-                    "name": "sourcePath",
-                    "desc": "The path within the repository where the function is defined. The path\nshould point to the directory where Cloud Functions files are located. Use\n\"/\" if the function is defined directly in the root directory of a\nrepository.",
-                    "type": "string"
-                },
-                {
-                    "name": "revision",
-                    "desc": "The id of the revision that captures the state of the repository from\nwhich the function should be fetched.",
-                    "type": "string"
-                },
-                {
-                    "name": "repositoryUrl",
-                    "desc": "URL to the hosted repository where the function is defined. Only paths in\nhttps://source.developers.google.com domain are supported. The path should\ncontain the name of the repository.",
-                    "type": "string"
-                }
-            ]
-        },
-        {
             "name": "Location",
             "desc": "A resource that represents Google Cloud Platform location.",
             "type": "object",
             "fields": [
+                {
+                    "name": "metadata",
+                    "desc": "Service-specific metadata. For example the available capacity at the given\nlocation.",
+                    "collection": "map",
+                    "type": "any"
+                },
                 {
                     "name": "labels",
                     "desc": "Cross-service attributes for the location. For example\n\n    {\"cloud.googleapis.com/region\": \"us-east1\"}",
@@ -373,12 +192,25 @@
                     "name": "locationId",
                     "desc": "The canonical id for this location. For example: `\"us-east1\"`.",
                     "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "ListOperationsResponse",
+            "desc": "The response message for Operations.ListOperations.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "operations",
+                    "desc": "A list of operations that matches the specified filter in the request.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Operation"
                 },
                 {
-                    "name": "metadata",
-                    "desc": "Service-specific metadata. For example the available capacity at the given\nlocation.",
-                    "collection": "map",
-                    "type": "any"
+                    "name": "nextPageToken",
+                    "desc": "The standard List next-page token.",
+                    "type": "string"
                 }
             ]
         },
@@ -421,19 +253,71 @@
             ]
         },
         {
-            "name": "EventTrigger",
-            "desc": "Describes EventTrigger, used to request events be sent from another\nservice.",
+            "name": "CallFunctionResponse",
+            "desc": "Response of `CallFunction` method.",
             "type": "object",
             "fields": [
                 {
-                    "name": "resource",
-                    "desc": "Which instance of the source's service should send events. E.g. for Pub/Sub\nthis would be a Pub/Sub topic at `projects/*/topics/*`. For Google Cloud\nStorage this would be a bucket at `projects/*/buckets/*`. For any source\nthat only supports one instance per-project, this should be the name of the\nproject (`projects/*`)",
+                    "name": "executionId",
+                    "desc": "Execution id of function invocation.",
                     "type": "string"
                 },
                 {
-                    "name": "eventType",
-                    "desc": "`event_type` names contain the service that is sending an event and the\nkind of event that was fired. Must be of the form\n`providers/*/eventTypes/*` e.g. Directly handle a Message published to\nGoogle Cloud Pub/Sub `providers/cloud.pubsub/eventTypes/topic.publish`\n\n     Handle an object changing in Google Cloud Storage\n     `providers/cloud.storage/eventTypes/object.change`\n\n     Handle a write to the Firebase Realtime Database\n     `providers/firebase.database/eventTypes/data.write`",
+                    "name": "result",
+                    "desc": "Result populated for successful execution of synchronous function. Will\nnot be populated if function does not return a result through context.",
                     "type": "string"
+                },
+                {
+                    "name": "error",
+                    "desc": "Either system or user-function generated error. Set if execution\nwas not successful.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "HTTPSTrigger",
+            "desc": "Describes HTTPSTrigger, could be used to connect web hooks to function.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "url",
+                    "desc": "Output only. The deployed url for the function.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Operation",
+            "desc": "This resource represents a long-running operation that is the result of a\nnetwork API call.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "done",
+                    "desc": "If the value is `false`, it means the operation is still in progress.\nIf true, the operation is completed, and either `error` or `response` is\navailable.",
+                    "type": "bool"
+                },
+                {
+                    "name": "response",
+                    "desc": "The normal response of the operation in case of success.  If the original\nmethod returns no data on success, such as `Delete`, the response is\n`google.protobuf.Empty`.  If the original method is standard\n`Get`/`Create`/`Update`, the response should be the resource.  For other\nmethods, the response should have the type `XxxResponse`, where `Xxx`\nis the original method name.  For example, if the original method name\nis `TakeSnapshot()`, the inferred response type is\n`TakeSnapshotResponse`.",
+                    "collection": "map",
+                    "type": "any"
+                },
+                {
+                    "name": "name",
+                    "desc": "The server-assigned name, which is only unique within the same service that\noriginally returns it. If you use the default HTTP mapping, the\n`name` should have the format of `operations/some/unique/name`.",
+                    "type": "string"
+                },
+                {
+                    "name": "error",
+                    "desc": "The error result of the operation in case of failure or cancellation.",
+                    "type": "ref",
+                    "refType": "Status"
+                },
+                {
+                    "name": "metadata",
+                    "desc": "Service-specific metadata associated with the operation.  It typically\ncontains progress information and common metadata such as create time.\nSome services might not provide such metadata.  Any method that returns a\nlong-running operation should document the metadata type, if any.",
+                    "collection": "map",
+                    "type": "any"
                 }
             ]
         },
@@ -479,13 +363,130 @@
             ]
         },
         {
-            "name": "HTTPSTrigger",
-            "desc": "Describes HTTPSTrigger, could be used to connect web hooks to function.",
+            "name": "SourceRepository",
+            "desc": "Describes the location of the function source in a remote repository.",
             "type": "object",
             "fields": [
                 {
-                    "name": "url",
-                    "desc": "Output only. The deployed url for the function.",
+                    "name": "revision",
+                    "desc": "The id of the revision that captures the state of the repository from\nwhich the function should be fetched.",
+                    "type": "string"
+                },
+                {
+                    "name": "repositoryUrl",
+                    "desc": "URL to the hosted repository where the function is defined. Only paths in\nhttps://source.developers.google.com domain are supported. The path should\ncontain the name of the repository.",
+                    "type": "string"
+                },
+                {
+                    "name": "tag",
+                    "desc": "The name of the tag that captures the state of the repository from\nwhich the function should be fetched.",
+                    "type": "string"
+                },
+                {
+                    "name": "branch",
+                    "desc": "The name of the branch from which the function should be fetched.",
+                    "type": "string"
+                },
+                {
+                    "name": "deployedRevision",
+                    "desc": "Output only. The id of the revision that was resolved at the moment of\nfunction creation or update. For example when a user deployed from a\nbranch, it will be the revision id of the latest change on this branch at\nthat time. If user deployed from revision then this value will be always\nequal to the revision specified by the user.",
+                    "type": "string"
+                },
+                {
+                    "name": "sourcePath",
+                    "desc": "The path within the repository where the function is defined. The path\nshould point to the directory where Cloud Functions files are located. Use\n\"/\" if the function is defined directly in the root directory of a\nrepository.",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "CloudFunction",
+            "desc": "Describes a Cloud Function that contains user computation executed in\nresponse to an event. It encapsulate function and triggers configurations.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "sourceArchiveUrl",
+                    "desc": "The URL, starting with gs://, pointing to the zip archive which contains\nthe function.",
+                    "type": "string"
+                },
+                {
+                    "name": "updateTime",
+                    "desc": "Output only. The last update timestamp of a Cloud Function.",
+                    "type": "datetime"
+                },
+                {
+                    "name": "latestOperation",
+                    "desc": "Output only. Name of the most recent operation modifying the function. If\nthe function status is `DEPLOYING` or `DELETING`, then it points to the\nactive operation.",
+                    "type": "string"
+                },
+                {
+                    "name": "httpsTrigger",
+                    "desc": "An HTTPS endpoint type of source that can be triggered via URL.",
+                    "type": "ref",
+                    "refType": "HTTPSTrigger"
+                },
+                {
+                    "name": "timeout",
+                    "desc": "The function execution timeout. Execution is considered failed and\ncan be terminated if the function is not completed at the end of the\ntimeout period. Defaults to 60 seconds.",
+                    "type": "string"
+                },
+                {
+                    "name": "availableMemoryMb",
+                    "desc": "The amount of memory in MB available for a function.\nDefaults to 256MB.",
+                    "type": "int32"
+                },
+                {
+                    "name": "name",
+                    "desc": "A user-defined name of the function. Function names must be unique\nglobally and match pattern `projects/*/locations/*/functions/*`",
+                    "type": "string"
+                },
+                {
+                    "name": "serviceAccount",
+                    "desc": "Output only. The service account of the function.",
+                    "type": "string"
+                },
+                {
+                    "name": "eventTrigger",
+                    "desc": "A source that fires events in response to a condition in another service.",
+                    "type": "ref",
+                    "refType": "EventTrigger"
+                },
+                {
+                    "name": "status",
+                    "desc": "Output only. Status of the function deployment.",
+                    "type": "string",
+                    "enum": [
+                        {
+                            "name": "STATUS_UNSPECIFIED",
+                            "desc": "Status not specified."
+                        },
+                        {
+                            "name": "READY",
+                            "desc": "Successfully deployed."
+                        },
+                        {
+                            "name": "FAILED",
+                            "desc": "Not deployed correctly - behavior is undefined. The item should be updated\nor deleted to move it out of this state."
+                        },
+                        {
+                            "name": "DEPLOYING",
+                            "desc": "Creation or update in progress."
+                        },
+                        {
+                            "name": "DELETING",
+                            "desc": "Deletion in progress."
+                        }
+                    ]
+                },
+                {
+                    "name": "sourceRepository",
+                    "desc": "The hosted repository where the function is defined.",
+                    "type": "ref",
+                    "refType": "SourceRepository"
+                },
+                {
+                    "name": "entryPoint",
+                    "desc": "The name of the function (as defined in source code) that will be\nexecuted. Defaults to the resource name suffix, if not specified. For\nbackward compatibility, if function with given name is not found, then the\nsystem will try to use function named \"function\".\nFor Node.js this is name of a function exported by the module specified\nin `source_location`.",
                     "type": "string"
                 }
             ]
@@ -499,10 +500,10 @@
                     "name": "locations",
                     "methods": [
                         {
-                            "name": "list",
-                            "desc": "Lists information about the supported locations for this service.",
                             "path": "v1beta2/{+name}/locations",
                             "httpMethod": "GET",
+                            "name": "list",
+                            "desc": "Lists information about the supported locations for this service.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform"
                             ],
@@ -515,7 +516,12 @@
                                     "pattern": "^projects/[^/]+$"
                                 }
                             ],
-                            "optinalQueryParams": [
+                            "optionalQueryParams": [
+                                {
+                                    "name": "pageSize",
+                                    "desc": "The standard list page size.",
+                                    "type": "int32"
+                                },
                                 {
                                     "name": "filter",
                                     "desc": "The standard list filter.",
@@ -525,11 +531,6 @@
                                     "name": "pageToken",
                                     "desc": "The standard list page token.",
                                     "type": "string"
-                                },
-                                {
-                                    "name": "pageSize",
-                                    "desc": "The standard list page size.",
-                                    "type": "int32"
                                 }
                             ],
                             "response": "ListLocationsResponse"
@@ -540,68 +541,10 @@
                             "name": "functions",
                             "methods": [
                                 {
-                                    "name": "get",
-                                    "desc": "Returns a function with the given name from the requested project.",
-                                    "path": "v1beta2/{+name}",
-                                    "httpMethod": "GET",
-                                    "scopes": [
-                                        "https://www.googleapis.com/auth/cloud-platform"
-                                    ],
-                                    "pathParams": [
-                                        {
-                                            "name": "name",
-                                            "desc": "The name of the function which details should be obtained.",
-                                            "required": true,
-                                            "type": "string",
-                                            "pattern": "^projects/[^/]+/locations/[^/]+/functions/[^/]+$"
-                                        }
-                                    ],
-                                    "response": "CloudFunction"
-                                },
-                                {
-                                    "name": "update",
-                                    "desc": "Updates existing function.",
-                                    "path": "v1beta2/{+name}",
-                                    "httpMethod": "PUT",
-                                    "scopes": [
-                                        "https://www.googleapis.com/auth/cloud-platform"
-                                    ],
-                                    "pathParams": [
-                                        {
-                                            "name": "name",
-                                            "desc": "The name of the function to be updated.",
-                                            "required": true,
-                                            "type": "string",
-                                            "pattern": "^projects/[^/]+/locations/[^/]+/functions/[^/]+$"
-                                        }
-                                    ],
-                                    "request": "CloudFunction",
-                                    "response": "Operation"
-                                },
-                                {
-                                    "name": "delete",
-                                    "desc": "Deletes a function with the given name from the specified project. If the\ngiven function is used by some trigger, the trigger will be updated to\nremove this function.",
-                                    "path": "v1beta2/{+name}",
-                                    "httpMethod": "DELETE",
-                                    "scopes": [
-                                        "https://www.googleapis.com/auth/cloud-platform"
-                                    ],
-                                    "pathParams": [
-                                        {
-                                            "name": "name",
-                                            "desc": "The name of the function which should be deleted.",
-                                            "required": true,
-                                            "type": "string",
-                                            "pattern": "^projects/[^/]+/locations/[^/]+/functions/[^/]+$"
-                                        }
-                                    ],
-                                    "response": "Operation"
-                                },
-                                {
-                                    "name": "list",
-                                    "desc": "Returns a list of functions that belong to the requested project.",
                                     "path": "v1beta2/{+location}/functions",
                                     "httpMethod": "GET",
+                                    "name": "list",
+                                    "desc": "Returns a list of functions that belong to the requested project.",
                                     "scopes": [
                                         "https://www.googleapis.com/auth/cloud-platform"
                                     ],
@@ -614,7 +557,7 @@
                                             "pattern": "^projects/[^/]+/locations/[^/]+$"
                                         }
                                     ],
-                                    "optinalQueryParams": [
+                                    "optionalQueryParams": [
                                         {
                                             "name": "pageToken",
                                             "desc": "The value returned by the last\n`ListFunctionsResponse`; indicates that\nthis is a continuation of a prior `ListFunctions` call, and that the\nsystem should return the next page of data.",
@@ -629,10 +572,10 @@
                                     "response": "ListFunctionsResponse"
                                 },
                                 {
-                                    "name": "create",
-                                    "desc": "Creates a new function. If a function with the given name already exists in\nthe specified project, the long running operation will return\n`ALREADY_EXISTS` error.",
                                     "path": "v1beta2/{+location}/functions",
                                     "httpMethod": "POST",
+                                    "name": "create",
+                                    "desc": "Creates a new function. If a function with the given name already exists in\nthe specified project, the long running operation will return\n`ALREADY_EXISTS` error.",
                                     "scopes": [
                                         "https://www.googleapis.com/auth/cloud-platform"
                                     ],
@@ -649,10 +592,10 @@
                                     "response": "Operation"
                                 },
                                 {
-                                    "name": "call",
-                                    "desc": "Invokes synchronously deployed function. To be used for testing, very\nlimited traffic allowed.",
                                     "path": "v1beta2/{+name}:call",
                                     "httpMethod": "POST",
+                                    "name": "call",
+                                    "desc": "Invokes synchronously deployed function. To be used for testing, very\nlimited traffic allowed.",
                                     "scopes": [
                                         "https://www.googleapis.com/auth/cloud-platform"
                                     ],
@@ -667,6 +610,64 @@
                                     ],
                                     "request": "CallFunctionRequest",
                                     "response": "CallFunctionResponse"
+                                },
+                                {
+                                    "path": "v1beta2/{+name}",
+                                    "httpMethod": "GET",
+                                    "name": "get",
+                                    "desc": "Returns a function with the given name from the requested project.",
+                                    "scopes": [
+                                        "https://www.googleapis.com/auth/cloud-platform"
+                                    ],
+                                    "pathParams": [
+                                        {
+                                            "name": "name",
+                                            "desc": "The name of the function which details should be obtained.",
+                                            "required": true,
+                                            "type": "string",
+                                            "pattern": "^projects/[^/]+/locations/[^/]+/functions/[^/]+$"
+                                        }
+                                    ],
+                                    "response": "CloudFunction"
+                                },
+                                {
+                                    "path": "v1beta2/{+name}",
+                                    "httpMethod": "PUT",
+                                    "name": "update",
+                                    "desc": "Updates existing function.",
+                                    "scopes": [
+                                        "https://www.googleapis.com/auth/cloud-platform"
+                                    ],
+                                    "pathParams": [
+                                        {
+                                            "name": "name",
+                                            "desc": "The name of the function to be updated.",
+                                            "required": true,
+                                            "type": "string",
+                                            "pattern": "^projects/[^/]+/locations/[^/]+/functions/[^/]+$"
+                                        }
+                                    ],
+                                    "request": "CloudFunction",
+                                    "response": "Operation"
+                                },
+                                {
+                                    "path": "v1beta2/{+name}",
+                                    "httpMethod": "DELETE",
+                                    "name": "delete",
+                                    "desc": "Deletes a function with the given name from the specified project. If the\ngiven function is used by some trigger, the trigger will be updated to\nremove this function.",
+                                    "scopes": [
+                                        "https://www.googleapis.com/auth/cloud-platform"
+                                    ],
+                                    "pathParams": [
+                                        {
+                                            "name": "name",
+                                            "desc": "The name of the function which should be deleted.",
+                                            "required": true,
+                                            "type": "string",
+                                            "pattern": "^projects/[^/]+/locations/[^/]+/functions/[^/]+$"
+                                        }
+                                    ],
+                                    "response": "Operation"
                                 }
                             ]
                         }
@@ -678,38 +679,14 @@
             "name": "operations",
             "methods": [
                 {
-                    "name": "get",
-                    "desc": "Gets the latest state of a long-running operation.  Clients can use this\nmethod to poll the operation result at intervals as recommended by the API\nservice.",
-                    "path": "v1beta2/{+name}",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/cloud-platform"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "name",
-                            "desc": "The name of the operation resource.",
-                            "required": true,
-                            "type": "string",
-                            "pattern": "^operations/[^/]+$"
-                        }
-                    ],
-                    "response": "Operation"
-                },
-                {
-                    "name": "list",
-                    "desc": "Lists operations that match the specified filter in the request. If the\nserver doesn't support this method, it returns `UNIMPLEMENTED`.\n\nNOTE: the `name` binding below allows API services to override the binding\nto use different resource name schemes, such as `users/*/operations`.",
                     "path": "v1beta2/operations",
                     "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "Lists operations that match the specified filter in the request. If the\nserver doesn't support this method, it returns `UNIMPLEMENTED`.\n\nNOTE: the `name` binding below allows API services to override the binding\nto use different resource name schemes, such as `users/*/operations`.",
                     "scopes": [
                         "https://www.googleapis.com/auth/cloud-platform"
                     ],
-                    "optinalQueryParams": [
-                        {
-                            "name": "pageSize",
-                            "desc": "The standard list page size.",
-                            "type": "int32"
-                        },
+                    "optionalQueryParams": [
                         {
                             "name": "filter",
                             "desc": "The standard list filter.",
@@ -724,9 +701,33 @@
                             "name": "pageToken",
                             "desc": "The standard list page token.",
                             "type": "string"
+                        },
+                        {
+                            "name": "pageSize",
+                            "desc": "The standard list page size.",
+                            "type": "int32"
                         }
                     ],
                     "response": "ListOperationsResponse"
+                },
+                {
+                    "path": "v1beta2/{+name}",
+                    "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Gets the latest state of a long-running operation.  Clients can use this\nmethod to poll the operation result at intervals as recommended by the API\nservice.",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/cloud-platform"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "name",
+                            "desc": "The name of the operation resource.",
+                            "required": true,
+                            "type": "string",
+                            "pattern": "^operations/[^/]+$"
+                        }
+                    ],
+                    "response": "Operation"
                 }
             ]
         }

@@ -10,6 +10,7 @@
     "documentationLink": "https://cloud.google.com/functions",
     "protocol": "rest",
     "rootUrl": "https://cloudfunctions.googleapis.com/",
+    "servicePath": "",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/cloud-platform"
@@ -47,24 +48,9 @@
             ]
         },
         {
-            "name": "alt",
-            "desc": "Data format for response.",
-            "type": "string",
-            "default": "json",
-            "enum": [
-                {
-                    "name": "json",
-                    "desc": "Responses with Content-Type of application/json"
-                },
-                {
-                    "name": "media",
-                    "desc": "Media download with context-dependent Content-Type"
-                },
-                {
-                    "name": "proto",
-                    "desc": "Responses with Content-Type of application/x-protobuf"
-                }
-            ]
+            "name": "access_token",
+            "desc": "OAuth access token.",
+            "type": "string"
         },
         {
             "name": "key",
@@ -72,14 +58,15 @@
             "type": "string"
         },
         {
-            "name": "access_token",
-            "desc": "OAuth access token.",
-            "type": "string"
-        },
-        {
             "name": "quotaUser",
             "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters.",
             "type": "string"
+        },
+        {
+            "name": "pp",
+            "desc": "Pretty-print response.",
+            "type": "bool",
+            "default": "true"
         },
         {
             "name": "oauth_token",
@@ -103,13 +90,56 @@
             "type": "string"
         },
         {
-            "name": "pp",
-            "desc": "Pretty-print response.",
-            "type": "bool",
-            "default": "true"
+            "name": "alt",
+            "desc": "Data format for response.",
+            "type": "string",
+            "default": "json",
+            "enum": [
+                {
+                    "name": "json",
+                    "desc": "Responses with Content-Type of application/json"
+                },
+                {
+                    "name": "media",
+                    "desc": "Media download with context-dependent Content-Type"
+                },
+                {
+                    "name": "proto",
+                    "desc": "Responses with Content-Type of application/x-protobuf"
+                }
+            ]
         }
     ],
     "schemas": [
+        {
+            "name": "Location",
+            "desc": "A resource that represents Google Cloud Platform location.",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "locationId",
+                    "desc": "The canonical id for this location. For example: `\"us-east1\"`.",
+                    "type": "string"
+                },
+                {
+                    "name": "metadata",
+                    "desc": "Service-specific metadata. For example the available capacity at the given\nlocation.",
+                    "collection": "map",
+                    "type": "any"
+                },
+                {
+                    "name": "labels",
+                    "desc": "Cross-service attributes for the location. For example\n\n    {\"cloud.googleapis.com/region\": \"us-east1\"}",
+                    "collection": "map",
+                    "type": "string"
+                },
+                {
+                    "name": "name",
+                    "desc": "Resource name for the location, which may vary between implementations.\nFor example: `\"projects/example-project/locations/us-east1\"`",
+                    "type": "string"
+                }
+            ]
+        },
         {
             "name": "OperationMetadataV1Beta2",
             "desc": "Metadata describing an Operation",
@@ -150,35 +180,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "name": "Location",
-            "desc": "A resource that represents Google Cloud Platform location.",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "labels",
-                    "desc": "Cross-service attributes for the location. For example\n\n    {\"cloud.googleapis.com/region\": \"us-east1\"}",
-                    "collection": "map",
-                    "type": "string"
-                },
-                {
-                    "name": "name",
-                    "desc": "Resource name for the location, which may vary between implementations.\nFor example: `\"projects/example-project/locations/us-east1\"`",
-                    "type": "string"
-                },
-                {
-                    "name": "locationId",
-                    "desc": "The canonical id for this location. For example: `\"us-east1\"`.",
-                    "type": "string"
-                },
-                {
-                    "name": "metadata",
-                    "desc": "Service-specific metadata. For example the available capacity at the given\nlocation.",
-                    "collection": "map",
-                    "type": "any"
-                }
-            ]
         }
     ],
     "resources": [
@@ -189,10 +190,10 @@
                     "name": "locations",
                     "methods": [
                         {
-                            "name": "get",
-                            "desc": "Get information about a location.",
                             "path": "v1/{+name}",
                             "httpMethod": "GET",
+                            "name": "get",
+                            "desc": "Get information about a location.",
                             "scopes": [
                                 "https://www.googleapis.com/auth/cloud-platform"
                             ],

@@ -10,6 +10,7 @@
     "documentationLink": "https://developers.google.com/appengine/docs/python/taskqueue/rest",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "taskqueue/v1beta1/projects/",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/taskqueue",
@@ -17,6 +18,11 @@
         ]
     },
     "parameters": [
+        {
+            "name": "fields",
+            "desc": "Selector specifying which fields to include in a partial response.",
+            "type": "string"
+        },
         {
             "name": "key",
             "desc": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
@@ -54,14 +60,28 @@
                     "desc": "Responses with Content-Type of application/json"
                 }
             ]
-        },
-        {
-            "name": "fields",
-            "desc": "Selector specifying which fields to include in a partial response.",
-            "type": "string"
         }
     ],
     "schemas": [
+        {
+            "name": "Tasks",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "items",
+                    "desc": "The actual list of tasks returned as a result of the lease operation.",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Task"
+                },
+                {
+                    "name": "kind",
+                    "desc": "The kind of object returned, a list of tasks.",
+                    "type": "string",
+                    "default": "taskqueue#tasks"
+                }
+            ]
+        },
         {
             "name": "Tasks2",
             "type": "object",
@@ -123,15 +143,15 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "maxLeases",
+                    "desc": "The number of times we should lease out tasks before giving up on them. If unset we lease them out forever until a worker deletes the task.",
+                    "type": "int32"
+                },
+                {
                     "name": "stats",
                     "desc": "Statistics for the TaskQueue object in question.",
                     "type": "object",
                     "fields": [
-                        {
-                            "name": "leasedLastHour",
-                            "desc": "Number of tasks leased in the last hour.",
-                            "type": "int64"
-                        },
                         {
                             "name": "leasedLastMinute",
                             "desc": "Number of tasks leased in the last minute.",
@@ -146,6 +166,11 @@
                             "name": "totalTasks",
                             "desc": "Number of tasks in the queue.",
                             "type": "int32"
+                        },
+                        {
+                            "name": "leasedLastHour",
+                            "desc": "Number of tasks leased in the last hour.",
+                            "type": "int64"
                         }
                     ]
                 },
@@ -155,6 +180,12 @@
                     "type": "object",
                     "fields": [
                         {
+                            "name": "adminEmails",
+                            "desc": "Email addresses of users who are \"admins\" of the TaskQueue. This means they can control the queue, eg set ACLs for the queue.",
+                            "collection": "array",
+                            "type": "string"
+                        },
+                        {
                             "name": "consumerEmails",
                             "desc": "Email addresses of users who can \"consume\" tasks from the TaskQueue. This means they can Dequeue and Delete tasks from the queue.",
                             "collection": "array",
@@ -163,12 +194,6 @@
                         {
                             "name": "producerEmails",
                             "desc": "Email addresses of users who can \"produce\" tasks into the TaskQueue. This means they can Insert tasks into the queue.",
-                            "collection": "array",
-                            "type": "string"
-                        },
-                        {
-                            "name": "adminEmails",
-                            "desc": "Email addresses of users who are \"admins\" of the TaskQueue. This means they can control the queue, eg set ACLs for the queue.",
                             "collection": "array",
                             "type": "string"
                         }
@@ -184,30 +209,6 @@
                     "desc": "The kind of REST object returned, in this case taskqueue.",
                     "type": "string",
                     "default": "taskqueues#taskqueue"
-                },
-                {
-                    "name": "maxLeases",
-                    "desc": "The number of times we should lease out tasks before giving up on them. If unset we lease them out forever until a worker deletes the task.",
-                    "type": "int32"
-                }
-            ]
-        },
-        {
-            "name": "Tasks",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "items",
-                    "desc": "The actual list of tasks returned as a result of the lease operation.",
-                    "collection": "array",
-                    "type": "ref",
-                    "refType": "Task"
-                },
-                {
-                    "name": "kind",
-                    "desc": "The kind of object returned, a list of tasks.",
-                    "type": "string",
-                    "default": "taskqueue#tasks"
                 }
             ]
         }
@@ -217,10 +218,10 @@
             "name": "taskqueues",
             "methods": [
                 {
-                    "name": "get",
-                    "desc": "Get detailed information about a TaskQueue.",
                     "path": "{project}/taskqueues/{taskqueue}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Get detailed information about a TaskQueue.",
                     "scopes": [
                         "https://www.googleapis.com/auth/taskqueue",
                         "https://www.googleapis.com/auth/taskqueue.consumer"
@@ -239,7 +240,7 @@
                             "type": "string"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
                         {
                             "name": "getStats",
                             "desc": "Whether to get stats. Optional.",
@@ -254,35 +255,10 @@
             "name": "tasks",
             "methods": [
                 {
-                    "name": "list",
-                    "desc": "List Tasks in a TaskQueue",
-                    "path": "{project}/taskqueues/{taskqueue}/tasks",
-                    "httpMethod": "GET",
-                    "scopes": [
-                        "https://www.googleapis.com/auth/taskqueue",
-                        "https://www.googleapis.com/auth/taskqueue.consumer"
-                    ],
-                    "pathParams": [
-                        {
-                            "name": "project",
-                            "desc": "The project under which the queue lies.",
-                            "required": true,
-                            "type": "string"
-                        },
-                        {
-                            "name": "taskqueue",
-                            "desc": "The id of the taskqueue to list tasks from.",
-                            "required": true,
-                            "type": "string"
-                        }
-                    ],
-                    "response": "Tasks2"
-                },
-                {
-                    "name": "delete",
-                    "desc": "Delete a task from a TaskQueue.",
                     "path": "{project}/taskqueues/{taskqueue}/tasks/{task}",
                     "httpMethod": "DELETE",
+                    "name": "delete",
+                    "desc": "Delete a task from a TaskQueue.",
                     "scopes": [
                         "https://www.googleapis.com/auth/taskqueue",
                         "https://www.googleapis.com/auth/taskqueue.consumer"
@@ -309,10 +285,10 @@
                     ]
                 },
                 {
-                    "name": "get",
-                    "desc": "Get a particular task from a TaskQueue.",
                     "path": "{project}/taskqueues/{taskqueue}/tasks/{task}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Get a particular task from a TaskQueue.",
                     "scopes": [
                         "https://www.googleapis.com/auth/taskqueue",
                         "https://www.googleapis.com/auth/taskqueue.consumer"
@@ -340,10 +316,10 @@
                     "response": "Task"
                 },
                 {
-                    "name": "lease",
-                    "desc": "Lease 1 or more tasks from a TaskQueue.",
                     "path": "{project}/taskqueues/{taskqueue}/tasks/lease",
                     "httpMethod": "POST",
+                    "name": "lease",
+                    "desc": "Lease 1 or more tasks from a TaskQueue.",
                     "scopes": [
                         "https://www.googleapis.com/auth/taskqueue",
                         "https://www.googleapis.com/auth/taskqueue.consumer"
@@ -377,6 +353,31 @@
                         }
                     ],
                     "response": "Tasks"
+                },
+                {
+                    "path": "{project}/taskqueues/{taskqueue}/tasks",
+                    "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "List Tasks in a TaskQueue",
+                    "scopes": [
+                        "https://www.googleapis.com/auth/taskqueue",
+                        "https://www.googleapis.com/auth/taskqueue.consumer"
+                    ],
+                    "pathParams": [
+                        {
+                            "name": "project",
+                            "desc": "The project under which the queue lies.",
+                            "required": true,
+                            "type": "string"
+                        },
+                        {
+                            "name": "taskqueue",
+                            "desc": "The id of the taskqueue to list tasks from.",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "response": "Tasks2"
                 }
             ]
         }

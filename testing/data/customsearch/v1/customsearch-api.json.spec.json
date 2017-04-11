@@ -10,19 +10,9 @@
     "documentationLink": "https://developers.google.com/custom-search/v1/using_rest",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "customsearch/",
     "auth": {},
     "parameters": [
-        {
-            "name": "prettyPrint",
-            "desc": "Returns response with indentations and line breaks.",
-            "type": "bool",
-            "default": "true"
-        },
-        {
-            "name": "quotaUser",
-            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
-            "type": "string"
-        },
         {
             "name": "userIp",
             "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
@@ -58,381 +48,51 @@
             "name": "oauth_token",
             "desc": "OAuth 2.0 token for the current user.",
             "type": "string"
+        },
+        {
+            "name": "prettyPrint",
+            "desc": "Returns response with indentations and line breaks.",
+            "type": "bool",
+            "default": "true"
+        },
+        {
+            "name": "quotaUser",
+            "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+            "type": "string"
         }
     ],
     "schemas": [
         {
-            "name": "Context",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "facets",
-                    "collection": "array",
-                    "collectionItem": {
-                        "collection": "array",
-                        "type": "object",
-                        "fields": [
-                            {
-                                "name": "anchor",
-                                "type": "string"
-                            },
-                            {
-                                "name": "label",
-                                "type": "string"
-                            },
-                            {
-                                "name": "label_with_op",
-                                "type": "string"
-                            }
-                        ]
-                    }
-                },
-                {
-                    "name": "title",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Promotion",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "bodyLines",
-                    "collection": "array",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "htmlTitle",
-                            "type": "string"
-                        },
-                        {
-                            "name": "link",
-                            "type": "string"
-                        },
-                        {
-                            "name": "title",
-                            "type": "string"
-                        },
-                        {
-                            "name": "url",
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "displayLink",
-                    "type": "string"
-                },
-                {
-                    "name": "htmlTitle",
-                    "type": "string"
-                },
-                {
-                    "name": "image",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "source",
-                            "type": "string"
-                        },
-                        {
-                            "name": "width",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "height",
-                            "type": "int32"
-                        }
-                    ]
-                },
-                {
-                    "name": "link",
-                    "type": "string"
-                },
-                {
-                    "name": "title",
-                    "type": "string"
-                }
-            ]
-        },
-        {
-            "name": "Query",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "gl",
-                    "type": "string"
-                },
-                {
-                    "name": "cref",
-                    "type": "string"
-                },
-                {
-                    "name": "relatedSite",
-                    "type": "string"
-                },
-                {
-                    "name": "siteSearch",
-                    "type": "string"
-                },
-                {
-                    "name": "outputEncoding",
-                    "type": "string"
-                },
-                {
-                    "name": "title",
-                    "type": "string"
-                },
-                {
-                    "name": "cx",
-                    "type": "string"
-                },
-                {
-                    "name": "excludeTerms",
-                    "type": "string"
-                },
-                {
-                    "name": "imgSize",
-                    "type": "string"
-                },
-                {
-                    "name": "inputEncoding",
-                    "type": "string"
-                },
-                {
-                    "name": "startIndex",
-                    "type": "int32"
-                },
-                {
-                    "name": "count",
-                    "type": "int32"
-                },
-                {
-                    "name": "disableCnTwTranslation",
-                    "type": "string"
-                },
-                {
-                    "name": "hl",
-                    "type": "string"
-                },
-                {
-                    "name": "imgColorType",
-                    "type": "string"
-                },
-                {
-                    "name": "language",
-                    "type": "string"
-                },
-                {
-                    "name": "lowRange",
-                    "type": "string"
-                },
-                {
-                    "name": "orTerms",
-                    "type": "string"
-                },
-                {
-                    "name": "cr",
-                    "type": "string"
-                },
-                {
-                    "name": "dateRestrict",
-                    "type": "string"
-                },
-                {
-                    "name": "siteSearchFilter",
-                    "type": "string"
-                },
-                {
-                    "name": "totalResults",
-                    "type": "int64"
-                },
-                {
-                    "name": "sort",
-                    "type": "string"
-                },
-                {
-                    "name": "exactTerms",
-                    "type": "string"
-                },
-                {
-                    "name": "filter",
-                    "type": "string"
-                },
-                {
-                    "name": "linkSite",
-                    "type": "string"
-                },
-                {
-                    "name": "searchTerms",
-                    "type": "string"
-                },
-                {
-                    "name": "imgDominantColor",
-                    "type": "string"
-                },
-                {
-                    "name": "imgType",
-                    "type": "string"
-                },
-                {
-                    "name": "rights",
-                    "type": "string"
-                },
-                {
-                    "name": "safe",
-                    "type": "string"
-                },
-                {
-                    "name": "fileType",
-                    "type": "string"
-                },
-                {
-                    "name": "googleHost",
-                    "type": "string"
-                },
-                {
-                    "name": "highRange",
-                    "type": "string"
-                },
-                {
-                    "name": "hq",
-                    "type": "string"
-                },
-                {
-                    "name": "searchType",
-                    "type": "string"
-                },
-                {
-                    "name": "startPage",
-                    "type": "int32"
-                }
-            ]
-        },
-        {
-            "name": "Result",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "snippet",
-                    "type": "string"
-                },
-                {
-                    "name": "fileFormat",
-                    "type": "string"
-                },
-                {
-                    "name": "mime",
-                    "type": "string"
-                },
-                {
-                    "name": "image",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "contextLink",
-                            "type": "string"
-                        },
-                        {
-                            "name": "height",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "thumbnailHeight",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "thumbnailLink",
-                            "type": "string"
-                        },
-                        {
-                            "name": "thumbnailWidth",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "width",
-                            "type": "int32"
-                        },
-                        {
-                            "name": "byteSize",
-                            "type": "int32"
-                        }
-                    ]
-                },
-                {
-                    "name": "kind",
-                    "type": "string",
-                    "default": "customsearch#result"
-                },
-                {
-                    "name": "labels",
-                    "collection": "array",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "displayName",
-                            "type": "string"
-                        },
-                        {
-                            "name": "label_with_op",
-                            "type": "string"
-                        },
-                        {
-                            "name": "name",
-                            "type": "string"
-                        }
-                    ]
-                },
-                {
-                    "name": "cacheId",
-                    "type": "string"
-                },
-                {
-                    "name": "htmlSnippet",
-                    "type": "string"
-                },
-                {
-                    "name": "pagemap",
-                    "collection": "map",
-                    "collectionItem": {
-                        "collection": "array",
-                        "collectionItem": {
-                            "collection": "map",
-                            "type": "any"
-                        }
-                    }
-                },
-                {
-                    "name": "displayLink",
-                    "type": "string"
-                },
-                {
-                    "name": "htmlTitle",
-                    "type": "string"
-                },
-                {
-                    "name": "link",
-                    "type": "string"
-                },
-                {
-                    "name": "title",
-                    "type": "string"
-                },
-                {
-                    "name": "formattedUrl",
-                    "type": "string"
-                },
-                {
-                    "name": "htmlFormattedUrl",
-                    "type": "string"
-                }
-            ]
-        },
-        {
             "name": "Search",
             "type": "object",
             "fields": [
+                {
+                    "name": "url",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "type",
+                            "type": "string",
+                            "default": "application/json"
+                        },
+                        {
+                            "name": "template",
+                            "type": "string",
+                            "default": "https://www.googleapis.com/customsearch/v1?q={searchTerms}\u0026num={count?}\u0026start={startIndex?}\u0026lr={language?}\u0026safe={safe?}\u0026cx={cx?}\u0026cref={cref?}\u0026sort={sort?}\u0026filter={filter?}\u0026gl={gl?}\u0026cr={cr?}\u0026googlehost={googleHost?}\u0026c2coff={disableCnTwTranslation?}\u0026hq={hq?}\u0026hl={hl?}\u0026siteSearch={siteSearch?}\u0026siteSearchFilter={siteSearchFilter?}\u0026exactTerms={exactTerms?}\u0026excludeTerms={excludeTerms?}\u0026linkSite={linkSite?}\u0026orTerms={orTerms?}\u0026relatedSite={relatedSite?}\u0026dateRestrict={dateRestrict?}\u0026lowRange={lowRange?}\u0026highRange={highRange?}\u0026searchType={searchType}\u0026fileType={fileType?}\u0026rights={rights?}\u0026imgSize={imgSize?}\u0026imgType={imgType?}\u0026imgColorType={imgColorType?}\u0026imgDominantColor={imgDominantColor?}\u0026alt=json"
+                        }
+                    ]
+                },
+                {
+                    "name": "context",
+                    "type": "ref",
+                    "refType": "Context"
+                },
+                {
+                    "name": "items",
+                    "collection": "array",
+                    "type": "ref",
+                    "refType": "Result"
+                },
                 {
                     "name": "kind",
                     "type": "string",
@@ -488,33 +148,374 @@
                             "type": "string"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "name": "Context",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "facets",
+                    "collection": "array",
+                    "collectionItem": {
+                        "collection": "array",
+                        "type": "object",
+                        "fields": [
+                            {
+                                "name": "anchor",
+                                "type": "string"
+                            },
+                            {
+                                "name": "label",
+                                "type": "string"
+                            },
+                            {
+                                "name": "label_with_op",
+                                "type": "string"
+                            }
+                        ]
+                    }
                 },
                 {
-                    "name": "url",
+                    "name": "title",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Promotion",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "htmlTitle",
+                    "type": "string"
+                },
+                {
+                    "name": "image",
                     "type": "object",
                     "fields": [
                         {
-                            "name": "type",
-                            "type": "string",
-                            "default": "application/json"
+                            "name": "height",
+                            "type": "int32"
                         },
                         {
-                            "name": "template",
-                            "type": "string",
-                            "default": "https://www.googleapis.com/customsearch/v1?q={searchTerms}\u0026num={count?}\u0026start={startIndex?}\u0026lr={language?}\u0026safe={safe?}\u0026cx={cx?}\u0026cref={cref?}\u0026sort={sort?}\u0026filter={filter?}\u0026gl={gl?}\u0026cr={cr?}\u0026googlehost={googleHost?}\u0026c2coff={disableCnTwTranslation?}\u0026hq={hq?}\u0026hl={hl?}\u0026siteSearch={siteSearch?}\u0026siteSearchFilter={siteSearchFilter?}\u0026exactTerms={exactTerms?}\u0026excludeTerms={excludeTerms?}\u0026linkSite={linkSite?}\u0026orTerms={orTerms?}\u0026relatedSite={relatedSite?}\u0026dateRestrict={dateRestrict?}\u0026lowRange={lowRange?}\u0026highRange={highRange?}\u0026searchType={searchType}\u0026fileType={fileType?}\u0026rights={rights?}\u0026imgSize={imgSize?}\u0026imgType={imgType?}\u0026imgColorType={imgColorType?}\u0026imgDominantColor={imgDominantColor?}\u0026alt=json"
+                            "name": "source",
+                            "type": "string"
+                        },
+                        {
+                            "name": "width",
+                            "type": "int32"
                         }
                     ]
                 },
                 {
-                    "name": "context",
-                    "type": "ref",
-                    "refType": "Context"
+                    "name": "link",
+                    "type": "string"
                 },
                 {
-                    "name": "items",
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "bodyLines",
                     "collection": "array",
-                    "type": "ref",
-                    "refType": "Result"
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "htmlTitle",
+                            "type": "string"
+                        },
+                        {
+                            "name": "link",
+                            "type": "string"
+                        },
+                        {
+                            "name": "title",
+                            "type": "string"
+                        },
+                        {
+                            "name": "url",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "displayLink",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Query",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "dateRestrict",
+                    "type": "string"
+                },
+                {
+                    "name": "filter",
+                    "type": "string"
+                },
+                {
+                    "name": "imgDominantColor",
+                    "type": "string"
+                },
+                {
+                    "name": "linkSite",
+                    "type": "string"
+                },
+                {
+                    "name": "totalResults",
+                    "type": "int64"
+                },
+                {
+                    "name": "cr",
+                    "type": "string"
+                },
+                {
+                    "name": "hq",
+                    "type": "string"
+                },
+                {
+                    "name": "siteSearchFilter",
+                    "type": "string"
+                },
+                {
+                    "name": "sort",
+                    "type": "string"
+                },
+                {
+                    "name": "excludeTerms",
+                    "type": "string"
+                },
+                {
+                    "name": "fileType",
+                    "type": "string"
+                },
+                {
+                    "name": "hl",
+                    "type": "string"
+                },
+                {
+                    "name": "imgSize",
+                    "type": "string"
+                },
+                {
+                    "name": "siteSearch",
+                    "type": "string"
+                },
+                {
+                    "name": "count",
+                    "type": "int32"
+                },
+                {
+                    "name": "googleHost",
+                    "type": "string"
+                },
+                {
+                    "name": "imgType",
+                    "type": "string"
+                },
+                {
+                    "name": "inputEncoding",
+                    "type": "string"
+                },
+                {
+                    "name": "highRange",
+                    "type": "string"
+                },
+                {
+                    "name": "language",
+                    "type": "string"
+                },
+                {
+                    "name": "lowRange",
+                    "type": "string"
+                },
+                {
+                    "name": "safe",
+                    "type": "string"
+                },
+                {
+                    "name": "searchType",
+                    "type": "string"
+                },
+                {
+                    "name": "imgColorType",
+                    "type": "string"
+                },
+                {
+                    "name": "searchTerms",
+                    "type": "string"
+                },
+                {
+                    "name": "startIndex",
+                    "type": "int32"
+                },
+                {
+                    "name": "cx",
+                    "type": "string"
+                },
+                {
+                    "name": "exactTerms",
+                    "type": "string"
+                },
+                {
+                    "name": "orTerms",
+                    "type": "string"
+                },
+                {
+                    "name": "rights",
+                    "type": "string"
+                },
+                {
+                    "name": "startPage",
+                    "type": "int32"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "cref",
+                    "type": "string"
+                },
+                {
+                    "name": "disableCnTwTranslation",
+                    "type": "string"
+                },
+                {
+                    "name": "gl",
+                    "type": "string"
+                },
+                {
+                    "name": "outputEncoding",
+                    "type": "string"
+                },
+                {
+                    "name": "relatedSite",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "Result",
+            "type": "object",
+            "fields": [
+                {
+                    "name": "htmlTitle",
+                    "type": "string"
+                },
+                {
+                    "name": "link",
+                    "type": "string"
+                },
+                {
+                    "name": "pagemap",
+                    "collection": "map",
+                    "collectionItem": {
+                        "collection": "array",
+                        "collectionItem": {
+                            "collection": "map",
+                            "type": "any"
+                        }
+                    }
+                },
+                {
+                    "name": "cacheId",
+                    "type": "string"
+                },
+                {
+                    "name": "image",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "thumbnailLink",
+                            "type": "string"
+                        },
+                        {
+                            "name": "thumbnailWidth",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "width",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "byteSize",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "contextLink",
+                            "type": "string"
+                        },
+                        {
+                            "name": "height",
+                            "type": "int32"
+                        },
+                        {
+                            "name": "thumbnailHeight",
+                            "type": "int32"
+                        }
+                    ]
+                },
+                {
+                    "name": "formattedUrl",
+                    "type": "string"
+                },
+                {
+                    "name": "labels",
+                    "collection": "array",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "displayName",
+                            "type": "string"
+                        },
+                        {
+                            "name": "label_with_op",
+                            "type": "string"
+                        },
+                        {
+                            "name": "name",
+                            "type": "string"
+                        }
+                    ]
+                },
+                {
+                    "name": "snippet",
+                    "type": "string"
+                },
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "displayLink",
+                    "type": "string"
+                },
+                {
+                    "name": "htmlFormattedUrl",
+                    "type": "string"
+                },
+                {
+                    "name": "htmlSnippet",
+                    "type": "string"
+                },
+                {
+                    "name": "kind",
+                    "type": "string",
+                    "default": "customsearch#result"
+                },
+                {
+                    "name": "mime",
+                    "type": "string"
+                },
+                {
+                    "name": "fileFormat",
+                    "type": "string"
                 }
             ]
         }
@@ -524,10 +525,10 @@
             "name": "cse",
             "methods": [
                 {
-                    "name": "list",
-                    "desc": "Returns metadata about the search performed, metadata about the custom search engine used for the search, and the search results.",
                     "path": "v1",
                     "httpMethod": "GET",
+                    "name": "list",
+                    "desc": "Returns metadata about the search performed, metadata about the custom search engine used for the search, and the search results.",
                     "requiredQueryParams": [
                         {
                             "name": "q",
@@ -536,10 +537,15 @@
                             "type": "string"
                         }
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
                         {
                             "name": "cr",
                             "desc": "Country restrict(s).",
+                            "type": "string"
+                        },
+                        {
+                            "name": "highRange",
+                            "desc": "Creates a range in form as_nlo value..as_nhi value and attempts to append it to query",
                             "type": "string"
                         },
                         {
@@ -690,6 +696,58 @@
                             ]
                         },
                         {
+                            "name": "c2coff",
+                            "desc": "Turns off the translation between zh-CN and zh-TW.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "dateRestrict",
+                            "desc": "Specifies all search results are from a time period",
+                            "type": "string"
+                        },
+                        {
+                            "name": "fileType",
+                            "desc": "Returns images of a specified type. Some of the allowed values are: bmp, gif, png, jpg, svg, pdf, ...",
+                            "type": "string"
+                        },
+                        {
+                            "name": "hq",
+                            "desc": "Appends the extra query terms to the query.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "imgType",
+                            "desc": "Returns images of a type, which can be one of: clipart, face, lineart, news, and photo.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "clipart",
+                                    "desc": "clipart"
+                                },
+                                {
+                                    "name": "face",
+                                    "desc": "face"
+                                },
+                                {
+                                    "name": "lineart",
+                                    "desc": "lineart"
+                                },
+                                {
+                                    "name": "news",
+                                    "desc": "news"
+                                },
+                                {
+                                    "name": "photo",
+                                    "desc": "photo"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "linkSite",
+                            "desc": "Specifies that all search results should contain a link to a particular URL",
+                            "type": "string"
+                        },
+                        {
                             "name": "safe",
                             "desc": "Search safety level",
                             "type": "string",
@@ -710,38 +768,34 @@
                             ]
                         },
                         {
-                            "name": "sort",
-                            "desc": "The sort expression to apply to the results",
-                            "type": "string"
+                            "name": "searchType",
+                            "desc": "Specifies the search type: image.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "image",
+                                    "desc": "custom image search"
+                                }
+                            ]
                         },
                         {
-                            "name": "hl",
-                            "desc": "Sets the user interface language.",
-                            "type": "string"
+                            "name": "siteSearchFilter",
+                            "desc": "Controls whether to include or exclude results from the site named in the as_sitesearch parameter",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "e",
+                                    "desc": "exclude"
+                                },
+                                {
+                                    "name": "i",
+                                    "desc": "include"
+                                }
+                            ]
                         },
                         {
-                            "name": "hq",
-                            "desc": "Appends the extra query terms to the query.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "c2coff",
-                            "desc": "Turns off the translation between zh-CN and zh-TW.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "dateRestrict",
-                            "desc": "Specifies all search results are from a time period",
-                            "type": "string"
-                        },
-                        {
-                            "name": "exactTerms",
-                            "desc": "Identifies a phrase that all documents in the search results must contain",
-                            "type": "string"
-                        },
-                        {
-                            "name": "fileType",
-                            "desc": "Returns images of a specified type. Some of the allowed values are: bmp, gif, png, jpg, svg, pdf, ...",
+                            "name": "googlehost",
+                            "desc": "The local Google domain to use to perform the search.",
                             "type": "string"
                         },
                         {
@@ -792,119 +846,6 @@
                             ]
                         },
                         {
-                            "name": "imgType",
-                            "desc": "Returns images of a type, which can be one of: clipart, face, lineart, news, and photo.",
-                            "type": "string",
-                            "enum": [
-                                {
-                                    "name": "clipart",
-                                    "desc": "clipart"
-                                },
-                                {
-                                    "name": "face",
-                                    "desc": "face"
-                                },
-                                {
-                                    "name": "lineart",
-                                    "desc": "lineart"
-                                },
-                                {
-                                    "name": "news",
-                                    "desc": "news"
-                                },
-                                {
-                                    "name": "photo",
-                                    "desc": "photo"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "rights",
-                            "desc": "Filters based on licensing. Supported values include: cc_publicdomain, cc_attribute, cc_sharealike, cc_noncommercial, cc_nonderived and combinations of these.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "cx",
-                            "desc": "The custom search engine ID to scope this search query",
-                            "type": "string"
-                        },
-                        {
-                            "name": "excludeTerms",
-                            "desc": "Identifies a word or phrase that should not appear in any documents in the search results",
-                            "type": "string"
-                        },
-                        {
-                            "name": "highRange",
-                            "desc": "Creates a range in form as_nlo value..as_nhi value and attempts to append it to query",
-                            "type": "string"
-                        },
-                        {
-                            "name": "imgColorType",
-                            "desc": "Returns black and white, grayscale, or color images: mono, gray, and color.",
-                            "type": "string",
-                            "enum": [
-                                {
-                                    "name": "color",
-                                    "desc": "color"
-                                },
-                                {
-                                    "name": "gray",
-                                    "desc": "gray"
-                                },
-                                {
-                                    "name": "mono",
-                                    "desc": "mono"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "lowRange",
-                            "desc": "Creates a range in form as_nlo value..as_nhi value and attempts to append it to query",
-                            "type": "string"
-                        },
-                        {
-                            "name": "num",
-                            "desc": "Number of search results to return",
-                            "type": "uint32",
-                            "default": "10"
-                        },
-                        {
-                            "name": "relatedSite",
-                            "desc": "Specifies that all search results should be pages that are related to the specified URL",
-                            "type": "string"
-                        },
-                        {
-                            "name": "googlehost",
-                            "desc": "The local Google domain to use to perform the search.",
-                            "type": "string"
-                        },
-                        {
-                            "name": "searchType",
-                            "desc": "Specifies the search type: image.",
-                            "type": "string",
-                            "enum": [
-                                {
-                                    "name": "image",
-                                    "desc": "custom image search"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "siteSearchFilter",
-                            "desc": "Controls whether to include or exclude results from the site named in the as_sitesearch parameter",
-                            "type": "string",
-                            "enum": [
-                                {
-                                    "name": "e",
-                                    "desc": "exclude"
-                                },
-                                {
-                                    "name": "i",
-                                    "desc": "include"
-                                }
-                            ]
-                        },
-                        {
                             "name": "cref",
                             "desc": "The URL of a linked custom search engine",
                             "type": "string"
@@ -925,23 +866,19 @@
                             ]
                         },
                         {
-                            "name": "orTerms",
-                            "desc": "Provides additional search terms to check for in a document, where each document in the search results must contain at least one of the additional search terms",
+                            "name": "hl",
+                            "desc": "Sets the user interface language.",
                             "type": "string"
                         },
                         {
-                            "name": "start",
-                            "desc": "The index of the first result to return",
-                            "type": "uint32"
+                            "name": "num",
+                            "desc": "Number of search results to return",
+                            "type": "uint32",
+                            "default": "10"
                         },
                         {
-                            "name": "siteSearch",
-                            "desc": "Specifies all search results should be pages from a given site",
-                            "type": "string"
-                        },
-                        {
-                            "name": "gl",
-                            "desc": "Geolocation of end user.",
+                            "name": "rights",
+                            "desc": "Filters based on licensing. Supported values include: cc_publicdomain, cc_attribute, cc_sharealike, cc_noncommercial, cc_nonderived and combinations of these.",
                             "type": "string"
                         },
                         {
@@ -980,8 +917,72 @@
                             ]
                         },
                         {
-                            "name": "linkSite",
-                            "desc": "Specifies that all search results should contain a link to a particular URL",
+                            "name": "excludeTerms",
+                            "desc": "Identifies a word or phrase that should not appear in any documents in the search results",
+                            "type": "string"
+                        },
+                        {
+                            "name": "siteSearch",
+                            "desc": "Specifies all search results should be pages from a given site",
+                            "type": "string"
+                        },
+                        {
+                            "name": "sort",
+                            "desc": "The sort expression to apply to the results",
+                            "type": "string"
+                        },
+                        {
+                            "name": "start",
+                            "desc": "The index of the first result to return",
+                            "type": "uint32"
+                        },
+                        {
+                            "name": "gl",
+                            "desc": "Geolocation of end user.",
+                            "type": "string"
+                        },
+                        {
+                            "name": "imgColorType",
+                            "desc": "Returns black and white, grayscale, or color images: mono, gray, and color.",
+                            "type": "string",
+                            "enum": [
+                                {
+                                    "name": "color",
+                                    "desc": "color"
+                                },
+                                {
+                                    "name": "gray",
+                                    "desc": "gray"
+                                },
+                                {
+                                    "name": "mono",
+                                    "desc": "mono"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "orTerms",
+                            "desc": "Provides additional search terms to check for in a document, where each document in the search results must contain at least one of the additional search terms",
+                            "type": "string"
+                        },
+                        {
+                            "name": "relatedSite",
+                            "desc": "Specifies that all search results should be pages that are related to the specified URL",
+                            "type": "string"
+                        },
+                        {
+                            "name": "cx",
+                            "desc": "The custom search engine ID to scope this search query",
+                            "type": "string"
+                        },
+                        {
+                            "name": "exactTerms",
+                            "desc": "Identifies a phrase that all documents in the search results must contain",
+                            "type": "string"
+                        },
+                        {
+                            "name": "lowRange",
+                            "desc": "Creates a range in form as_nlo value..as_nhi value and attempts to append it to query",
                             "type": "string"
                         }
                     ],

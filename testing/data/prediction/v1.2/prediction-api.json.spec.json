@@ -10,6 +10,7 @@
     "documentationLink": "https://developers.google.com/prediction/docs/developer-guide",
     "protocol": "rest",
     "rootUrl": "https://www.googleapis.com/",
+    "servicePath": "prediction/v1.2/",
     "auth": {
         "oauth2": [
             "https://www.googleapis.com/auth/devstorage.full_control",
@@ -19,11 +20,6 @@
         ]
     },
     "parameters": [
-        {
-            "name": "userIp",
-            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
-            "type": "string"
-        },
         {
             "name": "alt",
             "desc": "Data format for the response.",
@@ -61,26 +57,14 @@
             "name": "quotaUser",
             "desc": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
             "type": "string"
+        },
+        {
+            "name": "userIp",
+            "desc": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+            "type": "string"
         }
     ],
     "schemas": [
-        {
-            "name": "Input",
-            "type": "object",
-            "fields": [
-                {
-                    "name": "input",
-                    "type": "object",
-                    "fields": [
-                        {
-                            "name": "csvInstance",
-                            "collection": "array",
-                            "type": "any"
-                        }
-                    ]
-                }
-            ]
-        },
         {
             "name": "Output",
             "type": "object",
@@ -169,15 +153,32 @@
             "type": "object",
             "fields": [
                 {
+                    "name": "classLabel",
+                    "desc": "The true class label of this instance",
+                    "type": "string"
+                },
+                {
                     "name": "csvInstance",
                     "desc": "The input features for this instance",
                     "collection": "array",
                     "type": "any"
-                },
+                }
+            ]
+        },
+        {
+            "name": "Input",
+            "type": "object",
+            "fields": [
                 {
-                    "name": "classLabel",
-                    "desc": "The true class label of this instance",
-                    "type": "string"
+                    "name": "input",
+                    "type": "object",
+                    "fields": [
+                        {
+                            "name": "csvInstance",
+                            "collection": "array",
+                            "type": "any"
+                        }
+                    ]
                 }
             ]
         }
@@ -187,10 +188,10 @@
             "name": "hostedmodels",
             "methods": [
                 {
-                    "name": "predict",
-                    "desc": "Submit input and request an output against a hosted model",
                     "path": "hostedmodels/{hostedModelName}/predict",
                     "httpMethod": "POST",
+                    "name": "predict",
+                    "desc": "Submit input and request an output against a hosted model",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
@@ -211,10 +212,10 @@
             "name": "training",
             "methods": [
                 {
-                    "name": "delete",
-                    "desc": "Delete a trained model",
                     "path": "training/{data}",
                     "httpMethod": "DELETE",
+                    "name": "delete",
+                    "desc": "Delete a trained model",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
@@ -228,10 +229,10 @@
                     ]
                 },
                 {
-                    "name": "get",
-                    "desc": "Check training status of your model",
                     "path": "training/{data}",
                     "httpMethod": "GET",
+                    "name": "get",
+                    "desc": "Check training status of your model",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
@@ -246,17 +247,17 @@
                     "response": "Training"
                 },
                 {
-                    "name": "insert",
-                    "desc": "Begin training your model",
                     "path": "training",
                     "httpMethod": "POST",
+                    "name": "insert",
+                    "desc": "Begin training your model",
                     "scopes": [
                         "https://www.googleapis.com/auth/devstorage.full_control",
                         "https://www.googleapis.com/auth/devstorage.read_only",
                         "https://www.googleapis.com/auth/devstorage.read_write",
                         "https://www.googleapis.com/auth/prediction"
                     ],
-                    "optinalQueryParams": [
+                    "optionalQueryParams": [
                         {
                             "name": "data",
                             "desc": "mybucket/mydata resource in Google Storage",
@@ -267,10 +268,10 @@
                     "response": "Training"
                 },
                 {
-                    "name": "update",
-                    "desc": "Add new data to a trained model",
                     "path": "training/{data}",
                     "httpMethod": "PUT",
+                    "name": "update",
+                    "desc": "Add new data to a trained model",
                     "scopes": [
                         "https://www.googleapis.com/auth/prediction"
                     ],
